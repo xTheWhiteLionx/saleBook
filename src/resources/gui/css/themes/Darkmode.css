@@ -1,0 +1,131 @@
+.root { 
+    -fx-accent: #1e74c6;
+    -fx-focus-color: -fx-accent;
+    -fx-base: BLACK;
+    -fx-control-inner-background: derive(-fx-base, 35%);
+    -fx-control-inner-background-alt: -fx-control-inner-background ;
+}
+
+.label {
+    -fx-text-fill: lightgray;
+}
+
+.text-id {
+ -fx-fill: lightgray;
+}
+
+.text-field {
+    -fx-prompt-text-fill: gray;
+}
+
+.titulo{
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+
+.button{
+    -fx-focus-traversable: false;
+}
+
+.button:hover{
+    -fx-text-fill: white;
+}
+
+.separator *.line { 
+    -fx-background-color: #3C3C3C;
+    -fx-border-style: solid;
+    -fx-border-width: 1px;
+}
+
+.scroll-bar{
+    -fx-background-color: derive(-fx-base,45%)
+}
+
+.button:default {
+    -fx-base: -fx-accent;
+} 
+
+.table-view{
+    -fx-selection-bar-non-focused: derive(-fx-base, 50%);
+}
+
+.table-view .column-header .label{
+    -fx-alignment: CENTER_LEFT;
+    -fx-font-weight: none;
+}
+
+.list-cell:even,
+.list-cell:odd,
+.table-row-cell:even,
+.table-row-cell:odd{    
+    -fx-control-inner-background: derive(-fx-base, 15%);
+}
+
+.list-cell:empty,
+.table-row-cell:empty {
+    -fx-background-color: transparent;
+}
+
+.list-cell,
+.table-row-cell{
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color:transparent;
+}
+
+.date-picker-popup > .month-year-pane {
+    -fx-mark-highlight-color: white ;
+}
+
+.ribbon {
+    -fx-color: black;
+    RIBBON_BUTTON_HIGHLIGHT_COLOR: derive(-fx-base, 50%);
+    CONTROLS_LABEL_COLOR: white;
+}
+
+.quick-access-bar {
+    -fx-background-color: derive(-fx-base, 35%);
+}
+
+.quick-access-bar > .outer-container > .button-container {
+    -fx-background-color: derive(-fx-base, 35%);
+}
+
+.ribbon > .outer-container > .tab-pane > .tab-header-area > .headers-region > .tab:selected{
+    -fx-background-color:derive(-fx-base, 35%);
+}
+
+.ribbon > .outer-container > .tab-pane > .tab-header-area > .headers-region > .tab {
+    -fx-background-color: black;
+}
+
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: black;
+}
+
+.ribbon > .outer-container > .tab-pane > .tab-header-area {
+    -fx-background-color: black !important;
+}
+
+.ribbon-tab {
+    -fx-background-color: derive(-fx-base, 35%);
+}
+
+#modeImageView {
+    -fx-image: url("../../textures/sunIconWhite.png");
+}
+
+#sparePartsImageview {
+    -fx-image: url("../../textures/platform_icon_white.png");
+}
+
+#positionsImageview {
+    -fx-image: url("../../textures/productIconWhite.png");
+}
+
+#tenthPartImageview {
+    -fx-image: url("../../textures/incomeTaxIconWhite.png");
+}
+
+#copyBtn {
+    -fx-graphic: url("../../textures/icons8-kopieren-16-white.png")
+}

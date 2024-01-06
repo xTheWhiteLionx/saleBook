@@ -1,0 +1,11 @@
+.spinnerClass .increment-arrow {
+    /* plus symbol vector path */
+    -fx-shape: "M19,13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" !important;
+    -fx-scale-shape:false !important;
+}
+
+.spinnerClass .decrement-arrow {
+    /* minus symbol vector path */
+    -fx-shape: "M19,13H5v-2h14v2z" !important;
+    -fx-scale-shape:false !important;
+}

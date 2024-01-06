@@ -1,0 +1,1961 @@
+{
+  "spareParts": [
+    {
+      "name": "Flex Rail Slider Left",
+      "condition": "NEW",
+      "category": "Joy Con",
+      "unit": "pieces",
+      "quantity": 2
+    },
+    {
+      "name": "Flex Rail Slider Left and Right",
+      "condition": "NEW",
+      "category": "Joy Con",
+      "unit": "pair",
+      "quantity": 1
+    },
+    {
+      "name": "Flex Rail Slider Right",
+      "condition": "NEW",
+      "category": "Joy Con",
+      "unit": "pieces",
+      "quantity": 3
+    },
+    {
+      "name": "HAC-006 Battery",
+      "condition": "NEW",
+      "category": "Joy Con",
+      "unit": "pieces",
+      "quantity": 1
+    },
+    {
+      "name": "Joy-Con Pair Neon Green/Neon Pink OVP",
+      "condition": "NEW",
+      "category": "Joy Con",
+      "unit": "pieces",
+      "quantity": 1
+    },
+    {
+      "name": "Joy-Con Pair Neon Red/Neon BLue OVP",
+      "condition": "NEW",
+      "category": "Joy Con",
+      "unit": "pieces",
+      "quantity": 1
+    },
+    {
+      "name": "Joy-Con Pokemon Scarlet Violet Edition Shell",
+      "condition": "NEW",
+      "category": "Joy Con",
+      "unit": "pair",
+      "quantity": 1
+    },
+    {
+      "name": "Joystick",
+      "condition": "NEW",
+      "category": "Joy Con",
+      "unit": "pieces",
+      "quantity": 14
+    },
+    {
+      "name": "Joystick",
+      "condition": "REFURBISHED",
+      "category": "Joy Con",
+      "unit": "pieces",
+      "quantity": 2
+    },
+    {
+      "name": "Joystick",
+      "condition": "FAULTY",
+      "category": "Joy Con",
+      "unit": "pieces",
+      "quantity": 15
+    },
+    {
+      "name": "L flex cable",
+      "condition": "NEW",
+      "category": "Joy Con",
+      "unit": "pieces",
+      "quantity": 9
+    },
+    {
+      "name": "Lock button",
+      "condition": "NEW",
+      "category": "Joy Con",
+      "unit": "pieces",
+      "quantity": 3
+    },
+    {
+      "name": "SL flex cable",
+      "condition": "NEW",
+      "category": "Joy Con",
+      "unit": "pieces",
+      "quantity": 3
+    },
+    {
+      "name": "SR flex cable",
+      "condition": "NEW",
+      "category": "Joy Con",
+      "unit": "pieces",
+      "quantity": 3
+    },
+    {
+      "name": "ZL flex cable",
+      "condition": "NEW",
+      "category": "Joy Con",
+      "unit": "pieces",
+      "quantity": 4
+    },
+    {
+      "name": "ZR flex cable",
+      "condition": "NEW",
+      "category": "Joy Con",
+      "unit": "pieces",
+      "quantity": 4
+    }
+  ],
+  "positionData": [
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Super Mario Odyssey Edition Red",
+            "color": "0xe10f00ff"
+          },
+          "errorDescription": ""
+        },
+        {
+          "id": 2,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Super Mario Odyssey Edition Red",
+            "color": "0xe10f00ff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 1,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 35,
+      "orderDate": 19308,
+      "cost": 13.48,
+      "receivedDate": 19308,
+      "sellingDate": 19315,
+      "sellingPrice": 65,
+      "trackingNumber": "",
+      "nextItemId": 3
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Red",
+            "color": "0xff3c28ff"
+          },
+          "errorDescription": "-broken R Button"
+        }
+      ],
+      "id": 2,
+      "category": "Joy Con",
+      "state": "RECEIVED",
+      "purchasingPrice": 17.50,
+      "orderDate": 19308,
+      "cost": 0,
+      "receivedDate": 19315,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Orange",
+            "color": "0xfaa005ff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 3,
+      "category": "Joy Con",
+      "state": "RECEIVED",
+      "purchasingPrice": 17.50,
+      "orderDate": 19308,
+      "cost": 0,
+      "receivedDate": 19315,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "VERY_GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Pokémon: Let\u0027s Go! Edition Pikachu-Yellow",
+            "color": "0xffdc00ff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 4,
+      "category": "Joy Con",
+      "state": "DELIVERED",
+      "purchasingPrice": 18,
+      "orderDate": 19310,
+      "cost": 3.99,
+      "receivedDate": 19317,
+      "sellingDate": 19324,
+      "sellingPrice": 26.00,
+      "shippingCompany": "DHL",
+      "trackingNumber": "",
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "NEW",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "cremeweiß",
+            "color": "0xefebdcff"
+          },
+          "errorDescription": ""
+        },
+        {
+          "id": 2,
+          "condition": "NEW",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "cremeweiß",
+            "color": "0xefebdcff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 5,
+      "category": "Joy Con",
+      "state": "DELIVERED",
+      "purchasingPrice": 16,
+      "orderDate": 19312,
+      "cost": 18.62,
+      "receivedDate": 19319,
+      "sellingDate": 19565,
+      "sellingPrice": 96.00,
+      "shippingCompany": "DHL",
+      "trackingNumber": "358025403511",
+      "nextItemId": 3
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Blue",
+            "color": "0x0ab9e6ff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 6,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 8,
+      "orderDate": 19565,
+      "cost": 7.74,
+      "receivedDate": 19565,
+      "sellingDate": 19565,
+      "sellingPrice": 30.00,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "ACCEPTABLE",
+          "variant": "NONE",
+          "itemColor": {
+            "name": "Jet Black",
+            "color": "0x0e0e10ff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 7,
+      "category": "PlayStation 4",
+      "state": "SOLD",
+      "purchasingPrice": 60,
+      "orderDate": 19328,
+      "cost": 27.14,
+      "receivedDate": 19331,
+      "sellingDate": 19345,
+      "sellingPrice": 180.00,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "ACCEPTABLE",
+          "variant": "NONE",
+          "itemColor": {
+            "name": "Jet Black",
+            "color": "0x0e0e10ff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 8,
+      "category": "PlayStation 4",
+      "state": "SOLD",
+      "purchasingPrice": 60,
+      "orderDate": 19332,
+      "cost": 27.14,
+      "receivedDate": 19360,
+      "sellingDate": 19368,
+      "sellingPrice": 180.00,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "NEW",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Gray",
+            "color": "0x828282ff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 9,
+      "category": "Joy Con",
+      "state": "LOST",
+      "purchasingPrice": 12,
+      "orderDate": 19200,
+      "cost": 0,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Blue",
+            "color": "0x0ab9e6ff"
+          },
+          "errorDescription": ""
+        },
+        {
+          "id": 2,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Red",
+            "color": "0xff3c28ff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 10,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 22,
+      "orderDate": 19338,
+      "cost": 13.60,
+      "receivedDate": 19341,
+      "sellingDate": 19399,
+      "sellingPrice": 50.49,
+      "nextItemId": 3
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Blue",
+            "color": "0x0ab9e6ff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 11,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 18.99,
+      "orderDate": 19344,
+      "cost": 8.24,
+      "receivedDate": 19351,
+      "sellingDate": 19358,
+      "sellingPrice": 35.49,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Blue",
+            "color": "0x0ab9e6ff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 12,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 10,
+      "orderDate": 19345,
+      "cost": 3.99,
+      "receivedDate": 19348,
+      "sellingDate": 19355,
+      "sellingPrice": 37.00,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Blue",
+            "color": "0x0ab9e6ff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 13,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 10,
+      "orderDate": 19346,
+      "cost": 7.42,
+      "receivedDate": 19346,
+      "sellingDate": 19356,
+      "sellingPrice": 28.00,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Blue",
+            "color": "0x0ab9e6ff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 14,
+      "category": "Joy Con Gehäuse",
+      "state": "SOLD",
+      "purchasingPrice": 0,
+      "orderDate": 19346,
+      "cost": 3.41,
+      "receivedDate": 19346,
+      "sellingDate": 19346,
+      "sellingPrice": 5.50,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Red",
+            "color": "0xff3c28ff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 15,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 6.95,
+      "orderDate": 19363,
+      "cost": 3.99,
+      "receivedDate": 19366,
+      "sellingDate": 19373,
+      "sellingPrice": 30.00,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "VERY_GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Super Mario Odyssey Edition Red",
+            "color": "0xe10f00ff"
+          },
+          "errorDescription": "- Broken R button\n- no reaction of any button"
+        }
+      ],
+      "id": 16,
+      "category": "Joy Con",
+      "state": "RECEIVED",
+      "purchasingPrice": 14.50,
+      "orderDate": 19374,
+      "cost": 0,
+      "receivedDate": 19377,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Yellow",
+            "color": "0xe6ff00ff"
+          },
+          "errorDescription": "-broken R button"
+        }
+      ],
+      "id": 17,
+      "category": "Joy Con",
+      "state": "RECEIVED",
+      "purchasingPrice": 14.50,
+      "orderDate": 19565,
+      "cost": 0,
+      "receivedDate": 19558,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Blue",
+            "color": "0x0ab9e6ff"
+          },
+          "errorDescription": "-broken R button"
+        }
+      ],
+      "id": 18,
+      "category": "Joy Con",
+      "state": "RECEIVED",
+      "purchasingPrice": 14.50,
+      "orderDate": 19374,
+      "cost": 0,
+      "receivedDate": 19377,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "VERY_GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Purple",
+            "color": "0xb400e6ff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 19,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 15,
+      "orderDate": 19371,
+      "cost": 3.99,
+      "receivedDate": 19374,
+      "sellingDate": 19381,
+      "sellingPrice": 33.99,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Blue",
+            "color": "0x0ab9e6ff"
+          },
+          "errorDescription": "- broken R button"
+        }
+      ],
+      "id": 20,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 13,
+      "orderDate": 19372,
+      "cost": 0,
+      "receivedDate": 19375,
+      "sellingDate": 19382,
+      "sellingPrice": 25.00,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Red",
+            "color": "0xe10f00ff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 21,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 15,
+      "orderDate": 19380,
+      "cost": 5.49,
+      "receivedDate": 19405,
+      "sellingDate": 19412,
+      "sellingPrice": 35.49,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "NEW",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Classics NES",
+            "color": "0x000000ff"
+          },
+          "errorDescription": ""
+        },
+        {
+          "id": 2,
+          "condition": "NEW",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Classics NES",
+            "color": "0x000000ff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 22,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 25,
+      "orderDate": 19396,
+      "cost": 33.51,
+      "receivedDate": 19437,
+      "sellingDate": 19444,
+      "sellingPrice": 90.00,
+      "nextItemId": 3
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Red",
+            "color": "0xff3c28ff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 23,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 15,
+      "orderDate": 19398,
+      "cost": 6.72,
+      "receivedDate": 19401,
+      "sellingDate": 19408,
+      "sellingPrice": 35.49,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Blue",
+            "color": "0x0ab9e6ff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 24,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 10,
+      "orderDate": 19403,
+      "cost": 3.99,
+      "receivedDate": 19406,
+      "sellingDate": 19413,
+      "sellingPrice": 35.00,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "VERY_GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Green",
+            "color": "0x1edc00ff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 25,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 17,
+      "orderDate": 19410,
+      "cost": 5.49,
+      "receivedDate": 19413,
+      "sellingDate": 19418,
+      "sellingPrice": 40.49,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Red",
+            "color": "0xff3c28ff"
+          },
+          "errorDescription": "- Connector of the slider is broken"
+        }
+      ],
+      "id": 26,
+      "category": "Joy Con",
+      "state": "RECEIVED",
+      "purchasingPrice": 18,
+      "orderDate": 19413,
+      "cost": 0,
+      "receivedDate": 19416,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "FAULTY",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Gray",
+            "color": "0x828282ff"
+          },
+          "errorDescription": "- doesn\u0027t connect"
+        }
+      ],
+      "id": 27,
+      "category": "Joy Con",
+      "state": "LOST",
+      "purchasingPrice": 15,
+      "orderDate": 19414,
+      "cost": 0,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Blue",
+            "color": "0x0ab9e6ff"
+          },
+          "errorDescription": "- faulty battery \n- Joystick drift"
+        }
+      ],
+      "id": 28,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 20,
+      "orderDate": 19426,
+      "cost": 1.45,
+      "receivedDate": 19429,
+      "sellingDate": 19459,
+      "sellingPrice": 32.00,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Blue",
+            "color": "0x0ab9e6ff"
+          },
+          "errorDescription": "-Joystick drift"
+        }
+      ],
+      "id": 29,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 17.50,
+      "orderDate": 19428,
+      "cost": 0,
+      "receivedDate": 19431,
+      "sellingDate": 19439,
+      "sellingPrice": 30.00,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Blue",
+            "color": "0x4655f5ff"
+          },
+          "errorDescription": "- ZL button \n- faulty battery"
+        }
+      ],
+      "id": 30,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 12.50,
+      "orderDate": 19429,
+      "cost": 5.49,
+      "receivedDate": 19432,
+      "sellingDate": 19463,
+      "sellingPrice": 30.49,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "AS_NEW",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Green",
+            "color": "0x1edc00ff"
+          },
+          "errorDescription": "- disconected slider"
+        }
+      ],
+      "id": 31,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 17,
+      "orderDate": 19436,
+      "cost": 3.99,
+      "receivedDate": 19440,
+      "sellingDate": 19459,
+      "sellingPrice": 33.99,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "NEW",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Monster Hunter Rise Edition Gray Joy-Con",
+            "color": "0x818282ff"
+          },
+          "errorDescription": ""
+        },
+        {
+          "id": 2,
+          "condition": "NEW",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Monster Hunter Rise Edition Gray Joy-Con",
+            "color": "0x818282ff"
+          },
+          "errorDescription": "- missing slider\n- missing Lock Button"
+        }
+      ],
+      "id": 32,
+      "category": "Joy Con",
+      "state": "SHIPPED",
+      "purchasingPrice": 19.50,
+      "orderDate": 19452,
+      "cost": 12.05,
+      "receivedDate": 19455,
+      "sellingDate": 19461,
+      "sellingPrice": 65.49,
+      "shippingCompany": "DHL",
+      "trackingNumber": "358117388122",
+      "nextItemId": 3
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Blue",
+            "color": "0x0ab9e6ff"
+          },
+          "errorDescription": "- broken L button"
+        }
+      ],
+      "id": 33,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 12,
+      "orderDate": 19453,
+      "cost": 0,
+      "receivedDate": 19456,
+      "sellingDate": 19470,
+      "sellingPrice": 35.00,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Green",
+            "color": "0x1edc00ff"
+          },
+          "errorDescription": "- faulty SL and SR button \n- no 2-player mode\n- slightly Joystick drift"
+        }
+      ],
+      "id": 34,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 15,
+      "orderDate": 19465,
+      "cost": 3.99,
+      "receivedDate": 19468,
+      "sellingDate": 19471,
+      "sellingPrice": 35.00,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "AS_NEW",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Green",
+            "color": "0x1edc00ff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 35,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 12,
+      "orderDate": 19472,
+      "cost": 3.99,
+      "receivedDate": 19475,
+      "sellingDate": 19478,
+      "sellingPrice": 35.00,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Pink",
+            "color": "0xff3278ff"
+          },
+          "errorDescription": "- dirty\n- slightly broken R button\n- Slider, SL and SR disconnected"
+        }
+      ],
+      "id": 36,
+      "category": "Joy Con",
+      "state": "SHIPPED",
+      "purchasingPrice": 15,
+      "orderDate": 19484,
+      "cost": 5.49,
+      "receivedDate": 19486,
+      "sellingDate": 19489,
+      "sellingPrice": 30.49,
+      "shippingCompany": "DHL",
+      "trackingNumber": "358103488134",
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "NONE",
+          "itemColor": {
+            "name": "Jet Black",
+            "color": "0x0e0e10ff"
+          },
+          "errorDescription": "- faulty disc drive\n- deep clean\n- new thermal paste"
+        }
+      ],
+      "id": 37,
+      "category": "PlayStation 4",
+      "state": "REPAIRED",
+      "purchasingPrice": 50,
+      "orderDate": 19484,
+      "cost": 5.95,
+      "receivedDate": 19487,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Blue",
+            "color": "0x0ab9e6ff"
+          },
+          "errorDescription": "- SL and SR doesn\u0027t connect"
+        }
+      ],
+      "id": 38,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 12.50,
+      "orderDate": 19487,
+      "cost": 0,
+      "receivedDate": 19490,
+      "sellingDate": 19494,
+      "sellingPrice": 32.00,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Red",
+            "color": "0xff3c28ff"
+          },
+          "errorDescription": "- Joystick drift"
+        }
+      ],
+      "id": 39,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 12.50,
+      "orderDate": 19488,
+      "cost": 0,
+      "receivedDate": 19491,
+      "sellingDate": 19498,
+      "sellingPrice": 35.00,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Blue",
+            "color": "0x0ab9e6ff"
+          },
+          "errorDescription": "- Joystick head\n- broken L button"
+        }
+      ],
+      "id": 40,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 8.02,
+      "orderDate": 19535,
+      "cost": 3.99,
+      "receivedDate": 19541,
+      "sellingDate": 19562,
+      "sellingPrice": 29.00,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Green",
+            "color": "0x1edc00ff"
+          },
+          "errorDescription": "- faulty battery \n- Joystick head"
+        }
+      ],
+      "id": 41,
+      "category": "Joy Con",
+      "state": "SHIPPED",
+      "purchasingPrice": 8.02,
+      "orderDate": 19535,
+      "cost": 3.99,
+      "receivedDate": 19541,
+      "sellingDate": 19578,
+      "sellingPrice": 30.00,
+      "shippingCompany": "DHL",
+      "trackingNumber": "",
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "ACCEPTABLE",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Blue",
+            "color": "0x0ab9e6ff"
+          },
+          "errorDescription": "- Joystick head"
+        }
+      ],
+      "id": 42,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 8.02,
+      "orderDate": 19535,
+      "cost": 0,
+      "receivedDate": 19541,
+      "sellingDate": 19580,
+      "sellingPrice": 20.00,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "AS_NEW",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Red",
+            "color": "0xff3c28ff"
+          },
+          "errorDescription": "- faulty battery\n- Joystick isn\u0027t pressable"
+        }
+      ],
+      "id": 43,
+      "category": "Joy Con",
+      "state": "SHIPPED",
+      "purchasingPrice": 8.02,
+      "orderDate": 19535,
+      "cost": 5.49,
+      "receivedDate": 19541,
+      "sellingDate": 19602,
+      "sellingPrice": 30.49,
+      "shippingCompany": "DHL",
+      "trackingNumber": "358139402493",
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Joy Con White",
+            "color": "0xe6e6e6ff"
+          },
+          "errorDescription": "- missing slider"
+        },
+        {
+          "id": 2,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Joy Con White",
+            "color": "0xe6e6e6ff"
+          },
+          "errorDescription": "right\n-doesn\u0027t connect\n- missing Lock Button\n"
+        }
+      ],
+      "id": 44,
+      "category": "Joy Con",
+      "state": "DELIVERED",
+      "purchasingPrice": 16.04,
+      "orderDate": 19535,
+      "cost": 5.49,
+      "receivedDate": 19541,
+      "sellingDate": 19561,
+      "sellingPrice": 65.49,
+      "shippingCompany": "DHL",
+      "trackingNumber": "358121001067",
+      "nextItemId": 3
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Red",
+            "color": "0xff3c28ff"
+          },
+          "errorDescription": "- Joystick head\n- broken R button"
+        }
+      ],
+      "id": 45,
+      "category": "Joy Con",
+      "state": "RECEIVED",
+      "purchasingPrice": 8.02,
+      "orderDate": 19535,
+      "cost": 0,
+      "receivedDate": 19541,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Red",
+            "color": "0xff3c28ff"
+          },
+          "errorDescription": "- faulty slider"
+        }
+      ],
+      "id": 46,
+      "category": "Joy Con",
+      "state": "SHIPPED",
+      "purchasingPrice": 8.02,
+      "orderDate": 19535,
+      "cost": 5.49,
+      "receivedDate": 19541,
+      "sellingDate": 19548,
+      "sellingPrice": 35.00,
+      "shippingCompany": "DHL",
+      "trackingNumber": "358115486540",
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "AS_NEW",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Orange",
+            "color": "0xfaa005ff"
+          },
+          "errorDescription": "- doesn\u0027t connect"
+        }
+      ],
+      "id": 47,
+      "category": "Joy Con",
+      "state": "SHIPPED",
+      "purchasingPrice": 8.02,
+      "orderDate": 19535,
+      "cost": 5.49,
+      "receivedDate": 19541,
+      "sellingDate": 19568,
+      "sellingPrice": 35.49,
+      "shippingCompany": "DHL",
+      "trackingNumber": "358123668322",
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Pink",
+            "color": "0xff3278ff"
+          },
+          "errorDescription": "- doesn\u0027t connect or charge"
+        }
+      ],
+      "id": 48,
+      "category": "Joy Con",
+      "state": "RECEIVED",
+      "purchasingPrice": 12,
+      "orderDate": 19568,
+      "cost": 0,
+      "receivedDate": 19574,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Blue",
+            "color": "0x4655f5ff"
+          },
+          "errorDescription": "- doesn\u0027t connect, no reaction."
+        }
+      ],
+      "id": 49,
+      "category": "Joy Con",
+      "state": "RECEIVED",
+      "purchasingPrice": 10,
+      "orderDate": 19580,
+      "cost": 0,
+      "receivedDate": 19584,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "VERY_GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Blue",
+            "color": "0x0ab9e6ff"
+          },
+          "errorDescription": "- faulty SL flex cabel"
+        }
+      ],
+      "id": 52,
+      "category": "Joy Con",
+      "state": "SHIPPED",
+      "purchasingPrice": 10,
+      "orderDate": 19606,
+      "cost": 5.49,
+      "receivedDate": 19609,
+      "sellingDate": 19612,
+      "sellingPrice": 30,
+      "shippingCompany": "DHL",
+      "trackingNumber": "358142995219",
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "VERY_GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Gray",
+            "color": "0x828282ff"
+          },
+          "errorDescription": "- faulty right rail slider connector\n- faulty SR connector"
+        }
+      ],
+      "id": 53,
+      "category": "Joy Con",
+      "state": "RECEIVED",
+      "purchasingPrice": 10,
+      "orderDate": 19606,
+      "cost": 0,
+      "receivedDate": 19609,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "AS_NEW",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Pink",
+            "color": "0xff3278ff"
+          }
+        },
+        {
+          "id": 2,
+          "condition": "AS_NEW",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Green",
+            "color": "0x1edc00ff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 54,
+      "category": "Joy Con (third party)",
+      "state": "SOLD",
+      "purchasingPrice": 20,
+      "orderDate": 19584,
+      "cost": 0,
+      "receivedDate": 19588,
+      "sellingDate": 19628,
+      "sellingPrice": 30,
+      "nextItemId": 3
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "ACCEPTABLE",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Purple",
+            "color": "0xb400e6ff"
+          },
+          "errorDescription": "- slider is broken off\n- SL flex cable"
+        }
+      ],
+      "id": 55,
+      "category": "Joy Con",
+      "state": "SHIPPED",
+      "purchasingPrice": 15,
+      "orderDate": 19634,
+      "cost": 5.49,
+      "receivedDate": 19637,
+      "sellingDate": 19639,
+      "sellingPrice": 25.49,
+      "shippingCompany": "DHL",
+      "trackingNumber": "358155935458",
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Red",
+            "color": "0xff3c28ff"
+          },
+          "errorDescription": "- Broken R Button\n- faulty Joy stick \n- SR flex cable"
+        }
+      ],
+      "id": 56,
+      "category": "Joy Con",
+      "state": "RECEIVED",
+      "purchasingPrice": 10.50,
+      "orderDate": 19639,
+      "cost": 0,
+      "receivedDate": 19643,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Red",
+            "color": "0xff3c28ff"
+          },
+          "errorDescription": "- faulty vibrating motor\n- missing joystick cover\n- missing slider\n- missing SR flex cable\n- missing SL and SR Button"
+        }
+      ],
+      "id": 57,
+      "category": "Joy Con",
+      "state": "SHIPPED",
+      "purchasingPrice": 8.45,
+      "orderDate": 19645,
+      "cost": 3.99,
+      "receivedDate": 19649,
+      "sellingDate": 19693,
+      "sellingPrice": 28.99,
+      "shippingCompany": "DHL",
+      "trackingNumber": "",
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Blue",
+            "color": "0x0ab9e6ff"
+          },
+          "errorDescription": "- Broken Joystick"
+        }
+      ],
+      "id": 58,
+      "category": "Joy Con",
+      "state": "SHIPPED",
+      "purchasingPrice": 10,
+      "orderDate": 19657,
+      "cost": 5.49,
+      "receivedDate": 19660,
+      "sellingDate": 19665,
+      "sellingPrice": 30.50,
+      "shippingCompany": "DHL",
+      "trackingNumber": "358168852231",
+      "nextItemId": 3
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Gray",
+            "color": "0x828282ff"
+          },
+          "errorDescription": "- faulty L Button\n- Joystick drift"
+        }
+      ],
+      "id": 59,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 5,
+      "orderDate": 19657,
+      "cost": 0,
+      "receivedDate": 19660,
+      "sellingDate": 19672,
+      "sellingPrice": 25,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "AS_NEW",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Red",
+            "color": "0xff3c28ff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 60,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 10,
+      "orderDate": 19657,
+      "cost": 0,
+      "receivedDate": 19660,
+      "sellingDate": 19661,
+      "sellingPrice": 35,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Blue",
+            "color": "0x0ab9e6ff"
+          },
+          "errorDescription": "- broken Joystick \n- broken L button"
+        }
+      ],
+      "id": 61,
+      "category": "Joy Con",
+      "state": "SHIPPED",
+      "purchasingPrice": 10.20,
+      "orderDate": 19667,
+      "cost": 5.49,
+      "receivedDate": 19677,
+      "sellingDate": 19688,
+      "sellingPrice": 25.50,
+      "shippingCompany": "DHL",
+      "trackingNumber": "358182515514",
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "VERY_GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Red",
+            "color": "0xff3c28ff"
+          },
+          "errorDescription": "- Disconnected rail slider\n- Missing lock button"
+        }
+      ],
+      "id": 64,
+      "category": "Joy Con",
+      "state": "SHIPPED",
+      "purchasingPrice": 15,
+      "orderDate": 19699,
+      "cost": 5.49,
+      "receivedDate": 19706,
+      "sellingDate": 19709,
+      "sellingPrice": 35,
+      "shippingCompany": "DHL",
+      "trackingNumber": "358199627033",
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "ACCEPTABLE",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Gray",
+            "color": "0x828282ff"
+          },
+          "errorDescription": "- joystick drift\n- missing joystick head"
+        }
+      ],
+      "id": 67,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 13.71,
+      "orderDate": 19700,
+      "cost": 0,
+      "receivedDate": 19704,
+      "sellingDate": 19707,
+      "sellingPrice": 20,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "ACCEPTABLE",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Gray",
+            "color": "0x828282ff"
+          },
+          "errorDescription": "- joystick drift\n- missing joystick head"
+        }
+      ],
+      "id": 68,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 13.71,
+      "orderDate": 19700,
+      "cost": 0,
+      "receivedDate": 19704,
+      "sellingDate": 19716,
+      "sellingPrice": 30,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Pokémon: Scarlet × Violet OLED Edition Scarlet",
+            "color": "0xf07341ff"
+          },
+          "errorDescription": "- Joystick drift\n- Broken L button"
+        },
+        {
+          "id": 2,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Pokémon: Scarlet × Violet OLED Edition Violet",
+            "color": "0x9650aaff"
+          },
+          "errorDescription": "- Joystick drift"
+        }
+      ],
+      "id": 69,
+      "category": "Joy Con",
+      "state": "REPAIRED",
+      "purchasingPrice": 18,
+      "orderDate": 19684,
+      "cost": 0,
+      "receivedDate": 19688,
+      "nextItemId": 3
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Blue",
+            "color": "0x0ab9e6ff"
+          },
+          "errorDescription": "- joystick drift\n- swollen battery"
+        },
+        {
+          "id": 2,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Red",
+            "color": "0xff3c28ff"
+          },
+          "errorDescription": "- joystick drift"
+        }
+      ],
+      "id": 70,
+      "category": "Joy Con",
+      "state": "SHIPPED",
+      "purchasingPrice": 27.42,
+      "orderDate": 19700,
+      "cost": 5.49,
+      "receivedDate": 19704,
+      "sellingDate": 19709,
+      "sellingPrice": 55.49,
+      "shippingCompany": "DHL",
+      "trackingNumber": "358199352915",
+      "nextItemId": 3
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "VERY_GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Red",
+            "color": "0xff3c28ff"
+          },
+          "errorDescription": "- Joystick drift"
+        },
+        {
+          "id": 2,
+          "condition": "VERY_GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Blue",
+            "color": "0x0ab9e6ff"
+          },
+          "errorDescription": "- Joystick drift"
+        }
+      ],
+      "id": 71,
+      "category": "Joy Con",
+      "state": "ORDERED",
+      "purchasingPrice": 30,
+      "orderDate": 19709,
+      "cost": 0,
+      "nextItemId": 3
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "NEW",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Neon Blue",
+            "color": "0x0ab9e6ff"
+          },
+          "errorDescription": ""
+        },
+        {
+          "id": 2,
+          "condition": "NEW",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Red",
+            "color": "0xff3c28ff"
+          },
+          "errorDescription": "- few joy stick drift"
+        }
+      ],
+      "id": 72,
+      "category": "Joy Con",
+      "state": "SOLD",
+      "purchasingPrice": 30,
+      "orderDate": 19709,
+      "cost": 0,
+      "receivedDate": 19719,
+      "sellingDate": 19722,
+      "sellingPrice": 50,
+      "nextItemId": 3
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Fortnite Wildcat Edition Dark-Blue",
+            "color": "0x0084ffff"
+          },
+          "errorDescription": "does not connect or work "
+        }
+      ],
+      "id": 73,
+      "category": "Joy Con",
+      "state": "RECEIVED",
+      "purchasingPrice": 8,
+      "orderDate": 19718,
+      "cost": 0,
+      "receivedDate": 19726,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Gray",
+            "color": "0x828282ff"
+          },
+          "errorDescription": "- faulty L button"
+        }
+      ],
+      "id": 74,
+      "category": "Joy Con",
+      "state": "ORDERED",
+      "purchasingPrice": 18,
+      "orderDate": 19727,
+      "cost": 0,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Red",
+            "color": "0xff3c28ff"
+          },
+          "errorDescription": "- broken joystick"
+        }
+      ],
+      "id": 75,
+      "category": "Joy Con",
+      "state": "ORDERED",
+      "purchasingPrice": 15,
+      "orderDate": 19727,
+      "cost": 0,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Blue",
+            "color": "0x4655f5ff"
+          },
+          "errorDescription": "- not working"
+        }
+      ],
+      "id": 76,
+      "category": "Joy Con",
+      "state": "ORDERED",
+      "purchasingPrice": 15,
+      "orderDate": 19727,
+      "cost": 0,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Neon Red",
+            "color": "0xff3c28ff"
+          },
+          "errorDescription": "- broken slider "
+        }
+      ],
+      "id": 77,
+      "category": "Joy Con",
+      "state": "ORDERED",
+      "purchasingPrice": 7.50,
+      "orderDate": 19727,
+      "cost": 0,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "itemColor": {
+            "name": "Gray",
+            "color": "0x828282ff"
+          },
+          "errorDescription": "- does not connect possibly faulty slider"
+        }
+      ],
+      "id": 78,
+      "category": "Joy Con",
+      "state": "ORDERED",
+      "purchasingPrice": 18,
+      "orderDate": 19728,
+      "cost": 0,
+      "nextItemId": 2
+    }
+  ],
+  "suppliers": [
+    {
+      "name": "ali express",
+      "orderWebpage": "https://www.aliexpress.com/p/order/index.html?spm\u003da2g0o.home.1000001.35.22e712e28NpSI5"
+    },
+    {
+      "name": "amazon",
+      "orderWebpage": "https://www.amazon.de/your-orders/orders/ref\u003dyo_oh_gp_to_ov?_encoding\u003dUTF8\u0026ref_\u003dnav_AccountFlyout_orders"
+    },
+    {
+      "name": "ebay",
+      "orderWebpage": "https://www.ebay.de/mye/myebay/v2/purchase"
+    },
+    {
+      "name": "kleinanzeigen",
+      "orderWebpage": "https://www.kleinanzeigen.de/m-nachrichten.html"
+    }
+  ],
+  "orders": [],
+  "repairServiceSales": 155,
+  "extraordinaryIncome": 962.75,
+  "paid": 320,
+  "fixedCosts": 361.92,
+  "nextPosId": 79,
+  "nextOrderId": 3
+}

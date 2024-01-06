@@ -1,0 +1,133 @@
+{
+  "spareParts": [
+    {
+      "name": "T8 Schrauben",
+      "condition": "NEW",
+      "category": "a",
+      "unit": "pieces",
+      "quantity": 15
+    }
+  ],
+  "positionData": [
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "NEW",
+          "variant": "LEFT",
+          "itemColor": {
+            "name": "Kirmes",
+            "color": "0xff6666ff"
+          },
+          "errorDescription": "- hat keine Fehler"
+        }
+      ],
+      "id": 1,
+      "category": "a",
+      "state": "RECEIVED",
+      "purchasingPrice": 3,
+      "orderDate": 19583,
+      "cost": 0,
+      "receivedDate": 19583,
+      "nextItemId": 4
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "NEW",
+          "variant": "NONE",
+          "itemColor": {
+            "name": "farbe2",
+            "color": "0x4d1a4dff"
+          },
+          "errorDescription": "- hat keine Fehler"
+        }
+      ],
+      "id": 2,
+      "category": "a",
+      "state": "RECEIVED",
+      "purchasingPrice": 3,
+      "orderDate": 19583,
+      "cost": 0,
+      "receivedDate": 19583,
+      "nextItemId": 2
+    },
+    {
+      "items": [
+        {
+          "id": 1,
+          "condition": "NEW",
+          "variant": "NONE",
+          "itemColor": {
+            "name": "farbe3",
+            "color": "0x336633ff"
+          },
+          "errorDescription": "- hat keine Fehler"
+        },
+        {
+          "id": 2,
+          "condition": "NEW",
+          "variant": "NONE",
+          "itemColor": {
+            "name": "farbe4",
+            "color": "0x00ffffff"
+          },
+          "errorDescription": "- hat keine Fehler"
+        },
+        {
+          "id": 3,
+          "condition": "NEW",
+          "variant": "NONE",
+          "itemColor": {
+            "name": "creme",
+            "color": "0xffffffff"
+          },
+          "errorDescription": ""
+        }
+      ],
+      "id": 3,
+      "category": "a",
+      "state": "RECEIVED",
+      "purchasingPrice": 3,
+      "orderDate": 19583,
+      "cost": 0,
+      "receivedDate": 19583,
+      "nextItemId": 4
+    }
+  ],
+  "suppliers": [
+    {
+      "name": "lieferant x",
+      "orderWebpage": "https://www.economist.com/"
+    }
+  ],
+  "orders": [
+    {
+      "id": 1,
+      "supplier": {
+        "name": "lieferant x",
+        "orderWebpage": "https://www.economist.com/"
+      },
+      "cost": 10,
+      "sparePartToOrderQuantity": [
+        [
+          {
+            "name": "T8 Schrauben",
+            "condition": "NEW",
+            "category": "a",
+            "unit": "pieces",
+            "quantity": 15
+          },
+          15
+        ]
+      ]
+    }
+  ],
+  "repairServiceSales": 0,
+  "extraordinaryIncome": 0,
+  "paid": 0,
+  "fixedCosts": 30,
+  "nextPosId": 4,
+  "nextOrderId": 2
+}
