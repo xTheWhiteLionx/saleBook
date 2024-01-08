@@ -14,10 +14,9 @@ import gui.saleBookController.pages.positionsPage.functions.*;
 import gui.saleBookController.pages.positionsPage.functions.add.NewCostController;
 import gui.saleBookController.pages.positionsPage.functions.add.NewItemController;
 import gui.saleBookController.pages.positionsPage.functions.add.MasterController;
+import gui.util.RibbonTabUtil;
 import gui.util.StringUtils;
 import gui.util.TreeColumnUtils;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,7 +26,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
@@ -62,70 +60,162 @@ import static gui.saleBookController.pages.positionsPage.functions.add.NewCostCo
 import static gui.saleBookController.pages.positionsPage.functions.add.NewItemController.createAddItemController;
 import static gui.util.RibbonGroupUtil.createRibbonGroup;
 
+/**
+ * This class represents a PositionPage with his components.
+ * The PositionPage displays the positions and their items.
+ *
+ * @see gui.saleBookController.pages.Page
+ * @author xthe_white_lionx
+ */
 public class PositionsPage implements Initializable, Page {
-
+    /**
+     * Button to clean the searchbar
+     */
+    @FXML
     public Button cleanSearchBarBtn;
 
+    /**
+     * TextField to search the position by the id
+     */
+    @FXML
     public CustomTextField idSearchbarTxtFld;
-    //Tab Item
+
+    /**
+     * TreeTableView withe position and their items
+     */
     @FXML
     private TreeTableView<Product> trTblVw;
 
-    private ObservableTreeItemMapBinder<Integer> root;
-
+    /**
+     * VBox which wraps the TreeTableView and the searchbar
+     */
     @FXML
-    private VBox wrapVBoxInvestments;
+    private VBox wrapVBox;
+
+    /**
+     * Label to display the total performance of the positions
+     */
     @FXML
     private Label totalPerformanceLbl;
-    @FXML
-    private ScrollPane detailPane;
 
-    //function Buttons
+    /**
+     * ScrollPane to make the detailPanes scrollable
+     */
+    @FXML
+    private ScrollPane detailScrllPn;
+
+    /**
+     * The base pane of this controller
+     */
+    @FXML
+    private BorderPane borderPane;
+
+    /**
+     * Root of the TreeTableView
+     */
+    private ObservableTreeItemMapBinder<Integer> root;
+
+    /**
+     * SplitMenuButton for the selling price calculator
+     */
     private CustomSplitMenuButton btnSellingPriceCalculator;
+
+    /**
+     * MenuItem of the SplitMenuButton {@link #btnSellingPriceCalculator}
+     */
     private MenuItem btnPerformanceCalculator;
+
     /**
      * The current {@link SaleBook}
      */
     private SaleBook saleBook;
 
     /**
-     * The current {@link SaleBook}
+     * The current selected position
      */
     private Position currPos;
 
-    private FilterPositionsController filterPositionsController;
     /**
-     *
+     * FilterPositionsController to filter the positions of the TreeTableView
      */
-    private BorderPane borderPane;
+    private FilterPositionsController filterPositionsController;
 
+    /**
+     * RibbonTab of this page with his controls
+     */
     private RibbonTab positionsTab;
+
+    /**
+     * Button to combine the current position with the specified ones
+     */
     private Button combinePositionWithBtn;
+
+    /**
+     * Button to divide the current position
+     */
     private Button dividePositionBtn;
+
+    /**
+     * Button to set the current position to the state received
+     */
     private Button setReceivedBtn;
+
+    /**
+     * Button to add a cost the current position
+     */
     private Button addCostBtn;
+
+    /**
+     * Button to divide the current position
+     */
     private Button setRepairedBtn;
-    private ImageButton addItemBtn;
+
+    /**
+     * Button to add an item to the current position
+     */
+    private Button addItemBtn;
+
+    /**
+     * Button to ship the current position
+     */
     private Button toShipBtn;
+
+    /**
+     * Button to sale the current position
+     */
     private Button saleBtn;
 
+    /**
+     * Button to edit the current selected position or item
+     */
     private Button editBtn;
+
+    /**
+     * Button to delete the current selected position or item
+     */
     private Button deleteBtn;
+
+    /**
+     * Pane for the details of the current selected position
+     */
     private DetailPositionPane detailPositionPane;
+
+    /**
+     * Pane for the details of the current selected item
+     */
     private DetailItemPane detailItemPane;
 
     /**
-     * @return
+     * Creates a new positionPage
+     *
+     * @return a new positionPage
      */
     public static @NotNull PositionsPage createPositionsPage() throws IOException {
         FXMLLoader loader = new FXMLLoader(
                 ApplicationMain.class.getResource("saleBookController/pages/positionsPage/PositionsPage.fxml"));
-
         {
-            BorderPane borderPane = loader.load();
-            PositionsPage positionsPage = loader.getController();
-            positionsPage.borderPane = borderPane;
-            return positionsPage;
+            loader.load();
+            return loader.getController();
         }
     }
 
@@ -141,29 +231,48 @@ public class PositionsPage implements Initializable, Page {
         this.initializeTblVw();
     }
 
+    /**
+     * Returns the TreeTableView of this PositionPage
+     *
+     * @return the TreeTableView of this PositionPage
+     */
     public @NotNull TreeTableView<Product> getTrTblVw() {
         return this.trTblVw;
     }
 
     /**
-     * @return
+     * Returns the totalPerformanceLbl of this PositionPage
+     *
+     * @return the totalPerformanceLbl of this PositionPage
      */
     public @NotNull Label getTotalPerformanceLbl() {
         return this.totalPerformanceLbl;
     }
 
+    /**
+     * Returns the base pane of this PositionPage
+     *
+     * @return the base pane of this PositionPage
+     */
     @Override
     public @NotNull Pane getPane() {
         return this.borderPane;
     }
 
+    /**
+     * Returns the ribbonTab of this PositionPage
+     *
+     * @return the ribbonTab of this PositionPage
+     */
     @Override
     public @NotNull RibbonTab getRibbonTab() {
         return this.positionsTab;
     }
 
     /**
-     * @param saleBook
+     * Sets the saleBook of this PositionPage to the specified saleBook
+     *
+     * @param saleBook the specified saleBook which should be set
      */
     @Override
     public void setSaleBook(@NotNull SaleBook saleBook) {
@@ -171,6 +280,11 @@ public class PositionsPage implements Initializable, Page {
         this.filterPositionsController.setCategories(saleBook.getCategories());
     }
 
+    /**
+     * Sets the root of this PositionPage and the root of the TreeTableView to the specified root
+     *
+     * @param root the specified root which should be set
+     */
     public void setRoot(@NotNull ObservableTreeItemMapBinder<Integer> root) {
         this.root = root;
         this.trTblVw.setRoot(this.root);
@@ -184,18 +298,37 @@ public class PositionsPage implements Initializable, Page {
     }
 
     /**
-     * @param categories
+     * Sets the categories of the filter to the specified categories
+     *
+     * @param categories the new categories which should be set
      */
     public void setCategories(@NotNull Collection<String> categories) {
         this.filterPositionsController.setCategories(categories);
     }
 
     /**
+     * Updates the controls and details
+     */
+    public void updateControlsAndDetail() {
+        this.updateControlsAndDetail(this.trTblVw.getSelectionModel().getSelectedItem().getValue());
+    }
+
+    /**
+     * Handles the cleanSearchBar button and cleans the searchBar
      *
+     * @param actionEvent not used
+     */
+    @FXML
+    public void handleCleanSearchBar(ActionEvent actionEvent) {
+        this.idSearchbarTxtFld.setText("");
+        this.cleanSearchBarBtn.setVisible(false);
+        this.filterPositionsController.handleApply();
+    }
+
+    /**
+     * Initializes the ribbonTab with the controls
      */
     private void initializeRibbonTab() {
-        this.positionsTab = new RibbonTab("Positions");
-
         Button newPositionBtn = new ImageButton("new position", ADD_IMAGE,
                 actionEvent -> this.handleNewPosition());
         RibbonGroup ribbonGroupNew = createRibbonGroup("new", newPositionBtn);
@@ -209,11 +342,11 @@ public class PositionsPage implements Initializable, Page {
         this.dividePositionBtn.setDisable(true);
 
         this.combinePositionWithBtn = new ImageButton("combine with...", COMBINE_IMAGE,
-                actionEvent -> this.handleCombine());
+                actionEvent -> this.handleCombineWith());
         this.combinePositionWithBtn.setDisable(true);
 
         this.setReceivedBtn = new ImageButton("received", RECEIVED_IMAGE, actionEvent ->
-                this.handleReceived());
+                this.handleSetReceived());
         this.setReceivedBtn.setDisable(true);
 
         this.addCostBtn = new ImageButton("add cost", COST_IMAGE, actionEvent -> this.handleAddCost());
@@ -273,7 +406,8 @@ public class PositionsPage implements Initializable, Page {
                 this.addCostBtn, this.setRepairedBtn, this.saleBtn, this.toShipBtn,
                 this.btnSellingPriceCalculator);
 
-        Button filterBtn = new ImageButton("filter", FILTER_IMAGE, actionEvent -> this.handleFilter());
+        Button filterBtn = new ImageButton("filter", FILTER_IMAGE, actionEvent ->
+                this.handleFilter());
         this.editBtn = new ImageButton("edit", EDIT_IMAGE, actionEvent -> this.handleEdit());
         this.editBtn.setDisable(true);
         this.deleteBtn = new ImageButton("delete", DELETE_IMAGE,
@@ -283,25 +417,28 @@ public class PositionsPage implements Initializable, Page {
         RibbonGroup ribbonGroupOrganisation = createRibbonGroup("organisation", filterBtn, this.editBtn,
                 this.deleteBtn);
 
-        this.positionsTab.getRibbonGroups().addAll(ribbonGroupNew, ribbonGroupPositionFunctions,
-                ribbonGroupOrganisation);
+        this.positionsTab = RibbonTabUtil.createRibbonTab("Positions", ribbonGroupNew,
+                ribbonGroupPositionFunctions, ribbonGroupOrganisation);
     }
 
+    /**
+     * Handles the filter button and shows the filterController
+     */
     private void handleFilter() {
         this.filterPositionsController.showAndWait();
     }
 
     /**
-     *
+     * Handles the divide button and divides the current position
      */
     private void handleDivide() {
         this.saleBook.dividePosition(this.currPos.getId());
     }
 
     /**
-     *
+     * Handles the combine with button
      */
-    private void handleCombine() {
+    private void handleCombineWith() {
         try {
             int currPosId = this.currPos.getId();
             CombinePositionWithController controller =
@@ -315,7 +452,7 @@ public class PositionsPage implements Initializable, Page {
     }
 
     /**
-     *
+     * Handles the edit button and edits the selected position or item
      */
     private void handleEdit() {
         Product product = this.trTblVw.getSelectionModel().getSelectedItem().getValue();
@@ -345,8 +482,11 @@ public class PositionsPage implements Initializable, Page {
     }
 
     /**
+     *
+     *
      * @return
      */
+    //TODO 07.01.2024 JavaDoc
     private Function<Product, Node> createIcon() {
         return product -> {
             if (product instanceof Position position) {
@@ -372,30 +512,7 @@ public class PositionsPage implements Initializable, Page {
      * sets the default values
      */
     private void initializeTblVw() {
-//        //Creating a column
-//        TreeTableColumn<Product,String> column = new TreeTableColumn<>("Column");
-//        column.setPrefWidth(150);
-//
-//        //Defining cell content
-//        column.setCellValueFactory((TreeTableColumn.CellDataFeatures<Product, String> p) ->
-//                new ReadOnlyStringWrapper(p.getValue().getValue()));
-//
-//
-//        // cell factory to display graphic:
-//        column.setCellFactory(ttc -> new TreeTableCell<>() {
-//            private final ImageView graphic = new ImageView("gui/textures/positionIcons/nintendoSwitchIcon.png");
-//
-//            @Override
-//            protected void updateItem(String item, boolean empty) {
-//                super.updateItem(item, empty);
-//                setText(empty ? null : item);
-//                graphic.setFitHeight(25);
-//                graphic.setFitWidth(25);
-//                setGraphic(empty ? null : graphic);
-//            }
-//        });
-//        trTblVw.getColumns().add(column);
-
+        //TODO 07.01.2024 add image at creation
         TreeColumnUtils.addColumn(this.trTblVw, "icon", this.createIcon());
         TreeColumnUtils.addColumn(this.trTblVw, "id", Product::getId);
         TreeColumnUtils.addColumn(this.trTblVw, "type", Product::getSimpleName);
@@ -412,7 +529,7 @@ public class PositionsPage implements Initializable, Page {
             return "";
         });
 
-        this.trTblVw.prefHeightProperty().bind(this.wrapVBoxInvestments.heightProperty());
+        this.trTblVw.prefHeightProperty().bind(this.wrapVBox.heightProperty());
         this.trTblVw.setRoot(new TreeItem<>());
 
         try {
@@ -421,7 +538,7 @@ public class PositionsPage implements Initializable, Page {
             displayError("failed to load detailPositionPane", e);
         }
         this.trTblVw.getSelectionModel().selectedItemProperty().addListener((observableValue, productTreeItem, t1) -> {
-            this.detailPane.setContent(null);
+            this.detailScrllPn.setContent(null);
             if (t1 != null) {
                 Product product = t1.getValue();
                 if (product != null) {
@@ -447,8 +564,7 @@ public class PositionsPage implements Initializable, Page {
     }
 
     /**
-     * Handles the "add" Button and hands over the value for
-     * a new Item.
+     * Handles the "add" Button and creates a new Position.
      */
     private void handleNewPosition() {
         try {
@@ -461,15 +577,16 @@ public class PositionsPage implements Initializable, Page {
         }
     }
 
-    public void updateControlsAndDetail() {
-        this.updateControlsAndDetail(this.trTblVw.getSelectionModel().getSelectedItem().getValue());
-    }
-
+    /**
+     * Updates the controls and details depending on the specified product
+     *
+     * @param product the product on which the update will be done
+     */
     private void updateControlsAndDetail(@NotNull Product product) {
         if (product instanceof Position position) {
             this.currPos = position;
             this.detailPositionPane.setPosition(position);
-            this.detailPane.setContent(this.detailPositionPane.getVbox());
+            this.detailScrllPn.setContent(this.detailPositionPane.getVbox());
 
             State state = position.getState();
             this.btnSellingPriceCalculator.setDisable(false);
@@ -491,7 +608,7 @@ public class PositionsPage implements Initializable, Page {
             } catch (IOException e) {
                 displayError("failed to load detailItemPane", e);
             }
-            this.detailPane.setContent(this.detailItemPane.getVBox());
+            this.detailScrllPn.setContent(this.detailItemPane.getVBox());
 
             this.btnSellingPriceCalculator.setDisable(true);
             this.dividePositionBtn.setDisable(true);
@@ -509,19 +626,24 @@ public class PositionsPage implements Initializable, Page {
         this.deleteBtn.setDisable(false);
     }
 
-
-    private void handleReceived() {
-        ReceivedController receivedController = null;
+    /**
+     * Handles the set Received button and sets the current position to the state received
+     */
+    private void handleSetReceived() {
         try {
-            receivedController = createReceivedController(this.currPos.getOrderDate());
+            ReceivedController receivedController =
+                    createReceivedController(this.currPos.getOrderDate());
             receivedController.getResult().ifPresent(receivedDate ->
                     this.saleBook.setReceived(this.currPos.getId(), receivedDate)
             );
         } catch (IOException e) {
-            displayError("", e);
+            displayError("failed to load ReceivedController fxml", e);
         }
     }
 
+    /**
+     * Handles the add cost button and adds the cost to the current position
+     */
     private void handleAddCost() {
         try {
             NewCostController newCostController = createNewCostController();
@@ -532,6 +654,9 @@ public class PositionsPage implements Initializable, Page {
         }
     }
 
+    /**
+     * Handles the new item button and adds the new item to the current position
+     */
     private void handleNewItem() {
         try {
             NewItemController newItemController =
@@ -544,12 +669,14 @@ public class PositionsPage implements Initializable, Page {
         }
     }
 
+    /**
+     * Handles the repaired button and repairs the current position
+     */
     private void handleRepair() {
-        RepairedController repairedController = null;
         try {
             Collection<SparePart> spareParts = this.saleBook.getSpareParts();
             spareParts.removeIf(sparePart -> !sparePart.getCategory().equals(this.currPos.getCategory()));
-            repairedController = createRepairedController(spareParts);
+            RepairedController repairedController = createRepairedController(spareParts);
             repairedController.getResult().ifPresent(usedSpareParts ->
                     this.saleBook.repairPosition(this.currPos.getId(), usedSpareParts));
         } catch (IOException e) {
@@ -558,8 +685,7 @@ public class PositionsPage implements Initializable, Page {
     }
 
     /**
-     * Handles the "delete selected row" Button and
-     * deletes the selected investment.
+     * Handles the delete Button and deletes the selected position or selected item.
      */
     private void handleDelete() {
         if (acceptedDeleteAlert()) {
@@ -572,11 +698,5 @@ public class PositionsPage implements Initializable, Page {
                 this.saleBook.removeItem(positionId, item.getId());
             }
         }
-    }
-
-    public void handleCleanSearchBar(ActionEvent actionEvent) {
-        this.idSearchbarTxtFld.setText("");
-        this.cleanSearchBarBtn.setVisible(false);
-        this.filterPositionsController.handleApply();
     }
 }
