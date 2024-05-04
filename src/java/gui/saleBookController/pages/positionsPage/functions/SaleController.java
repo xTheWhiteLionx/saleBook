@@ -1,19 +1,19 @@
 package gui.saleBookController.pages.positionsPage.functions;
 
 import gui.ApplicationMain;
-import gui.util.LabelUtils;
+import gui.BoundedDateCell;
+import gui.DialogWindow;
+import gui.FXutils.LabelUtils;
+import gui.FXutils.StageUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.DateCell;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import logic.utils.BigDecimalUtils;
+import logic.products.position.State;
+import utils.BigDecimalUtils;
 import logic.products.position.Position;
 import logic.saleBook.SaleBook;
 import org.jetbrains.annotations.NotNull;
@@ -22,63 +22,79 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static gui.DialogWindow.displayError;
-import static gui.util.StageUtils.createStyledStage;
-import static gui.util.StringUtils.isValidNumber;
+import static gui.FXutils.StageUtils.createStyledStage;
+import static utils.StringUtils.isValidNumber;
 
 /**
+ * Controller to sale a specified position
  *
+ * @author xthe_white_lionx
  */
 public class SaleController implements Initializable {
 
     /**
-     *
+     * TextField to set the selling price
      */
     @FXML
     private TextField sellingPriceTxtField;
+
     /**
-     *
+     * Label to display the currency of the selling price
      */
     @FXML
     private Label sellingPriceLblCurrency;
+
     /**
-     *
+     * DatePicker to pick the selling date
      */
     @FXML
     private DatePicker sellingDatePicker;
+
     /**
-     *
+     * Button to apply the selling data
      */
     @FXML
     private Button btnApply;
+
     /**
-     *
+     * Button to cancel the selling
      */
     @FXML
     private Button btnCancel;
+
     /**
      *
      */
     private SaleBook saleBook;
+
     /**
-     * The current controlled investment
+     * The current position
      */
     private Position position;
 
     /**
      *
+     *
      * @param position
      */
-    private void loadSaleController(@NotNull Position position, @NotNull SaleBook saleBook){
+    private void loadSaleController(@NotNull Position position, @NotNull SaleBook saleBook) {
         this.position = position;
+        this.sellingDatePicker.setDayCellFactory(cf -> new BoundedDateCell(
+                this.position.getReceivedDate(), null));
         this.saleBook = saleBook;
     }
 
     /**
+     * Creates a new SaleController
      *
-     * @return
+     * @param position the position, which should be sold
+     * @param saleBook saleBook to overhand the input
+     * @return the new created saleController
+     * @throws IOException if the fxml file cannot be loaded
      */
     public static @NotNull SaleController createSaleController(@NotNull Position position,
                                                                @NotNull SaleBook saleBook)
@@ -95,6 +111,7 @@ public class SaleController implements Initializable {
         stage.show();
         SaleController controller = loader.getController();
         controller.loadSaleController(position, saleBook);
+        controller.saleBook = saleBook;
         return controller;
     }
 
@@ -109,16 +126,10 @@ public class SaleController implements Initializable {
         LabelUtils.setCurrencies(this.sellingPriceLblCurrency);
         this.btnApply.setDisable(true);
         this.sellingDatePicker.setValue(LocalDate.now());
-        this.sellingDatePicker.setDayCellFactory(d -> new DateCell() {
-            @Override
-            public void updateItem(LocalDate item, boolean empty) {
-                super.updateItem(item, empty);
-                this.setDisable(item.isBefore(SaleController.this.position.getOrderDate()));
-            }
-        });
         this.sellingPriceTxtField.textProperty().addListener(
-                (observableValue, oldValue, newValue) -> this.btnApply.setDisable(
-                        !isValidNumber(newValue)));
+                (observableValue, oldText, newText) -> this.btnApply.setDisable(
+                        !isValidNumber(newText))
+        );
     }
 
     /**
@@ -136,7 +147,7 @@ public class SaleController implements Initializable {
      */
     @FXML
     private void handleCancel() {
-     Stage stage = (Stage) this.btnCancel.getScene().getWindow();
-     stage.close();
+        Stage stage = (Stage) this.btnCancel.getScene().getWindow();
+        stage.close();
     }
 }

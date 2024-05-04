@@ -39,7 +39,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                      <children>
-                           <TextField fx:id="sellingPriceTxtField" promptText="selling price" />
+                           <TextField fx:id="sellingPriceTxtFld" promptText="selling price" />
                         <Label fx:id="sellingPriceCurrencyLbl">
                            <HBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

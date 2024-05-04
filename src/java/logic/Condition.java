@@ -33,5 +33,15 @@ public enum Condition {
     /**
      * Does not work correctly
      */
-    FAULTY
+    FAULTY;
+
+    /**
+     * Checks if the condition allows using the object.
+     * An object is usable if it is not faulty.
+     *
+     * @return true if the condition allows the using, otherwise false.
+     */
+    public boolean isUsable(){
+        return this != FAULTY;
+    }
 }

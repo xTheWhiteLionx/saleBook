@@ -1,17 +1,16 @@
 package gui.saleBookController.pages.positionsPage.functions;
 
 import gui.ApplicationMain;
+import gui.SpinnerTableCell;
+import gui.SpinnerTableColumn;
 import gui.saleBookController.pages.FunctionDialog;
-import gui.util.TableViewUtils;
-import javafx.beans.property.SimpleIntegerProperty;
+import gui.FXutils.TableViewUtils;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import logic.SparePart;
@@ -20,29 +19,41 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 import static gui.DialogWindow.displayError;
-import static gui.util.StageUtils.createStyledStage;
+import static gui.FXutils.StageUtils.createStyledStage;
 
+/**
+ * Controller to choose the used spareParts for a repair
+ *
+ * @author xthe_white_lionx
+ */
 public class RepairedController extends FunctionDialog<Map<SparePart, Integer>> implements Initializable {
 
-    @FXML
-    public BorderPane borderPane;
+    /**
+     * Button to apply the changes
+     */
     @FXML
     private Button applyBtn;
+
+    /**
+     * TableView to display the spare parts that could be used for the repair
+     */
     @FXML
     private TableView<SparePart> sparePartsTblVw;
 
-    private final Map<SparePart, Integer> sparePartToUsedMap = new HashMap<>();
+    /**
+     * SpinnerTableColumn needed to display a spinner for each row of the tableView
+     */
+    private SpinnerTableColumn spinnerTableColumn;
 
     /**
-     * @param spareParts
-     * @return
+     * Creates and loads a new RepairedController
+     *
+     * @param spareParts spareParts that could be used for the repair
+     * @return the new created RepairedController
      */
     public static @NotNull RepairedController createRepairedController(
             @NotNull Collection<SparePart> spareParts) throws IOException {
@@ -62,151 +73,50 @@ public class RepairedController extends FunctionDialog<Map<SparePart, Integer>> 
     }
 
     /**
-     * @param spareParts
-     */
-    private void setSpareParts(@NotNull Collection<SparePart> spareParts) {
-        ObservableList<SparePart> items = this.sparePartsTblVw.getItems();
-        for (SparePart sparePart : spareParts) {
-            if (sparePart.getQuantity() > 0) {
-                items.add(sparePart);
-            }
-        }
-    }
-
-    /**
-     * @param url
-     * @param resourceBundle
+     * Initializes this controller
+     *
+     * @param url unused
+     * @param resourceBundle unused
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         TableViewUtils.addColumn(this.sparePartsTblVw, "name", SparePart::getName);
         TableViewUtils.addColumn(this.sparePartsTblVw, "condition", SparePart::getCondition);
         TableViewUtils.addColumn(this.sparePartsTblVw, "in stock", SparePart::getQuantity);
-        this.sparePartsTblVw.getColumns().add(this.getSparePartIntegerTableColumn());
-        this.sparePartsTblVw.setEditable(true);
-    }
-
-    @NotNull
-    private TableColumn<SparePart, Integer> getSparePartIntegerTableColumn() {
-        TableColumn<SparePart, Integer> usedColumn = new TableColumn<>("used");
-        usedColumn.setPrefWidth(100);
-        usedColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(0).asObject());
-        BiConsumer<SparePart, Integer> updateMap =
-                (key, value) -> {
-                    if (value > 0) {
-                        this.sparePartToUsedMap.put(key, value);
-                    } else {
-                        this.sparePartToUsedMap.remove(key);
-                    }
-                };
-        usedColumn.setCellFactory(tc -> new SpinnerTableCell(updateMap,
-                (key) -> this.sparePartToUsedMap.getOrDefault(key, 0)));
-
-        usedColumn.setOnEditCommit(
-                t -> updateMap.accept(t.getTableView().getItems().get(
-                        t.getTablePosition().getRow()), t.getNewValue()));
-
-        return usedColumn;
+        this.spinnerTableColumn = new SpinnerTableColumn("used", SpinnerTableCell.MaxValueType.MAX_STOCK);
+        this.sparePartsTblVw.getColumns().add(this.spinnerTableColumn);
     }
 
     /**
+     * Sets the chose able spareParts of the TableView to the specified spareParts and filters them if needed
      *
+     * @param spareParts spareParts that could be used for the repair
+     */
+    private void setSpareParts(@NotNull Collection<SparePart> spareParts) {
+        ObservableList<SparePart> items = this.sparePartsTblVw.getItems();
+        for (SparePart sparePart : spareParts) {
+            //show only spareParts which are in stock/available and usable
+            if (sparePart.getCondition().isUsable() && sparePart.getQuantity() > 0) {
+                items.add(sparePart);
+            }
+        }
+    }
+
+    /**
+     * Handles the apply button and sets the result
      */
     @FXML
     private void handleApply() {
-        this.result = this.sparePartToUsedMap;
+        this.result = this.spinnerTableColumn.getSparePartToSpinnerValue();
         this.handleCancel();
-
     }
 
     /**
-     *
+     * Handles the cancel button and closes the window
      */
     @FXML
     private void handleCancel() {
         Stage stage = (Stage) this.applyBtn.getScene().getWindow();
         stage.close();
-    }
-
-    /**
-     *
-     */
-    public static class SpinnerTableCell extends TableCell<SparePart, Integer> {
-
-        Spinner<Integer> spinner;
-
-        SpinnerValueFactory.IntegerSpinnerValueFactory spinnerValueFactory;
-
-        BiConsumer<SparePart, Integer> updateMap;
-
-        Function<SparePart, Integer> getValueOf;
-
-
-        public SpinnerTableCell(BiConsumer<SparePart, Integer> updateMap, Function<SparePart, Integer> getValueOf) {
-            this.updateMap = updateMap;
-            this.getValueOf = getValueOf;
-        }
-
-        @Override
-        public void startEdit() {
-            super.startEdit();
-
-            if (this.spinner == null) {
-                this.createSpinner();
-            }
-
-            this.setGraphic(this.spinner);
-            this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-        }
-
-        @Override
-        public void cancelEdit() {
-            super.cancelEdit();
-
-            this.updateItem(this.spinner.getValue(), false);
-            this.updateMap.accept(this.getTableRow().getItem(), this.spinner.getValue());
-            this.setContentDisplay(ContentDisplay.TEXT_ONLY);
-        }
-
-        /**
-         *
-         */
-        private void createSpinner() {
-            this.spinner = new Spinner<>(0, this.getTableView().getItems().get(this.getIndex()).getQuantity(),
-                    this.getItem());
-            this.spinnerValueFactory = (SpinnerValueFactory.IntegerSpinnerValueFactory) this.spinner.getValueFactory();
-            this.spinner.setEditable(true);
-            this.spinner.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 4);
-            this.spinner.setOnKeyPressed(t -> {
-                if (t.getCode() == KeyCode.ENTER) {
-                    this.commitEdit(this.spinner.getValue());
-                    this.cancelEdit();
-                    this.updateItem(this.spinner.getValue(), false);
-                } else if (t.getCode() == KeyCode.ESCAPE) {
-                    this.cancelEdit();
-                }
-            });
-        }
-
-        @Override
-        protected void updateItem(Integer item, boolean empty) {
-            super.updateItem(item, empty);
-
-            if (empty) {
-                this.setGraphic(this.spinner);
-            } else {
-                if (this.isEditing()) {
-                    if (this.spinner != null) {
-                        this.spinnerValueFactory.setMax(this.getTableView().getItems().get(this.getIndex()).getQuantity());
-                        this.spinnerValueFactory.setValue(this.getItem());
-                    }
-                    this.setGraphic(this.spinner);
-                    this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-                } else {
-                    this.setText(String.valueOf(this.getValueOf.apply(this.getTableView().getItems().get(this.getIndex()))));
-                    this.setContentDisplay(ContentDisplay.TEXT_ONLY);
-                }
-            }
-        }
     }
 }

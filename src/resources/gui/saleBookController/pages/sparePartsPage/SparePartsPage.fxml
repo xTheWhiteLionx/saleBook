@@ -18,7 +18,8 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.textfield.CustomTextField?>
 
-<BorderPane fx:id="borderPane" stylesheets="@../../../css/SpinnerStyle.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.saleBookController.pages.sparePartsPage.SparePartsPage">
+<BorderPane fx:id="basePane" stylesheets="@../../../css/SpinnerStyle.css"
+            xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.saleBookController.pages.sparePartsPage.SparePartsPage">
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
@@ -26,7 +27,7 @@
         <SplitPane dividerPositions="0.5844919786096258" BorderPane.alignment="TOP_CENTER">
             <VBox fx:id="wrapVBox" alignment="TOP_CENTER">
                 <ToolBar>
-                    <CustomTextField fx:id="nameSearchbarTxtFld" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="154.0" promptText="search" styleClass="searchField">
+                    <CustomTextField fx:id="searchBar" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="154.0" promptText="search" styleClass="searchField">
                         <left>
                             <Label styleClass="searchBoxLabel">
                                 <graphic>
@@ -37,7 +38,7 @@
                             </Label>
                         </left>
                         <right>
-                            <Button fx:id="platformCleanSearchBar" onAction="#handleCleanSearchBar" style="-fx-background-color: transparent;" text="x" textAlignment="CENTER" visible="false">
+                            <Button fx:id="cleanSearchBarBtn" onAction="#handleCleanSearchBar" style="-fx-background-color: transparent;" text="x" textAlignment="CENTER" visible="false">
                             </Button>
                         </right>
                     </CustomTextField>
@@ -97,7 +98,7 @@
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                 </GridPane.margin>
                             </Spinner>
-                            <Label fx:id="amountUnitLbl" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                            <Label fx:id="unitLbl" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                             <Label layoutX="15.0" layoutY="89.0" text="condition" GridPane.rowIndex="1">
                                 <font>
                                     <Font name="System Bold" size="12.0" />

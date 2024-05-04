@@ -12,9 +12,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import logic.ItemColor;
+import logic.products.item.ItemColor;
 import logic.products.position.Position;
-import logic.saleBook.SaleBook;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -24,7 +23,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import static gui.DialogWindow.displayError;
-import static gui.util.StageUtils.createStyledStage;
+import static gui.FXutils.StageUtils.createStyledStage;
 
 /**
  * This controller class will be used to manage the switching, at a creation of a position, between
@@ -90,6 +89,12 @@ public class MasterController extends FunctionDialog<Position> implements Initia
         return masterController;
     }
 
+    /**
+     * Initializes this controller and his controls
+     *
+     * @param url unused
+     * @param resourceBundle unused
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -102,7 +107,7 @@ public class MasterController extends FunctionDialog<Position> implements Initia
     public void showNewItemsController() {
         this.newPositionController.getResult().ifPresent(position -> {
             this.newItemsController.setPosition(position);
-            this.borderPane.setCenter(this.newItemsController.getPane());
+            this.borderPane.setCenter(this.newItemsController.getBasePane());
             this.progressBar.setProgress(1);
             this.secondStep.setFill(Color.LIMEGREEN);
         });
@@ -114,7 +119,7 @@ public class MasterController extends FunctionDialog<Position> implements Initia
      */
     public void showNewPositionController() {
         if (this.newItemsController != null) {
-            this.borderPane.setCenter(this.newPositionController.getPane());
+            this.borderPane.setCenter(this.newPositionController.getBasePane());
             this.progressBar.setProgress(0.5);
             this.secondStep.setFill(Color.LIGHTGREY);
         }
@@ -143,7 +148,7 @@ public class MasterController extends FunctionDialog<Position> implements Initia
         try {
             this.newPositionController = NewPositionController.createAddPositionController(
                     this, id, categories);
-            this.borderPane.setCenter(this.newPositionController.getPane());
+            this.borderPane.setCenter(this.newPositionController.getBasePane());
             this.newItemsController = NewItemsController.createAddItemsController(this,
                     nameToItemColor);
         } catch (IOException e) {

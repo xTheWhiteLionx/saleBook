@@ -4,13 +4,13 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/20.0.1"
+<BorderPane fx:id="basePane" xmlns="http://javafx.com/javafx/11.0.2"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.saleBookController.pages.positionsPage.functions.add.NewItemsController">
    <center>
    </center>
@@ -22,8 +22,7 @@
    <bottom>
       <ButtonBar BorderPane.alignment="CENTER">
          <buttons>
-            <Button fx:id="previousBtn" mnemonicParsing="false" text="Previous"
-                    onAction="#handlePrevious"/>
+            <Button fx:id="previousBtn" mnemonicParsing="false" onAction="#handlePrevious" text="Previous" />
                <Button fx:id="applyBtn" defaultButton="true" mnemonicParsing="false" onAction="#handleApply" text="apply" />
          </buttons>
          <BorderPane.margin>
@@ -34,8 +33,47 @@
    <top>
       <ButtonBar BorderPane.alignment="CENTER">
          <buttons>
-            <Button fx:id="addItemBtn" mnemonicParsing="false" onAction="#handleAddItem" text="add item" />
+            <Button mnemonicParsing="false" onAction="#handleAddItem" text="add item" />
          </buttons>
       </ButtonBar>
    </top>
+   <center>
+      <ScrollPane BorderPane.alignment="CENTER">
+         <content>
+            <GridPane fx:id="itemsGridPane">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" />
+                <ColumnConstraints hgrow="SOMETIMES" />
+                  <ColumnConstraints hgrow="SOMETIMES" />
+                  <ColumnConstraints hgrow="SOMETIMES" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="condition">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label layoutX="15.0" layoutY="17.0" text="variant" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label layoutX="115.0" layoutY="17.0" text="color" GridPane.columnIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label layoutX="215.0" layoutY="17.0" text="error description" GridPane.columnIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </Label>
+               </children>
+            </GridPane>
+         </content>
+      </ScrollPane>
+   </center>
 </BorderPane>

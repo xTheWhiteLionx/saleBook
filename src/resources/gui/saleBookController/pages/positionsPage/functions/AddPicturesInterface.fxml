@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="mainPane" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.saleBookController.pages.positionsPage.functions.AddPicturesController">
+   <bottom>
+   </bottom>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+   <center>
+      <GridPane>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+         <Label layoutX="10.0" layoutY="123.0" text="pictures">
+            <font>
+               <Font name="System Bold" size="12.0" />
+            </font>
+         </Label>
+         <HBox fx:id="picturesDragTarget" alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-border-style: dashed;" GridPane.columnIndex="1">
+            <GridPane.margin>
+               <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+            </GridPane.margin>
+            <Button fx:id="picturesUploadButton" mnemonicParsing="false" onAction="#uploadPictures" text="upload">
+               <HBox.margin>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </HBox.margin>
+            </Button>
+            <Label fx:id="picturesDragLabel" text="or drop your files">
+               <HBox.margin>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </HBox.margin>
+            </Label>
+         </HBox>
+      </GridPane>
+   </center>
+   <bottom>
+      <ButtonBar BorderPane.alignment="CENTER">
+         <buttons>
+            <Button fx:id="applyBtn" defaultButton="true" mnemonicParsing="false" onAction="#handleApply" text="apply" />
+            <Button cancelButton="true" mnemonicParsing="false" onAction="#handleClose" text="cancel" />
+         </buttons>
+         <BorderPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </BorderPane.margin>
+      </ButtonBar>
+   </bottom>
+</BorderPane>

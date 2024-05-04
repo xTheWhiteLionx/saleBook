@@ -2,12 +2,13 @@ package gui.saleBookController.pages.ordersPage.functions;
 
 import gui.ApplicationMain;
 import gui.SpinnerTableCell;
+import gui.SpinnerTableColumn;
 import gui.saleBookController.pages.FunctionDialog;
-import gui.util.ChoiceBoxUtils;
-import gui.util.LabelUtils;
-import gui.util.StringUtils;
-import gui.util.TableViewUtils;
-import javafx.beans.property.SimpleIntegerProperty;
+import gui.FXutils.ChoiceBoxUtils;
+import gui.FXutils.LabelUtils;
+import utils.StringUtils;
+import gui.FXutils.TableViewUtils;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,7 +16,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
@@ -23,24 +23,19 @@ import javafx.stage.Stage;
 import logic.Condition;
 import logic.SparePart;
 import logic.order.Order;
-import logic.order.Supplier;
+import logic.Supplier;
 import logic.saleBook.SaleBook;
-import logic.utils.BigDecimalUtils;
+import utils.BigDecimalUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.function.BiConsumer;
+import java.util.*;
 
-import static gui.util.StageUtils.createStyledStage;
+import static gui.FXutils.StageUtils.createStyledStage;
 
 /**
  * This class represents a controller to create a new order.
- * The new created Order can be
  */
 public class NewOrderController extends FunctionDialog<Order> implements Initializable {
 
@@ -81,14 +76,14 @@ public class NewOrderController extends FunctionDialog<Order> implements Initial
     private SaleBook saleBook;
 
     /**
-     * Map to mapping the spare part to the quantity of order
+     * SpinnerTableColumn needed to display a spinner for each row of the tableView
      */
-    private final Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
+    private SpinnerTableColumn spinnerTableColumn;
 
     /**
      * Factory to create a NewOrderController
      *
-     * @param saleBook SaleBook to which the order should be added
+     * @param saleBook the saleBook to which the order should be added
      * @return a new NewOrderController
      * @throws IOException if the loading of the fxml file fails to load
      */
@@ -119,7 +114,9 @@ public class NewOrderController extends FunctionDialog<Order> implements Initial
     public void initialize(URL url, ResourceBundle resourceBundle) {
         TableViewUtils.addColumn(this.sparePartsTblVw, "name", SparePart::getName);
         TableViewUtils.addColumn(this.sparePartsTblVw, "condition", SparePart::getCondition);
-        this.sparePartsTblVw.getColumns().add(this.createSpinnerTableColumn());
+        this.spinnerTableColumn = new SpinnerTableColumn("ordered",
+                SpinnerTableCell.MaxValueType.UNLIMITED);
+        this.sparePartsTblVw.getColumns().add(this.spinnerTableColumn);
 
         LabelUtils.setCurrencies(this.orderCostCurrencyLbl);
         this.orderCostTxtFld.textProperty().addListener((observableValue, oldValue, newValue) ->
@@ -133,7 +130,7 @@ public class NewOrderController extends FunctionDialog<Order> implements Initial
     public void handleApply() {
         Supplier supplier = this.saleBook.getSupplierByName(this.supplierChcBx.getValue());
         if (supplier != null) {
-            this.result = new Order(this.orderId, supplier, this.sparePartToOrderQuantity,
+            this.result = new Order(this.orderId, supplier, this.spinnerTableColumn.getSparePartToSpinnerValue(),
                     BigDecimalUtils.parse(this.orderCostTxtFld.getText()));
             this.handleCancel();
         }
@@ -158,34 +155,12 @@ public class NewOrderController extends FunctionDialog<Order> implements Initial
         this.saleBook = saleBook;
         this.orderId = saleBook.getNextOrderId();
         Set<SparePart> spareParts = saleBook.getSpareParts();
-        spareParts.removeIf(sparePart -> !sparePart.getCondition().equals(Condition.NEW));
-        this.sparePartsTblVw.getItems().addAll(spareParts);
+        ObservableList<SparePart> tblVwItems = this.sparePartsTblVw.getItems();
+        for (SparePart sparePart : spareParts) {
+            if(sparePart.getCondition().equals(Condition.NEW)){
+                tblVwItems.add(sparePart);
+            }
+        }
         ChoiceBoxUtils.addItems(this.supplierChcBx, saleBook.getSupplierNames());
-    }
-
-    /**
-     * Creates a new TableColumn named count,
-     * which represents the ordered quantity of the matching spare part of the row
-     *
-     * @return the new TableColumn
-     */
-    private @NotNull TableColumn<SparePart, Integer> createSpinnerTableColumn() {
-        TableColumn<SparePart, Integer> usedColumn = new TableColumn<>("ordered");
-        usedColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(0).asObject());
-        BiConsumer<SparePart, Integer> updateMap =
-                (key, value) -> {
-                    if (value > 0) {
-                        this.sparePartToOrderQuantity.put(key, value);
-                    } else {
-                        this.sparePartToOrderQuantity.remove(key);
-                    }
-                };
-
-        usedColumn.setCellFactory(tc -> new SpinnerTableCell(updateMap,
-                (sparePart) -> this.sparePartToOrderQuantity.getOrDefault(sparePart,0)));
-        usedColumn.setOnEditCommit(
-                t -> updateMap.accept(t.getTableView().getItems().get(
-                        t.getTablePosition().getRow()), t.getNewValue()));
-        return usedColumn;
     }
 }

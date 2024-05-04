@@ -1,9 +1,10 @@
 import gui.ObservableTreeItemMapBinder;
 import javafx.collections.ObservableList;
+import logic.Asset;
 import logic.GUIConnector;
 import logic.SparePart;
 import logic.order.Order;
-import logic.order.Supplier;
+import logic.Supplier;
 import logic.products.position.Position;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +20,7 @@ public class FakeGui implements GUIConnector {
     }
 
     @Override
-    public void displayCategories(@NotNull Collection<String> models) {
+    public void displayCategories(@NotNull Collection<String> categories) {
 
     }
 
@@ -45,6 +46,14 @@ public class FakeGui implements GUIConnector {
 
     @Override
     public void displayOrders(@NotNull ObservableList<Order> orders) {
+
+    }
+
+    /**
+     * @param assets
+     */
+    @Override
+    public void displayAssets(@NotNull ObservableList<Asset> assets) {
 
     }
 

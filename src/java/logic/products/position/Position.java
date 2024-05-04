@@ -1,24 +1,24 @@
 package logic.products.position;
 
-import com.google.gson.JsonArray;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Pos;
-import logic.products.Item;
+import logic.products.item.Item;
 import logic.products.Product;
+import logic.products.item.ItemColor;
+import logic.products.item.ItemData;
+import utils.BigDecimalUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.*;
 
 import static java.time.temporal.ChronoUnit.DAYS;
-import static logic.utils.BigDecimalUtils.calcPercent;
-import static logic.utils.BigDecimalUtils.isPositive;
-import static logic.utils.LocalDateUtil.areAcceptableDates;
+import static utils.BigDecimalUtils.calcPercent;
+import static utils.BigDecimalUtils.isPositive;
+import static utils.LocalDateUtil.areAcceptableDates;
 
 /**
  * This class represents a position. Each Position can be identified by his id in the
@@ -28,13 +28,12 @@ import static logic.utils.LocalDateUtil.areAcceptableDates;
  *
  * @author xthe_white_lionx
  */
-public class Position extends PositionImpl implements Product, Comparable<Position> {
+public class Position extends AbstractPosition implements Product, Comparable<Position> {
 
     /**
      * Items of this position
      */
     private final ObservableList<Item> items;
-    private Set<Integer> itemIds;
 
     /**
      * Constructor for an ordered position
@@ -80,16 +79,22 @@ public class Position extends PositionImpl implements Product, Comparable<Positi
     /**
      * Constructor for a position
      *
-     * @param positionDatum the data of one position
+     * @param positionData the data of one position
+     * @param nameToItemColorMap
      */
-    public Position(PositionData positionDatum) {
-        super(positionDatum.id, positionDatum.category, positionDatum.orderDate, positionDatum.purchasingPrice,
-                positionDatum.state, positionDatum.cost, positionDatum.receivedDate, positionDatum.sellingDate,
-                positionDatum.sellingPrice, positionDatum.shippingCompany, positionDatum.trackingNumber);
+    public Position(PositionData positionData, Map<String, ItemColor> nameToItemColorMap) {
+        super(positionData.id, positionData.category, positionData.orderDate, positionData.purchasingPrice,
+                positionData.state, positionData.cost, positionData.receivedDate, positionData.sellingDate,
+                positionData.sellingPrice, positionData.shippingCompany, positionData.trackingNumber);
 
-        List<Item> itemList = new ArrayList<>(Arrays.asList(positionDatum.getItems()));
+        ItemData[] itemData = positionData.getItemData();
+        List<Item> itemList = new ArrayList<>();
+        for (ItemData itemDatum : itemData) {
+            itemList.add(new Item(itemDatum, nameToItemColorMap.get(itemDatum.getItemColorName())));
+        }
+
         this.items = FXCollections.observableList(itemList);
-        this.nextItemId = positionDatum.nextItemId;
+        this.nextItemId = positionData.nextItemId;
     }
 
     /**
@@ -153,11 +158,13 @@ public class Position extends PositionImpl implements Product, Comparable<Positi
     }
 
     /**
-     * @param cost
-     * @throws IllegalArgumentException
+     * Sets the cost of this position
+     *
+     * @param cost the new cost
+     * @throws IllegalArgumentException if the cost is negative
      */
     public void setCost(@NotNull BigDecimal cost) {
-        if (cost.doubleValue() < 0) {
+        if (!BigDecimalUtils.isPositive(cost)) {
             throw new IllegalArgumentException("cost must be greater equals 0 but is " + cost);
         }
         this.cost = cost;
@@ -197,7 +204,7 @@ public class Position extends PositionImpl implements Product, Comparable<Positi
      * @throws IllegalArgumentException if the specified sellingPrice is less than 0
      */
     public void setSellingPrice(@NotNull BigDecimal sellingPrice) {
-        if (this.isSold()) {
+        if (!this.isSold()) {
             throw new IllegalStateException(String.format("position must be at least sold but " +
                     "current state is %s least", this.state));
         }
@@ -263,7 +270,7 @@ public class Position extends PositionImpl implements Product, Comparable<Positi
      * @throws IllegalArgumentException if the specified newCost is less than 0.
      */
     public void addCost(@NotNull BigDecimal newCost) {
-        if (this.cost.doubleValue() < 0) {
+        if (!BigDecimalUtils.isPositive(newCost)) {
             throw new IllegalArgumentException(String.format("new cost must be greater equals " +
                     "0 but is %s", newCost));
         }
@@ -321,7 +328,6 @@ public class Position extends PositionImpl implements Product, Comparable<Positi
         if (!areAcceptableDates(this.receivedDate, sellingDate)) {
             throw new IllegalArgumentException("sellingDate is before receivedDate");
         }
-
 
         this.state = State.SOLD;
         this.sellingDate = sellingDate;
@@ -411,15 +417,20 @@ public class Position extends PositionImpl implements Product, Comparable<Positi
      * To get an id for an item use the {@link #getNextItemId()} methode.
      *
      * @param item the item to be added to this position
+     * @return
      * @throws IllegalArgumentException if the id of the specified item is already used
      */
-    public void addItem(@NotNull Item item) {
+    public boolean addItem(@NotNull Item item) {
         int itemId = item.getId();
         if (this.nextItemId != itemId){
             throw new IllegalArgumentException("expected id is %d but is %d".formatted(this.nextItemId, itemId));
         }
-        this.items.add(item);
-        this.nextItemId++;
+        boolean added = this.items.add(item);
+        if (added){
+            this.nextItemId++;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -476,8 +487,8 @@ public class Position extends PositionImpl implements Product, Comparable<Positi
             this.receivedDate = that.receivedDate;
         }
         for (Item item : that.items) {
-            this.addItem(new Item(this.nextItemId, item.getCondition(), item.getVariant(),
-                    item.getItemColor(), item.getErrorDescription()));
+            item.setId(this.nextItemId);
+            this.addItem(item);
         }
 
         return this;

@@ -12,7 +12,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane stylesheets="@../../../../css/SpinnerStyle.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.saleBookController.pages.sparePartsPage.functions.NewSparePartController">
+<BorderPane stylesheets="@../../../../css/SpinnerStyle.css" xmlns="http://javafx.com/javafx/11.0.2"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.saleBookController.pages.sparePartsPage.functions.NewSparePartController">
     <center>
          <GridPane alignment="CENTER">
              <columnConstraints>
@@ -51,7 +52,8 @@
                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </GridPane.margin>
          </Label>
-         <TextField fx:id="unitTxtFld" layoutX="128.0" layoutY="20.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <TextField fx:id="unitTxtFld" layoutX="128.0" layoutY="20.0" GridPane.columnIndex="1"
+                    GridPane.rowIndex="2" text="pieces">
             <GridPane.margin>
                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </GridPane.margin>
@@ -61,7 +63,7 @@
                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </GridPane.margin>
          </TextField>
-         <Label fx:id="amountUnitLbl" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+         <Label fx:id="quantityUnitLbl" GridPane.columnIndex="2" GridPane.rowIndex="3" />
          <Label layoutX="15.0" layoutY="89.0" text="condition" GridPane.rowIndex="1">
             <font>
                <Font name="System Bold" size="12.0" />
@@ -75,7 +77,7 @@
                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </GridPane.margin>
          </ChoiceBox>
-         <TextField fx:id="quantityTxtFld" GridPane.columnIndex="1" GridPane.rowIndex="3">
+         <TextField fx:id="quantityTxtFld" GridPane.columnIndex="1" GridPane.rowIndex="3" text="1">
             <GridPane.margin>
                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </GridPane.margin>
@@ -109,7 +111,8 @@
    <bottom>
         <ButtonBar BorderPane.alignment="CENTER">
             <buttons>
-                <Button fx:id="btnApply" defaultButton="true" mnemonicParsing="false" onAction="#handleApply" text="apply" />
+                <Button fx:id="btnApply" defaultButton="true" disable="true" mnemonicParsing="false"
+                        onAction="#handleApply" text="apply" />
                 <Button fx:id="btnCancel" cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" text="cancel" />
             </buttons>
          <BorderPane.margin>

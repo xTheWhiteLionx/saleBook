@@ -1,6 +1,6 @@
 package gui;
 
-import gui.util.StageUtils;
+import gui.FXutils.StageUtils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -35,7 +35,7 @@ public class ApplicationMain extends Application {
         try {
             Scene scene = new Scene(loader.load(), width, height);
             primaryStage.setScene(scene);
-            StageUtils.styleScene(scene);
+            StageUtils.styleStage(primaryStage);
             primaryStage.setTitle("welcome");
             primaryStage.setMinWidth(width);
             primaryStage.setMinHeight(height);

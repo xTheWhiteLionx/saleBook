@@ -6,8 +6,6 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 /**
  * A wrapper class that binds the values of an {@link ObservableMap} to an {@link ObservableList}. The items in the list
  * will match the values in the map. This class is not synchronized.
@@ -17,15 +15,19 @@ import java.util.Objects;
  */
 public class ObservableListMapBinder<K, V> implements MapChangeListener<K, V> {
 
-    private final ObservableList<V> list;
+    /**
+     * ObservableList bound to the values of the ObservableMap
+     */
+    private final ObservableList<V> observableList;
 
     /**
+     * Creates an observableListMapBinder bound to the values of the specified map
      *
-     * @param map
+     * @param map from which the values should be bound
      */
     public ObservableListMapBinder(@NotNull ObservableMap<K, V> map) {
         // initialise the list
-        this.list = FXCollections.observableArrayList(map.values());
+        this.observableList = FXCollections.observableArrayList(map.values());
 
         // listen for changes
         map.addListener(this);
@@ -36,17 +38,17 @@ public class ObservableListMapBinder<K, V> implements MapChangeListener<K, V> {
      *
      * @return unmodifiable ObservableList
      */
-    public @NotNull ObservableList<V> getList() {
-        return FXCollections.unmodifiableObservableList(this.list);
+    public @NotNull ObservableList<V> getObservableList() {
+        return FXCollections.unmodifiableObservableList(this.observableList);
     }
 
     @Override
     public void onChanged(Change<? extends K, ? extends V> change) {
         if (change.wasRemoved()) {
-            this.list.remove(change.getValueRemoved());
+            this.observableList.remove(change.getValueRemoved());
         }
         if (change.wasAdded()) {
-            this.list.add(change.getValueAdded());
+            this.observableList.add(change.getValueAdded());
         }
     }
 }

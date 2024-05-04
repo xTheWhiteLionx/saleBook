@@ -10,22 +10,24 @@ import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import logic.Condition;
-import logic.ItemColor;
+import logic.products.item.ItemColor;
 import logic.Variant;
-import logic.products.Item;
-import org.controlsfx.control.textfield.TextFields;
+import logic.products.item.Item;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.TreeSet;
 
-import static gui.util.ChoiceBoxUtils.addItems;
-import static gui.util.StageUtils.createStyledStage;
+import static gui.FXutils.ChoiceBoxUtils.addItems;
+import static gui.FXutils.StageUtils.createStyledStage;
 
 /**
+ *  This controller has the new created item as result.
  *
+ * @author xthe_white_lionx
  */
 public class NewItemController extends FunctionDialog<Item> implements Initializable {
     /**
@@ -47,7 +49,7 @@ public class NewItemController extends FunctionDialog<Item> implements Initializ
      * TextField for the name of the item color
      */
     @FXML
-    private TextField colorNameTxtFld;
+    private ComboBox<String> colorNameComboBox;
     /**
      * ColorPicker for the item color
      */
@@ -109,8 +111,9 @@ public class NewItemController extends FunctionDialog<Item> implements Initializ
     private void initializeController(int itemId, Map<String, ItemColor> nameToItemColor) {
         this.itemId = itemId;
         this.idLbl.setText(String.valueOf(itemId));
-        TextFields.bindAutoCompletion(this.colorNameTxtFld, nameToItemColor.keySet());
-        this.colorNameTxtFld.textProperty().addListener((observableValue, oldValue, newValue) -> {
+        TreeSet<String> possibleSuggestions = new TreeSet<>(nameToItemColor.keySet());
+        this.colorNameComboBox.getItems().setAll(possibleSuggestions);
+        this.colorNameComboBox.valueProperty().addListener((observableValue, oldValue, newValue) -> {
             ItemColor itemColor = nameToItemColor.get(newValue);
             if (itemColor != null) {
                 this.colorpicker.setValue(itemColor.getColor());
@@ -123,7 +126,7 @@ public class NewItemController extends FunctionDialog<Item> implements Initializ
     }
 
     /**
-     * Initializes the application.
+     * Initializes.
      *
      * @param url            unused
      * @param resourceBundle unused
@@ -147,7 +150,7 @@ public class NewItemController extends FunctionDialog<Item> implements Initializ
     @FXML
     private void handleApply() {
         this.result = new Item(this.itemId, this.conditionChcBx.getValue(), this.variantChcBx.getValue(),
-                new ItemColor(this.colorNameTxtFld.getText(), this.colorpicker.getValue()),
+                ItemColor.getItemColor(this.colorNameComboBox.getValue(), this.colorpicker.getValue()),
                 this.errorDescriptionTxtArea.getText());
         this.handleCancel();
     }

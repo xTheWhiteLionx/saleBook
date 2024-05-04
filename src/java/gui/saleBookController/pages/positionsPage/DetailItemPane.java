@@ -1,23 +1,20 @@
 package gui.saleBookController.pages.positionsPage;
 
 import gui.ApplicationMain;
-import javafx.event.ActionEvent;
+import gui.FXutils.ColorUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-import logic.ItemColor;
-import logic.products.Item;
+import logic.products.item.ItemColor;
+import logic.products.item.Item;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
-import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -28,8 +25,13 @@ import java.util.ResourceBundle;
  * @author xthe_white_lionx
  */
 public class DetailItemPane implements Initializable {
+
+    /**
+     * The base VBox of the controller
+     */
     @FXML
-    private VBox vb;
+    private Pane baseVbx;
+
     /**
      * Label to display the id of the item
      */
@@ -77,18 +79,24 @@ public class DetailItemPane implements Initializable {
         return detailItemPane;
     }
 
-
+    /**
+     * Initializes the DetailItemPane.
+     *
+     * @param url            unused
+     * @param resourceBundle unused
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
     }
 
     /**
+     * Returns the base pane of this DetailItemPane
      *
-     * @return
+     * @return the base pane of this DetailItemPane
      */
-    public VBox getVBox() {
-        return this.vb;
+    public Pane getBasePane() {
+        return this.baseVbx;
     }
 
     /**
@@ -108,22 +116,16 @@ public class DetailItemPane implements Initializable {
         this.errorDescriptionLbl.setText(item.getErrorDescription());
     }
 
-    private static String toHexString(Color color) {
-        int r = ((int) Math.round(color.getRed()     * 255)) << 24;
-        int g = ((int) Math.round(color.getGreen()   * 255)) << 16;
-        int b = ((int) Math.round(color.getBlue()    * 255)) << 8;
-        StringBuilder sb = new StringBuilder(String.format("%08X", (r + g + b)));
-        int end = sb.length();
-        int start = end - 2;
-        return sb.delete(start, end).toString();
-    }
-
+    /**
+     * Handles the copy hex color button and copies the hexadecimal format of
+     * the item to the clipboard of the user
+     */
     @FXML
     private void handleCopyHexColor() {
         Clipboard clipboard = Clipboard.getSystemClipboard();
         ClipboardContent content = new ClipboardContent();
         Color color = (Color) this.circleColor.getFill();
-        content.putString(toHexString(color));
+        content.putString(ColorUtils.toHexString(color));
         clipboard.setContent(content);
     }
 }

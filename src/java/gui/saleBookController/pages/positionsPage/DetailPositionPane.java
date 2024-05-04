@@ -2,18 +2,17 @@ package gui.saleBookController.pages.positionsPage;
 
 import gui.ApplicationMain;
 import gui.DialogWindow;
-import gui.util.LabelUtils;
+import gui.FXutils.LabelUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import logic.products.position.Position;
 import logic.products.position.State;
-import logic.utils.LocalDateUtil;
+import utils.LocalDateUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -29,6 +28,16 @@ import java.util.ResourceBundle;
  * @author xthe_white_lionx
  */
 public class DetailPositionPane implements Initializable {
+
+    /**
+     * Days of a commercial month
+     */
+    public static final long DAYS_OF_COMMERCIAL_MONTH = 30L;
+
+    /**
+     * Number of Days of a year
+     */
+    public static final long DAYS_OF_A_YEAR = 365L;
 
     /**
      * The base vbox which inherits all components of this pane
@@ -110,9 +119,9 @@ public class DetailPositionPane implements Initializable {
     private Label percentPerformanceLbl;
 
     /**
-     * Returns the new created DetailPositionPane
+     * Creates and loads a new DetailPositionPane
      *
-     * @return
+     * @return the new created DetailPositionPane
      */
     public static @NotNull DetailPositionPane createDetailPositionPane() throws IOException {
         FXMLLoader loader = new FXMLLoader(
@@ -121,6 +130,12 @@ public class DetailPositionPane implements Initializable {
         return loader.getController();
     }
 
+    /**
+     * Initializes this controller and his controls
+     *
+     * @param url unused
+     * @param resourceBundle unused
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.clear();
@@ -141,22 +156,22 @@ public class DetailPositionPane implements Initializable {
         Long holdingPeriod = position.calcHoldingPeriod();
         if (holdingPeriod != null) {
             StringBuilder sb = new StringBuilder();
-            if (holdingPeriod > 360){
-                long years = holdingPeriod / 360;
+            if (holdingPeriod > DAYS_OF_A_YEAR){
+                long years = holdingPeriod / DAYS_OF_A_YEAR;
                 sb.append(years).append(" ").append("year");
                 if (years != 1){
                     sb.append("s");
                 }
             }
-            if (holdingPeriod > 30){
-                long months = holdingPeriod / 30;
+            if (holdingPeriod > DAYS_OF_COMMERCIAL_MONTH){
+                long months = holdingPeriod / DAYS_OF_COMMERCIAL_MONTH;
                 sb.append(" ").append(months).append(" ").append("month");
                 if (months != 1){
                     sb.append("s");
                 }
                 sb.append(" ");
             }
-            long days = holdingPeriod % 30;
+            long days = holdingPeriod % DAYS_OF_COMMERCIAL_MONTH;
             sb.append(days).append(" ").append("day");
             if (days != 1){
                 sb.append("s");
@@ -183,7 +198,7 @@ public class DetailPositionPane implements Initializable {
                         if (Desktop.isDesktopSupported()) {
                             try {
                                 Desktop.getDesktop().browse(position.getShippingCompany().
-                                        createTrackingLink(position.getTrackingNumber()));
+                                        createTrackingLink(trackingNumber));
                             } catch (IOException | URISyntaxException e) {
                                 DialogWindow.displayError(e);
                                 throw new RuntimeException(e);
@@ -201,11 +216,11 @@ public class DetailPositionPane implements Initializable {
     }
 
     /**
-     * Returns the vbox
+     * Returns the base pane of this controller
      *
-     * @return the vbox
+     * @return the base pane of this controller
      */
-    public VBox getVbox() {
+    public Pane getBasePane() {
         return this.vbox;
     }
 

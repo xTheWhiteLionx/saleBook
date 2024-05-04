@@ -19,7 +19,7 @@
       "condition": "NEW",
       "category": "Joy Con",
       "unit": "pieces",
-      "quantity": 3
+      "quantity": 2
     },
     {
       "name": "HAC-006 Battery",
@@ -54,7 +54,7 @@
       "condition": "NEW",
       "category": "Joy Con",
       "unit": "pieces",
-      "quantity": 14
+      "quantity": 12
     },
     {
       "name": "Joystick",
@@ -75,14 +75,14 @@
       "condition": "NEW",
       "category": "Joy Con",
       "unit": "pieces",
-      "quantity": 9
+      "quantity": 8
     },
     {
       "name": "Lock button",
       "condition": "NEW",
       "category": "Joy Con",
       "unit": "pieces",
-      "quantity": 3
+      "quantity": 2
     },
     {
       "name": "SL flex cable",
@@ -115,25 +115,19 @@
   ],
   "positionData": [
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Super Mario Odyssey Edition Red",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Super Mario Odyssey Edition Red",
-            "color": "0xe10f00ff"
-          },
           "errorDescription": ""
         },
         {
+          "itemColorName": "Super Mario Odyssey Edition Red",
           "id": 2,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Super Mario Odyssey Edition Red",
-            "color": "0xe10f00ff"
-          },
           "errorDescription": ""
         }
       ],
@@ -150,15 +144,12 @@
       "nextItemId": 3
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Red",
           "id": 1,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Red",
-            "color": "0xff3c28ff"
-          },
           "errorDescription": "-broken R Button"
         }
       ],
@@ -172,15 +163,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Orange",
           "id": 1,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Orange",
-            "color": "0xfaa005ff"
-          },
           "errorDescription": ""
         }
       ],
@@ -194,15 +182,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Pokémon: Let\u0027s Go! Edition Pikachu-Yellow",
           "id": 1,
           "condition": "VERY_GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Pokémon: Let\u0027s Go! Edition Pikachu-Yellow",
-            "color": "0xffdc00ff"
-          },
           "errorDescription": ""
         }
       ],
@@ -220,25 +205,19 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Cremeweiß",
           "id": 1,
           "condition": "NEW",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "cremeweiß",
-            "color": "0xefebdcff"
-          },
           "errorDescription": ""
         },
         {
+          "itemColorName": "Cremeweiß",
           "id": 2,
           "condition": "NEW",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "cremeweiß",
-            "color": "0xefebdcff"
-          },
           "errorDescription": ""
         }
       ],
@@ -256,15 +235,12 @@
       "nextItemId": 3
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Blue",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Blue",
-            "color": "0x0ab9e6ff"
-          },
           "errorDescription": ""
         }
       ],
@@ -280,15 +256,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Jet Black",
           "id": 1,
           "condition": "ACCEPTABLE",
           "variant": "NONE",
-          "itemColor": {
-            "name": "Jet Black",
-            "color": "0x0e0e10ff"
-          },
           "errorDescription": ""
         }
       ],
@@ -304,15 +277,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Jet Black",
           "id": 1,
           "condition": "ACCEPTABLE",
           "variant": "NONE",
-          "itemColor": {
-            "name": "Jet Black",
-            "color": "0x0e0e10ff"
-          },
           "errorDescription": ""
         }
       ],
@@ -328,15 +298,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Gray",
           "id": 1,
           "condition": "NEW",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Gray",
-            "color": "0x828282ff"
-          },
           "errorDescription": ""
         }
       ],
@@ -349,25 +316,19 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Blue",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Blue",
-            "color": "0x0ab9e6ff"
-          },
           "errorDescription": ""
         },
         {
+          "itemColorName": "Neon Red",
           "id": 2,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Red",
-            "color": "0xff3c28ff"
-          },
           "errorDescription": ""
         }
       ],
@@ -383,15 +344,12 @@
       "nextItemId": 3
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Blue",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Blue",
-            "color": "0x0ab9e6ff"
-          },
           "errorDescription": ""
         }
       ],
@@ -407,15 +365,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Blue",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Blue",
-            "color": "0x0ab9e6ff"
-          },
           "errorDescription": ""
         }
       ],
@@ -431,15 +386,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Blue",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Blue",
-            "color": "0x0ab9e6ff"
-          },
           "errorDescription": ""
         }
       ],
@@ -455,15 +407,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Blue",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Blue",
-            "color": "0x0ab9e6ff"
-          },
           "errorDescription": ""
         }
       ],
@@ -479,15 +428,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Red",
           "id": 1,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Red",
-            "color": "0xff3c28ff"
-          },
           "errorDescription": ""
         }
       ],
@@ -503,15 +449,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Super Mario Odyssey Edition Red",
           "id": 1,
           "condition": "VERY_GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Super Mario Odyssey Edition Red",
-            "color": "0xe10f00ff"
-          },
           "errorDescription": "- Broken R button\n- no reaction of any button"
         }
       ],
@@ -525,15 +468,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Yellow",
           "id": 1,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Yellow",
-            "color": "0xe6ff00ff"
-          },
           "errorDescription": "-broken R button"
         }
       ],
@@ -547,15 +487,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Blue",
           "id": 1,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Blue",
-            "color": "0x0ab9e6ff"
-          },
           "errorDescription": "-broken R button"
         }
       ],
@@ -569,15 +506,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Purple",
           "id": 1,
           "condition": "VERY_GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Purple",
-            "color": "0xb400e6ff"
-          },
           "errorDescription": ""
         }
       ],
@@ -593,15 +527,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Blue",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Blue",
-            "color": "0x0ab9e6ff"
-          },
           "errorDescription": "- broken R button"
         }
       ],
@@ -617,15 +548,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Red",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Red",
-            "color": "0xe10f00ff"
-          },
           "errorDescription": ""
         }
       ],
@@ -641,25 +569,19 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Classics NES",
           "id": 1,
           "condition": "NEW",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Classics NES",
-            "color": "0x000000ff"
-          },
           "errorDescription": ""
         },
         {
+          "itemColorName": "Classics NES",
           "id": 2,
           "condition": "NEW",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Classics NES",
-            "color": "0x000000ff"
-          },
           "errorDescription": ""
         }
       ],
@@ -675,15 +597,12 @@
       "nextItemId": 3
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Red",
           "id": 1,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Red",
-            "color": "0xff3c28ff"
-          },
           "errorDescription": ""
         }
       ],
@@ -699,15 +618,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Blue",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Blue",
-            "color": "0x0ab9e6ff"
-          },
           "errorDescription": ""
         }
       ],
@@ -723,15 +639,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Green",
           "id": 1,
           "condition": "VERY_GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Green",
-            "color": "0x1edc00ff"
-          },
           "errorDescription": ""
         }
       ],
@@ -747,15 +660,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Red",
           "id": 1,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Red",
-            "color": "0xff3c28ff"
-          },
           "errorDescription": "- Connector of the slider is broken"
         }
       ],
@@ -769,15 +679,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Gray",
           "id": 1,
           "condition": "FAULTY",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Gray",
-            "color": "0x828282ff"
-          },
           "errorDescription": "- doesn\u0027t connect"
         }
       ],
@@ -790,15 +697,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Blue",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Blue",
-            "color": "0x0ab9e6ff"
-          },
           "errorDescription": "- faulty battery \n- Joystick drift"
         }
       ],
@@ -814,15 +718,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Blue",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Blue",
-            "color": "0x0ab9e6ff"
-          },
           "errorDescription": "-Joystick drift"
         }
       ],
@@ -838,15 +739,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Blue",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Blue",
-            "color": "0x4655f5ff"
-          },
           "errorDescription": "- ZL button \n- faulty battery"
         }
       ],
@@ -862,15 +760,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Green",
           "id": 1,
           "condition": "AS_NEW",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Green",
-            "color": "0x1edc00ff"
-          },
           "errorDescription": "- disconected slider"
         }
       ],
@@ -886,25 +781,19 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Monster Hunter Rise Edition Gray Joy-Con",
           "id": 1,
           "condition": "NEW",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Monster Hunter Rise Edition Gray Joy-Con",
-            "color": "0x818282ff"
-          },
           "errorDescription": ""
         },
         {
+          "itemColorName": "Monster Hunter Rise Edition Gray Joy-Con",
           "id": 2,
           "condition": "NEW",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Monster Hunter Rise Edition Gray Joy-Con",
-            "color": "0x818282ff"
-          },
           "errorDescription": "- missing slider\n- missing Lock Button"
         }
       ],
@@ -922,15 +811,12 @@
       "nextItemId": 3
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Blue",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Blue",
-            "color": "0x0ab9e6ff"
-          },
           "errorDescription": "- broken L button"
         }
       ],
@@ -946,15 +832,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Green",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Green",
-            "color": "0x1edc00ff"
-          },
           "errorDescription": "- faulty SL and SR button \n- no 2-player mode\n- slightly Joystick drift"
         }
       ],
@@ -970,15 +853,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Green",
           "id": 1,
           "condition": "AS_NEW",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Green",
-            "color": "0x1edc00ff"
-          },
           "errorDescription": ""
         }
       ],
@@ -994,15 +874,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Pink",
           "id": 1,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Pink",
-            "color": "0xff3278ff"
-          },
           "errorDescription": "- dirty\n- slightly broken R button\n- Slider, SL and SR disconnected"
         }
       ],
@@ -1020,15 +897,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Jet Black",
           "id": 1,
           "condition": "GOOD",
           "variant": "NONE",
-          "itemColor": {
-            "name": "Jet Black",
-            "color": "0x0e0e10ff"
-          },
           "errorDescription": "- faulty disc drive\n- deep clean\n- new thermal paste"
         }
       ],
@@ -1042,15 +916,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Blue",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Blue",
-            "color": "0x0ab9e6ff"
-          },
           "errorDescription": "- SL and SR doesn\u0027t connect"
         }
       ],
@@ -1066,15 +937,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Red",
           "id": 1,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Red",
-            "color": "0xff3c28ff"
-          },
           "errorDescription": "- Joystick drift"
         }
       ],
@@ -1090,15 +958,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Blue",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Blue",
-            "color": "0x0ab9e6ff"
-          },
           "errorDescription": "- Joystick head\n- broken L button"
         }
       ],
@@ -1114,15 +979,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Green",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Green",
-            "color": "0x1edc00ff"
-          },
           "errorDescription": "- faulty battery \n- Joystick head"
         }
       ],
@@ -1140,15 +1002,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Blue",
           "id": 1,
           "condition": "ACCEPTABLE",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Blue",
-            "color": "0x0ab9e6ff"
-          },
           "errorDescription": "- Joystick head"
         }
       ],
@@ -1164,15 +1023,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Red",
           "id": 1,
           "condition": "AS_NEW",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Red",
-            "color": "0xff3c28ff"
-          },
           "errorDescription": "- faulty battery\n- Joystick isn\u0027t pressable"
         }
       ],
@@ -1190,25 +1046,19 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Joy Con White",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Joy Con White",
-            "color": "0xe6e6e6ff"
-          },
           "errorDescription": "- missing slider"
         },
         {
+          "itemColorName": "Joy Con White",
           "id": 2,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Joy Con White",
-            "color": "0xe6e6e6ff"
-          },
           "errorDescription": "right\n-doesn\u0027t connect\n- missing Lock Button\n"
         }
       ],
@@ -1226,15 +1076,12 @@
       "nextItemId": 3
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Red",
           "id": 1,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Red",
-            "color": "0xff3c28ff"
-          },
           "errorDescription": "- Joystick head\n- broken R button"
         }
       ],
@@ -1248,15 +1095,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Red",
           "id": 1,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Red",
-            "color": "0xff3c28ff"
-          },
           "errorDescription": "- faulty slider"
         }
       ],
@@ -1274,15 +1118,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Orange",
           "id": 1,
           "condition": "AS_NEW",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Orange",
-            "color": "0xfaa005ff"
-          },
           "errorDescription": "- doesn\u0027t connect"
         }
       ],
@@ -1300,15 +1141,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Pink",
           "id": 1,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Pink",
-            "color": "0xff3278ff"
-          },
           "errorDescription": "- doesn\u0027t connect or charge"
         }
       ],
@@ -1322,15 +1160,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Blue",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Blue",
-            "color": "0x4655f5ff"
-          },
           "errorDescription": "- doesn\u0027t connect, no reaction."
         }
       ],
@@ -1344,15 +1179,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Blue",
           "id": 1,
           "condition": "VERY_GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Blue",
-            "color": "0x0ab9e6ff"
-          },
           "errorDescription": "- faulty SL flex cabel"
         }
       ],
@@ -1370,15 +1202,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Gray",
           "id": 1,
           "condition": "VERY_GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Gray",
-            "color": "0x828282ff"
-          },
           "errorDescription": "- faulty right rail slider connector\n- faulty SR connector"
         }
       ],
@@ -1392,24 +1221,19 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Pink",
           "id": 1,
           "condition": "AS_NEW",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Pink",
-            "color": "0xff3278ff"
-          }
+          "errorDescription": ""
         },
         {
+          "itemColorName": "Neon Green",
           "id": 2,
           "condition": "AS_NEW",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Green",
-            "color": "0x1edc00ff"
-          },
           "errorDescription": ""
         }
       ],
@@ -1425,15 +1249,12 @@
       "nextItemId": 3
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Purple",
           "id": 1,
           "condition": "ACCEPTABLE",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Purple",
-            "color": "0xb400e6ff"
-          },
           "errorDescription": "- slider is broken off\n- SL flex cable"
         }
       ],
@@ -1451,15 +1272,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Red",
           "id": 1,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Red",
-            "color": "0xff3c28ff"
-          },
           "errorDescription": "- Broken R Button\n- faulty Joy stick \n- SR flex cable"
         }
       ],
@@ -1473,15 +1291,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Red",
           "id": 1,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Red",
-            "color": "0xff3c28ff"
-          },
           "errorDescription": "- faulty vibrating motor\n- missing joystick cover\n- missing slider\n- missing SR flex cable\n- missing SL and SR Button"
         }
       ],
@@ -1499,15 +1314,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Blue",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Blue",
-            "color": "0x0ab9e6ff"
-          },
           "errorDescription": "- Broken Joystick"
         }
       ],
@@ -1525,15 +1337,12 @@
       "nextItemId": 3
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Gray",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Gray",
-            "color": "0x828282ff"
-          },
           "errorDescription": "- faulty L Button\n- Joystick drift"
         }
       ],
@@ -1549,15 +1358,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Red",
           "id": 1,
           "condition": "AS_NEW",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Red",
-            "color": "0xff3c28ff"
-          },
           "errorDescription": ""
         }
       ],
@@ -1573,15 +1379,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Blue",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Blue",
-            "color": "0x0ab9e6ff"
-          },
           "errorDescription": "- broken Joystick \n- broken L button"
         }
       ],
@@ -1599,15 +1402,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Red",
           "id": 1,
           "condition": "VERY_GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Red",
-            "color": "0xff3c28ff"
-          },
           "errorDescription": "- Disconnected rail slider\n- Missing lock button"
         }
       ],
@@ -1625,15 +1425,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Gray",
           "id": 1,
           "condition": "ACCEPTABLE",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Gray",
-            "color": "0x828282ff"
-          },
           "errorDescription": "- joystick drift\n- missing joystick head"
         }
       ],
@@ -1649,15 +1446,12 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Gray",
           "id": 1,
           "condition": "ACCEPTABLE",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Gray",
-            "color": "0x828282ff"
-          },
           "errorDescription": "- joystick drift\n- missing joystick head"
         }
       ],
@@ -1673,57 +1467,49 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Pokémon: Scarlet × Violet OLED Edition Scarlet",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Pokémon: Scarlet × Violet OLED Edition Scarlet",
-            "color": "0xf07341ff"
-          },
           "errorDescription": "- Joystick drift\n- Broken L button"
         },
         {
+          "itemColorName": "Pokémon: Scarlet × Violet OLED Edition Violet",
           "id": 2,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Pokémon: Scarlet × Violet OLED Edition Violet",
-            "color": "0x9650aaff"
-          },
           "errorDescription": "- Joystick drift"
         }
       ],
       "id": 69,
       "category": "Joy Con",
-      "state": "REPAIRED",
+      "state": "SHIPPED",
       "purchasingPrice": 18,
       "orderDate": 19684,
       "cost": 0,
       "receivedDate": 19688,
+      "sellingDate": 19794,
+      "sellingPrice": 85.50,
+      "shippingCompany": "DHL",
+      "trackingNumber": "358242992149",
       "nextItemId": 3
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Blue",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Blue",
-            "color": "0x0ab9e6ff"
-          },
           "errorDescription": "- joystick drift\n- swollen battery"
         },
         {
+          "itemColorName": "Neon Red",
           "id": 2,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Red",
-            "color": "0xff3c28ff"
-          },
           "errorDescription": "- joystick drift"
         }
       ],
@@ -1741,56 +1527,44 @@
       "nextItemId": 3
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Red",
           "id": 1,
           "condition": "VERY_GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Red",
-            "color": "0xff3c28ff"
-          },
           "errorDescription": "- Joystick drift"
         },
         {
+          "itemColorName": "Neon Blue",
           "id": 2,
           "condition": "VERY_GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Blue",
-            "color": "0x0ab9e6ff"
-          },
           "errorDescription": "- Joystick drift"
         }
       ],
       "id": 71,
       "category": "Joy Con",
-      "state": "ORDERED",
+      "state": "LOST",
       "purchasingPrice": 30,
       "orderDate": 19709,
       "cost": 0,
       "nextItemId": 3
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Blue",
           "id": 1,
           "condition": "NEW",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Neon Blue",
-            "color": "0x0ab9e6ff"
-          },
           "errorDescription": ""
         },
         {
+          "itemColorName": "Neon Red",
           "id": 2,
           "condition": "NEW",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Red",
-            "color": "0xff3c28ff"
-          },
           "errorDescription": "- few joy stick drift"
         }
       ],
@@ -1806,15 +1580,12 @@
       "nextItemId": 3
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Fortnite Wildcat Edition Dark-Blue",
           "id": 1,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Fortnite Wildcat Edition Dark-Blue",
-            "color": "0x0084ffff"
-          },
           "errorDescription": "does not connect or work "
         }
       ],
@@ -1828,109 +1599,235 @@
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Gray",
           "id": 1,
           "condition": "GOOD",
           "variant": "LEFT",
-          "itemColor": {
-            "name": "Gray",
-            "color": "0x828282ff"
-          },
           "errorDescription": "- faulty L button"
         }
       ],
       "id": 74,
       "category": "Joy Con",
-      "state": "ORDERED",
+      "state": "SHIPPED",
       "purchasingPrice": 18,
       "orderDate": 19727,
-      "cost": 0,
+      "cost": 5.49,
+      "receivedDate": 19732,
+      "sellingDate": 19784,
+      "sellingPrice": 30,
+      "shippingCompany": "DHL",
+      "trackingNumber": "358237503977",
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Neon Red",
           "id": 1,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Red",
-            "color": "0xff3c28ff"
-          },
           "errorDescription": "- broken joystick"
         }
       ],
       "id": 75,
       "category": "Joy Con",
-      "state": "ORDERED",
+      "state": "SHIPPED",
       "purchasingPrice": 15,
       "orderDate": 19727,
-      "cost": 0,
+      "cost": 5.49,
+      "receivedDate": 19734,
+      "sellingDate": 19754,
+      "sellingPrice": 30.50,
+      "shippingCompany": "DHL",
+      "trackingNumber": "358222832533",
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
-          "id": 1,
-          "condition": "GOOD",
-          "variant": "LEFT",
-          "itemColor": {
-            "name": "Blue",
-            "color": "0x4655f5ff"
-          },
-          "errorDescription": "- not working"
-        }
-      ],
-      "id": 76,
-      "category": "Joy Con",
-      "state": "ORDERED",
-      "purchasingPrice": 15,
-      "orderDate": 19727,
-      "cost": 0,
-      "nextItemId": 2
-    },
-    {
-      "items": [
-        {
+          "itemColorName": "Neon Red",
           "id": 1,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Neon Red",
-            "color": "0xff3c28ff"
-          },
           "errorDescription": "- broken slider "
         }
       ],
       "id": 77,
       "category": "Joy Con",
-      "state": "ORDERED",
+      "state": "SHIPPED",
       "purchasingPrice": 7.50,
       "orderDate": 19727,
-      "cost": 0,
+      "cost": 5.49,
+      "receivedDate": 19732,
+      "sellingDate": 19817,
+      "sellingPrice": 30.49,
+      "shippingCompany": "DHL",
+      "trackingNumber": "358254943558",
       "nextItemId": 2
     },
     {
-      "items": [
+      "itemData": [
         {
+          "itemColorName": "Gray",
           "id": 1,
           "condition": "GOOD",
           "variant": "RIGHT",
-          "itemColor": {
-            "name": "Gray",
-            "color": "0x828282ff"
-          },
-          "errorDescription": "- does not connect possibly faulty slider"
+          "errorDescription": "- does not connenct because of the faulty slider"
         }
       ],
       "id": 78,
       "category": "Joy Con",
-      "state": "ORDERED",
+      "state": "SHIPPED",
       "purchasingPrice": 18,
       "orderDate": 19728,
-      "cost": 0,
+      "cost": 6.65,
+      "receivedDate": 19734,
+      "sellingDate": 19738,
+      "sellingPrice": 32.49,
+      "shippingCompany": "DHL",
+      "trackingNumber": "358214483974",
       "nextItemId": 2
+    },
+    {
+      "itemData": [
+        {
+          "itemColorName": "Neon Blue",
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "errorDescription": "- missing 1 Y-screw\n- missing 1 X-Screw\n- broken LED strip connector\n- faulty joystick "
+        }
+      ],
+      "id": 79,
+      "category": "Joy Con",
+      "state": "RECEIVED",
+      "purchasingPrice": 16.50,
+      "orderDate": 19821,
+      "cost": 0,
+      "receivedDate": 19830,
+      "nextItemId": 2
+    },
+    {
+      "itemData": [
+        {
+          "itemColorName": "Neon Blue",
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "LEFT",
+          "errorDescription": "- rail working fine but does not connect. \nFaulty connetor "
+        }
+      ],
+      "id": 80,
+      "category": "Joy Con",
+      "state": "RECEIVED",
+      "purchasingPrice": 15.45,
+      "orderDate": 19822,
+      "cost": 0,
+      "receivedDate": 19825,
+      "nextItemId": 2
+    },
+    {
+      "itemData": [
+        {
+          "itemColorName": "Neon Red",
+          "id": 1,
+          "condition": "GOOD",
+          "variant": "RIGHT",
+          "errorDescription": "- faulty Joystick\n- scretched rail"
+        }
+      ],
+      "id": 81,
+      "category": "Joy Con",
+      "state": "REPAIRED",
+      "purchasingPrice": 12,
+      "orderDate": 19826,
+      "cost": 0,
+      "receivedDate": 19830,
+      "nextItemId": 2
+    }
+  ],
+  "itemColors": [
+    {
+      "name": "Blue",
+      "color": "0x4655f5ff"
+    },
+    {
+      "name": "Classics NES",
+      "color": "0x000000ff"
+    },
+    {
+      "name": "Cremeweiß",
+      "color": "0xefebdcff"
+    },
+    {
+      "name": "Fortnite Wildcat Edition Dark-Blue",
+      "color": "0x0084ffff"
+    },
+    {
+      "name": "Gray",
+      "color": "0x828282ff"
+    },
+    {
+      "name": "Jet Black",
+      "color": "0x0e0e10ff"
+    },
+    {
+      "name": "Joy Con White",
+      "color": "0xe6e6e6ff"
+    },
+    {
+      "name": "Monster Hunter Rise Edition Gray Joy-Con",
+      "color": "0x818282ff"
+    },
+    {
+      "name": "Neon Blue",
+      "color": "0x0ab9e6ff"
+    },
+    {
+      "name": "Neon Green",
+      "color": "0x1edc00ff"
+    },
+    {
+      "name": "Neon Orange",
+      "color": "0xfaa005ff"
+    },
+    {
+      "name": "Neon Pink",
+      "color": "0xff3278ff"
+    },
+    {
+      "name": "Neon Purple",
+      "color": "0xb400e6ff"
+    },
+    {
+      "name": "Neon Red",
+      "color": "0xff3c28ff"
+    },
+    {
+      "name": "Neon Yellow",
+      "color": "0xe6ff00ff"
+    },
+    {
+      "name": "Pokémon: Let\u0027s Go! Edition Pikachu-Yellow",
+      "color": "0xffdc00ff"
+    },
+    {
+      "name": "Pokémon: Scarlet × Violet OLED Edition Scarlet",
+      "color": "0xf07341ff"
+    },
+    {
+      "name": "Pokémon: Scarlet × Violet OLED Edition Violet",
+      "color": "0x9650aaff"
+    },
+    {
+      "name": "Red",
+      "color": "0xe10f00ff"
+    },
+    {
+      "name": "Super Mario Odyssey Edition Red",
+      "color": "0xe10f00ff"
     }
   ],
   "suppliers": [
@@ -1952,10 +1849,46 @@
     }
   ],
   "orders": [],
+  "assets": [
+    {
+      "id": 1,
+      "name": "Soldingstation",
+      "supplier": {
+        "name": "ali express",
+        "orderWebpage": "https://www.aliexpress.com/p/order/index.html?spm\u003da2g0o.home.1000001.35.22e712e28NpSI5"
+      },
+      "purchasingDate": 19454,
+      "arrivalDate": 19483,
+      "value": 60.47
+    },
+    {
+      "id": 2,
+      "name": "Dust blower",
+      "supplier": {
+        "name": "ebay",
+        "orderWebpage": "https://www.ebay.de/mye/myebay/v2/purchase"
+      },
+      "purchasingDate": 19655,
+      "arrivalDate": 19658,
+      "value": 20.49
+    },
+    {
+      "id": 3,
+      "name": "4 Joy-Cons Charging Dock",
+      "supplier": {
+        "name": "ebay",
+        "orderWebpage": "https://www.ebay.de/mye/myebay/v2/purchase"
+      },
+      "purchasingDate": 19727,
+      "arrivalDate": 19740,
+      "value": 13.96
+    }
+  ],
+  "nextPosId": 82,
+  "nextOrderId": 3,
+  "nextAssetId": 4,
   "repairServiceSales": 155,
-  "extraordinaryIncome": 962.75,
-  "paid": 320,
-  "fixedCosts": 361.92,
-  "nextPosId": 79,
-  "nextOrderId": 3
+  "extraordinaryIncome": 1090.00,
+  "paid": 345,
+  "fixedCosts": 361.92
 }

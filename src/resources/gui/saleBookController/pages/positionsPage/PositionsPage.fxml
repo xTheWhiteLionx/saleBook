@@ -16,11 +16,13 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.textfield.CustomTextField?>
 
-<BorderPane xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.saleBookController.pages.positionsPage.PositionsPage">
+<BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/11.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+             fx:controller="gui.saleBookController.pages.positionsPage.PositionsPage">
     <center>
       <SplitPane dividerPositions="0.3">
          <items>
-               <VBox fx:id="wrapVBoxInvestments" alignment="TOP_CENTER">
+               <VBox fx:id="wrapVBox" alignment="TOP_CENTER">
                    <Label text="total performance:">
                        <font>
                            <Font size="14.0" />
@@ -53,7 +55,7 @@
                        <Cursor fx:constant="DEFAULT" />
                    </cursor>
                </VBox>
-            <ScrollPane fx:id="detailPane">
+            <ScrollPane fx:id="detailScrllPn">
                <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
                </content>

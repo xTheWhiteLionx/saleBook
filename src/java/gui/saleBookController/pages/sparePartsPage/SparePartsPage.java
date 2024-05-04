@@ -7,9 +7,10 @@ import gui.ImageButton;
 import gui.saleBookController.pages.Page;
 import gui.saleBookController.pages.sparePartsPage.functions.NewSparePartController;
 import gui.saleBookController.pages.sparePartsPage.functions.EditSparePartController;
-import gui.util.SpinnerUtils;
-import gui.util.StringUtils;
-import gui.util.TableViewUtils;
+import gui.FXutils.RibbonTabUtils;
+import gui.FXutils.SpinnerUtils;
+import utils.StringUtils;
+import gui.FXutils.TableViewUtils;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
@@ -26,62 +27,117 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.function.Function;
 
 import static gui.DialogWindow.*;
 import static gui.Images.*;
 import static gui.saleBookController.pages.sparePartsPage.functions.NewSparePartController.createSparePartController;
 import static gui.saleBookController.pages.sparePartsPage.functions.EditSparePartController.createEditSparePartController;
-import static gui.util.RibbonGroupUtil.createRibbonGroup;
+import static gui.FXutils.RibbonGroupUtils.createRibbonGroup;
 
 /**
+ * This Page shows the spareParts of the saleBook and handles the possible controls for it
  *
+ * @author xthe_white_lionx
+ * @see gui.saleBookController.pages.Page
  */
 public class SparePartsPage implements Initializable, Page {
+
     /**
-     *
+     * The base pane
      */
     @FXML
-    private Pane borderPane;
+    private Pane basePane;
+
     /**
-     *
+     * Label to display the name of the current spare part 
      */
     @FXML
     public Label nameLbl;
+
+    /**
+     * Label to display the condition of the current spare part 
+     */
     @FXML
     public Label conditionLbl;
+
+    /**
+     * Spinner to edit the quantity of the current spare part 
+     */
     @FXML
     public Spinner<Integer> quantitySpinner;
+
+    /**
+     * Label to display the unit of the current spare part 
+     */
     @FXML
-    public Label amountUnitLbl;
+    public Label unitLbl;
+
+    /**
+     * Label to display the category of the current spare part 
+     */
     @FXML
     public Label categoryLbl;
+
+    /**
+     * TextField to search a spare part by name
+     */
     @FXML
-    public TextField nameSearchbarTxtFld;
+    public TextField searchBar;
+
+    /**
+     * Button to clean the {@link #searchBar}
+     */
     @FXML
-    private Button platformCleanSearchBar;
-    @FXML
-    private TableView<SparePart> sparePartTblVw;
+    private Button cleanSearchBarBtn;
+
+    /**
+     * VBox to wrap the {@link #searchBar} and the {@link #sparePartTblVw}
+     */
     @FXML
     private VBox wrapVBox;
+    
+    /**
+     * TableView to display all spare parts of the saleBook
+     */
+    @FXML
+    private TableView<SparePart> sparePartTblVw;
 
+    /**
+     * FilteredList item of the {@link #sparePartTblVw} to make the tableView filterable
+     */
     private FilteredList<SparePart> sparePartFilteredList;
 
     /**
-     * The current {@link SaleBook}
+     * The saleBook to which operate on
      */
     private SaleBook saleBook;
+
     /**
-     *
+     * The current selected spare part
      */
-    private SparePart currentSparePart;
-    private RibbonTab sparePartsTab;
+    private SparePart selectedSparePart;
+
+    /**
+     * The ribbonTab of this SparePartPage
+     */
+    private RibbonTab ribbonTab;
+
+    /**
+     * Button to delete the selected spare part
+     */
     private Button deleteSparePartBtn;
+
+    /**
+     * Button to edit the selected spare part
+     */
     private Button editBtn;
 
 
     /**
-     * @return
+     * Creates and loads a new SparePartsPage
+     *
+     * @return the new created SparePartPage
+     * @throws IOException if the fxml could not be loaded
      */
     public static @NotNull SparePartsPage createSparePartsPage() throws IOException {
         FXMLLoader loader = new FXMLLoader(
@@ -92,36 +148,32 @@ public class SparePartsPage implements Initializable, Page {
     }
 
     /**
-     * @param sparePartObservableList
+     * Sets the spare parts of this SparePartsPage as ObservableList for filtering
+     *
+     * @param sparePartObservableList the observableList of spare parts which should be displayed
      */
     public void setSpareParts(@NotNull ObservableList<SparePart> sparePartObservableList) {
         this.sparePartFilteredList = new FilteredList<>(sparePartObservableList);
         this.sparePartTblVw.setItems(this.sparePartFilteredList);
     }
 
-    /**
-     * @return
-     */
     @Override
-    public @NotNull Pane getPane() {
-        return this.borderPane;
+    public @NotNull Pane getBasePane() {
+        return this.basePane;
     }
 
     @Override
     public @NotNull RibbonTab getRibbonTab() {
-        return this.sparePartsTab;
+        return this.ribbonTab;
     }
 
-    /**
-     * @param saleBook
-     */
     @Override
     public void setSaleBook(@NotNull SaleBook saleBook) {
         this.saleBook = saleBook;
     }
 
     /**
-     * Initializes the SparePartsPane.
+     * Initializes this SparePartsPage.
      *
      * @param url            unused
      * @param resourceBundle unused
@@ -130,57 +182,118 @@ public class SparePartsPage implements Initializable, Page {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.initializeRibbonTab();
         this.initializeTblVw();
-        this.detailToDefault();
+        this.detailsToDefault();
         this.initializeSearchBar();
         this.quantitySpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
-    }
-
-    /**
-     *
-     */
-    private void initializeRibbonTab() {
-        this.sparePartsTab = new RibbonTab("Spare Parts");
-        Button newSparePartBtn = new ImageButton("new", ADD_IMAGE,
-                actionEvent -> this.handleNewSparePart());
-
-        this.deleteSparePartBtn = new ImageButton("delete", DELETE_IMAGE, actionEvent -> this.handleDeleteSparePart());
-        this.deleteSparePartBtn.setDisable(true);
-        this.editBtn = new ImageButton("edit", EDIT_IMAGE, actionEvent -> this.handleEditSparePart());
-        this.editBtn.setDisable(true);
-
-        RibbonGroup ribbonGroup = createRibbonGroup("organisation", newSparePartBtn,
-                this.editBtn, this.deleteSparePartBtn);
-        this.sparePartsTab.getRibbonGroups().add(ribbonGroup);
+        this.quantitySpinner.valueProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (this.selectedSparePart != null) {
+                this.selectedSparePart.setQuantity(newValue);
+                this.sparePartTblVw.refresh();
+            }
+        });
     }
 
 
     /**
-     * @param f
-     * @return
+     * Handles the press of the edit button
      */
-    private Function<SparePart, String> formatUnit(Function<SparePart, Number> f) {
-        return s -> f.apply(s) + " " + s.getUnit();
-    }
-
-    /**
-     *
-     */
-    private void updateDetail() {
-        if (this.currentSparePart != null) {
-            this.nameLbl.setText(this.currentSparePart.getName());
-            this.conditionLbl.setText(this.currentSparePart.getCondition().name());
-            this.quantitySpinner.setValueFactory(
-                    SpinnerUtils.createValueFactory(this.currentSparePart.getQuantity()));
-            this.amountUnitLbl.setText(this.currentSparePart.getUnit());
-            this.categoryLbl.setText(this.currentSparePart.getCategory());
-        } else {
-            this.detailToDefault();
+    @FXML
+    public void handleEditSparePart() {
+        if (this.selectedSparePart != null) {
+            try {
+                EditSparePartController editSparePartController =
+                        createEditSparePartController(this.selectedSparePart, this.saleBook.getCategories());
+                editSparePartController.getResult().ifPresent(dirty -> {
+                    if (dirty) {
+                        this.updateTableViewAndDetail();
+                    }
+                });
+            } catch (IOException e) {
+                displayError("failed to load editSparePartController", e);
+            }
         }
     }
 
     /**
-     * Initialize the investment tab, the Tableview and
-     * sets the default values
+     * Handles the cleaning of the searchbar and set it invisible
+     */
+    @FXML
+    public void handleCleanSearchBar() {
+        this.searchBar.setText("");
+        this.cleanSearchBarBtn.setVisible(false);
+    }
+
+    /**
+     * Handles the "new" Button and opens a new newSparePartController
+     */
+    @FXML
+    public void handleNewSparePart() {
+        try {
+            NewSparePartController newSparePartController =
+                    createSparePartController(this.saleBook.getSparePartNames(),
+                            this.saleBook.getSparePartUnits(), this.saleBook.getCategories());
+            newSparePartController.getResult().ifPresent(sparePart ->
+                    this.saleBook.addSparePart(sparePart));
+        } catch (IOException e) {
+            displayError("failed to load newSparePartController", e);
+        }
+    }
+
+    /**
+     * Handles the "delete" Button and deletes the selected spare part.
+     */
+    @FXML
+    public void handleDeleteSparePart() {
+        if (acceptedDeleteAlert()) {
+            this.saleBook.removeSparePart(this.selectedSparePart);
+        }
+    }
+
+    /**
+     * Updates the sparePartTblVw and the detail view of the spare part
+     */
+    public void updateTableViewAndDetail() {
+        this.updateDetail();
+        this.sparePartTblVw.refresh();
+    }
+
+    /**
+     * Initializes the RibbonTab
+     */
+    private void initializeRibbonTab() {
+        Button newSparePartBtn = new ImageButton("new", ADD_IMAGE,
+                actionEvent -> this.handleNewSparePart());
+
+        this.deleteSparePartBtn = new ImageButton("delete", DELETE_IMAGE,
+                actionEvent -> this.handleDeleteSparePart());
+        this.deleteSparePartBtn.setDisable(true);
+        this.editBtn = new ImageButton("edit", EDIT_IMAGE,
+                actionEvent -> this.handleEditSparePart());
+        this.editBtn.setDisable(true);
+
+        RibbonGroup ribbonGroup = createRibbonGroup("organisation", newSparePartBtn,
+                this.editBtn, this.deleteSparePartBtn);
+        this.ribbonTab = RibbonTabUtils.createRibbonTab("Spare Parts", ribbonGroup);
+    }
+
+    /**
+     * Updates the detail view of the selected spare part
+     */
+    private void updateDetail() {
+        if (this.selectedSparePart != null) {
+            this.nameLbl.setText(this.selectedSparePart.getName());
+            this.conditionLbl.setText(this.selectedSparePart.getCondition().name());
+            this.quantitySpinner.setValueFactory(
+                    SpinnerUtils.createValueFactory(this.selectedSparePart.getQuantity()));
+            this.unitLbl.setText(this.selectedSparePart.getUnit());
+            this.categoryLbl.setText(this.selectedSparePart.getCategory());
+        } else {
+            this.detailsToDefault();
+        }
+    }
+
+    /**
+     * Initializes sparePartTblVw
      */
     private void initializeTblVw() {
         TableViewUtils.addColumn(this.sparePartTblVw, "", (sparePart -> {
@@ -198,117 +311,48 @@ public class SparePartsPage implements Initializable, Page {
         TableViewUtils.addColumn(this.sparePartTblVw, "name", SparePart::getName);
         TableViewUtils.addColumn(this.sparePartTblVw, "condition",
                 sparePart -> sparePart.getCondition().name());
-        TableViewUtils.addColumn(this.sparePartTblVw, "in stock", this.formatUnit(SparePart::getQuantity));
+        TableViewUtils.addColumn(this.sparePartTblVw, "in stock",
+                sparePart -> sparePart.getQuantity() + " " + sparePart.getUnit());
         TableViewUtils.addColumn(this.sparePartTblVw, "for", SparePart::getCategory);
 
-        this.sparePartTblVw.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
         this.sparePartTblVw.prefHeightProperty().bind(this.wrapVBox.heightProperty());
 
-        this.sparePartTblVw.getSelectionModel().selectedItemProperty().addListener(((observableValue,
-                                                                                     sparePart, t1) -> {
-            this.currentSparePart = t1;
+        this.sparePartTblVw.getSelectionModel().selectedItemProperty().addListener(
+                ((observableValue, oldSparePart, newSparePart) -> {
+            this.selectedSparePart = newSparePart;
             this.updateDetail();
-            boolean isNull = t1 == null;
+            boolean isNull = newSparePart == null;
             this.quantitySpinner.setDisable(isNull);
             this.editBtn.setDisable(isNull);
             this.deleteSparePartBtn.setDisable(isNull);
         }));
-
-        this.quantitySpinner.valueProperty().addListener((observableValue, integer, t1) -> {
-            if (this.currentSparePart != null) {
-                this.currentSparePart.setQuantity(t1);
-            }
-        });
     }
 
     /**
-     *
+     * Initializes the search bar
      */
     private void initializeSearchBar() {
-        this.nameSearchbarTxtFld.textProperty().addListener((observableValue, oldValue, newValue) -> {
-            if (newValue.isEmpty()) {
-                this.platformCleanSearchBar.setVisible(false);
+        this.searchBar.textProperty().addListener((observableValue, oldText, newText) -> {
+            if (newText.isEmpty()) {
+                this.cleanSearchBarBtn.setVisible(false);
                 this.sparePartFilteredList.setPredicate(sparePart -> true);
             } else {
-                this.platformCleanSearchBar.setVisible(true);
+                this.cleanSearchBarBtn.setVisible(true);
                 this.sparePartFilteredList.setPredicate(sparePart ->
-                        StringUtils.containsIgnoreCase(sparePart.getName(), newValue));
+                        StringUtils.containsIgnoreCase(sparePart.getName(), newText));
             }
         });
     }
 
     /**
-     *
+     * Sets the detail to the default values
      */
-    private void detailToDefault() {
+    private void detailsToDefault() {
         this.nameLbl.setText("");
         this.conditionLbl.setText("");
-        this.quantitySpinner.setDisable(true);
-        this.amountUnitLbl.setText("");
+        this.unitLbl.setText("");
         this.categoryLbl.setText("");
+        this.quantitySpinner.setDisable(true);
         this.quantitySpinner.setValueFactory(SpinnerUtils.createValueFactory(0));
-//        SpinnerUtils.setNewValueFactory(this.quantitySpinner, 0);
-    }
-
-    /**
-     * Handles the cleaning of the searchbar and
-     */
-    @FXML
-    private void handleCleanSearchBar() {
-        this.nameSearchbarTxtFld.setText("");
-        this.platformCleanSearchBar.setVisible(false);
-    }
-
-    /**
-     * Handles the "Add" Button and hands over the value for
-     * a new Platform.
-     */
-    @FXML
-    private void handleNewSparePart() {
-        try {
-            NewSparePartController newSparePartController =
-                    createSparePartController(this.saleBook.getSparePartNames(),
-                            this.saleBook.getSparePartUnits(), this.saleBook.getCategories());
-            newSparePartController.getResult().ifPresent(sparePart ->
-                    this.saleBook.addSparePart(sparePart));
-        } catch (IOException e) {
-            displayError("failed to load newSparePartController", e);
-        }
-    }
-
-    /**
-     *
-     */
-    @FXML
-    public void handleEditSparePart() {
-        if (this.currentSparePart != null) {
-            try {
-                EditSparePartController editSparePartController =
-                        createEditSparePartController(this.currentSparePart, this.saleBook.getCategories());
-                editSparePartController.getResult().ifPresent(dirty -> {
-                    if (dirty) {
-                        this.updateTableViewAndDetail();
-                    }
-                });
-            } catch (IOException e) {
-                displayError("failed to load editSparePartController", e);
-            }
-        }
-    }
-
-    public void updateTableViewAndDetail() {
-        this.updateDetail();
-        this.sparePartTblVw.refresh();
-    }
-
-    /**
-     * Handles the "delete selected row" Button and
-     * deletes the selected platform.
-     */
-    @FXML
-    private void handleDeleteSparePart() {
-        if (acceptedDeleteAlert()) {
-            this.saleBook.removeSparePart(this.currentSparePart);
-        }
     }
 }

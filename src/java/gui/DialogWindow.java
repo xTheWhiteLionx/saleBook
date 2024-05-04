@@ -1,7 +1,6 @@
 package gui;
 
-import gui.util.StageUtils;
-import javafx.scene.Scene;
+import gui.FXutils.StageUtils;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
@@ -39,7 +38,7 @@ public class DialogWindow {
         FileChooser fileChooser = new FileChooser();
         //ensure the dialog opens in the correct directory
         File theDir = new File(DIRECTORY);
-        if (!theDir.exists()) {
+        if (!theDir.isDirectory()) {
             theDir.mkdir();
         }
         fileChooser.setInitialDirectory(theDir);
@@ -50,14 +49,31 @@ public class DialogWindow {
     }
 
     /**
-     * creates a confirmation alert with the given content
+     * creates a confirmation alert
      *
      * @return true if deleting were accepted
      */
     public static boolean acceptedDeleteAlert() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        StageUtils.styleScene(alert.getDialogPane().getScene());
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        StageUtils.styleStage(stage);
         alert.setContentText("Are your sure you want to delete the selected item?");
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == ButtonType.OK;
+    }
+
+    /**
+     * creates a warning alert
+     *
+     * @return true if deleting were accepted
+     */
+    public static boolean unsavedDataAlert() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        StageUtils.styleStage(stage);
+        alert.getButtonTypes().add(ButtonType.CANCEL);
+        alert.setHeaderText("You have unsaved data");
+        alert.setContentText("Unsaved data will get lost. Should the app still be closed?");
         Optional<ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == ButtonType.OK;
     }
@@ -65,7 +81,7 @@ public class DialogWindow {
     /**
      * Displays an alert with the specified exception as near content
      *
-     * @param headerText
+     * @param headerText the headerText of the alert
      * @param ex exception which should be displayed
      * @throws NullPointerException if the specified element is null
      */
@@ -76,8 +92,8 @@ public class DialogWindow {
         alert.setHeaderText(headerText);
         alert.setContentText(ex.getMessage());
         DialogPane dialogPane = alert.getDialogPane();
-
-        StageUtils.styleScene(dialogPane.getScene());
+        Stage stage = (Stage) dialogPane.getScene().getWindow();
+        StageUtils.styleStage(stage);
 
         ex.printStackTrace(printWriter);
         printWriter.close();
@@ -102,9 +118,8 @@ public class DialogWindow {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setContentText(ex.getMessage());
         DialogPane dialogPane = alert.getDialogPane();
-
-        Scene scene = dialogPane.getScene();
-        StageUtils.styleScene(scene);
+        Stage stage = (Stage) dialogPane.getScene().getWindow();
+        StageUtils.styleStage(stage);
 
         ex.printStackTrace(printWriter);
         printWriter.close();
@@ -115,38 +130,5 @@ public class DialogWindow {
 
         dialogPane.setExpandableContent(gridPane);
         alert.showAndWait();
-    }
-
-    /**
-     * Displays an alert with the specified exception as near content
-     *
-     * @param ex exception which should be displayed
-     * @throws NullPointerException if the specified element is null
-     */
-    public static void displayInvalidFile(Exception ex) {
-        if (ex != null) {
-            StringWriter stringWriter = new StringWriter();
-            PrintWriter printWriter = new PrintWriter(stringWriter);
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            Scene scene = alert.getDialogPane().getScene();
-            StageUtils.styleScene(scene);
-
-            alert.setHeaderText("Die ausgewählte Datei ist fehlerhaft!");
-
-            alert.setContentText(ex.getMessage());
-
-            ex.printStackTrace(printWriter);
-            printWriter.close();
-
-            GridPane gridPane = new GridPane();
-            gridPane.add(new Label("Exception stacktrace:"), 0, 0);
-            gridPane.add(new TextArea(stringWriter.toString()), 0, 1);
-
-            alert.getDialogPane().setExpandableContent(gridPane);
-
-            alert.showAndWait();
-        } else {
-            throw new NullPointerException("exception == null");
-        }
     }
 }

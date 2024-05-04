@@ -8,7 +8,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<FlowPane fx:id="pane" alignment="TOP_CENTER" columnHalignment="CENTER" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.saleBookController.pages.tenthPartPage.TenthPartPage">
+<FlowPane fx:id="basePane" alignment="TOP_CENTER" columnHalignment="CENTER"
+          xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="gui.saleBookController.pages.tenthPartPage.TenthPartPage">
    <children>
          <GridPane alignment="CENTER">
              <columnConstraints>

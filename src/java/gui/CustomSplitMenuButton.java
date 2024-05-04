@@ -14,10 +14,11 @@ import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 
+//TODO 08.01.2024 JavaDoc
 public class CustomSplitMenuButton extends Group {
 
-    private ButtonBase label;
-    private ButtonBase arrowButton;
+    private final ButtonBase label;
+    private final ButtonBase arrowButton;
     protected ContextMenu popup;
     private ObjectProperty<SplitMode> splitMode;
     private DoubleProperty sizeBinding;
@@ -27,13 +28,13 @@ public class CustomSplitMenuButton extends Group {
     private PseudoClass layoutClass;
 
     //
-    private static PseudoClass TOP_PSEUDO_CLASS = PseudoClass.getPseudoClass("top");
-    private static PseudoClass BOTTOM_PSEUDO_CLASS = PseudoClass.getPseudoClass("bottom");
-    private static PseudoClass LEFT_PSEUDO_CLASS = PseudoClass.getPseudoClass("left");
-    private static PseudoClass RIGHT_PSEUDO_CLASS = PseudoClass.getPseudoClass("right");
-    private static PseudoClass HIDDEN_PSEUDO_CLASS = PseudoClass.getPseudoClass("hidden");
+    private static final PseudoClass TOP_PSEUDO_CLASS = PseudoClass.getPseudoClass("top");
+    private static final PseudoClass BOTTOM_PSEUDO_CLASS = PseudoClass.getPseudoClass("bottom");
+    private static final PseudoClass LEFT_PSEUDO_CLASS = PseudoClass.getPseudoClass("left");
+    private static final PseudoClass RIGHT_PSEUDO_CLASS = PseudoClass.getPseudoClass("right");
+    private static final PseudoClass HIDDEN_PSEUDO_CLASS = PseudoClass.getPseudoClass("hidden");
 
-    public static enum SplitMode {
+    public enum SplitMode {
         SPLIT_TOP, // put arrow buton on top
         SPLIT_RIGHT, // put arrow button on right
         SPLIT_BOTTOM, // bottom
@@ -42,112 +43,112 @@ public class CustomSplitMenuButton extends Group {
     }
 
     private void changeToPseudoClass(PseudoClass newClass) {
-        pseudoClassStateChanged(layoutClass, false);
-        pseudoClassStateChanged(newClass, true);
-        layoutClass = newClass;
+        this.pseudoClassStateChanged(this.layoutClass, false);
+        this.pseudoClassStateChanged(newClass, true);
+        this.layoutClass = newClass;
     }
 
     private void bindHidden() {
-        if (sizeBinding != null) {
-            sizeBinding.unbind();
-            sizeBinding.set(oldSizeValue);
+        if (this.sizeBinding != null) {
+            this.sizeBinding.unbind();
+            this.sizeBinding.set(this.oldSizeValue);
         }
-        if (layoutBinding != null) {
-            layoutBinding.unbind();
-            layoutBinding.set(oldLayoutValue);
+        if (this.layoutBinding != null) {
+            this.layoutBinding.unbind();
+            this.layoutBinding.set(this.oldLayoutValue);
         }
-        arrowButton.setVisible(false);
-        changeToPseudoClass(HIDDEN_PSEUDO_CLASS);
+        this.arrowButton.setVisible(false);
+        this.changeToPseudoClass(HIDDEN_PSEUDO_CLASS);
     }
 
     private void bindSizeAndLayout(DoubleProperty sizeFrom, ReadOnlyDoubleProperty sizeTo,
                                    DoubleProperty layoutFrom, ReadOnlyDoubleProperty layoutTo,
                                    PseudoClass newPseudoClass) {
 
-        if (sizeBinding != null) {
-            sizeBinding.unbind();
-            sizeBinding.set(oldSizeValue);
+        if (this.sizeBinding != null) {
+            this.sizeBinding.unbind();
+            this.sizeBinding.set(this.oldSizeValue);
         }
-        if (layoutBinding != null) {
-            layoutBinding.unbind();
-            layoutBinding.set(oldLayoutValue);
+        if (this.layoutBinding != null) {
+            this.layoutBinding.unbind();
+            this.layoutBinding.set(this.oldLayoutValue);
         }
-        oldSizeValue = sizeFrom.get();
-        sizeBinding = sizeFrom;
-        oldLayoutValue = layoutFrom.get();
-        layoutBinding = layoutFrom;
+        this.oldSizeValue = sizeFrom.get();
+        this.sizeBinding = sizeFrom;
+        this.oldLayoutValue = layoutFrom.get();
+        this.layoutBinding = layoutFrom;
         sizeFrom.bind(sizeTo);
         layoutFrom.bind(layoutTo);
-        changeToPseudoClass(newPseudoClass);
-        arrowButton.setVisible(true);
+        this.changeToPseudoClass(newPseudoClass);
+        this.arrowButton.setVisible(true);
     }
 
     public void setGraphic(ImageView imageView) {
-        label.setGraphic(imageView);
+        this.label.setGraphic(imageView);
     }
 
     public void setOnAction(EventHandler<ActionEvent> actionEvent) {
-        label.setOnAction(actionEvent);
+        this.label.setOnAction(actionEvent);
     }
 
     public void setSplitMode(SplitMode mode) {
-        if (splitMode == null) {
-            splitMode = new SimpleObjectProperty();
+        if (this.splitMode == null) {
+            this.splitMode = new SimpleObjectProperty<>();
         }
-        if (splitMode.get() == mode) {
+        if (this.splitMode.get() == mode) {
             return;
         } // no changes needed
-        splitMode.set(mode);
+        this.splitMode.set(mode);
 
         // set up new bindings
         switch (mode) {
             case SPLIT_BOTTOM:
                 // bind arrowbutton width to label width
                 // bind arrowbutton starting position to bottom of label
-                bindSizeAndLayout(arrowButton.prefWidthProperty(), label.widthProperty(),
-                        arrowButton.layoutYProperty(), label.heightProperty(),
+                this.bindSizeAndLayout(this.arrowButton.prefWidthProperty(), this.label.widthProperty(),
+                        this.arrowButton.layoutYProperty(), this.label.heightProperty(),
                         BOTTOM_PSEUDO_CLASS);
                 break;
             case SPLIT_RIGHT:
                 // bind arrowbutton height to label height
-                bindSizeAndLayout(arrowButton.prefHeightProperty(), label.heightProperty(),
-                        arrowButton.layoutXProperty(), label.widthProperty(),
+                this.bindSizeAndLayout(this.arrowButton.prefHeightProperty(), this.label.heightProperty(),
+                        this.arrowButton.layoutXProperty(), this.label.widthProperty(),
                         RIGHT_PSEUDO_CLASS);
                 break;
             case SPLIT_LEFT:
                 // bind arrowbutton height to label height
-                bindSizeAndLayout(arrowButton.prefHeightProperty(), label.heightProperty(),
-                        label.layoutXProperty(), arrowButton.widthProperty(),
+                this.bindSizeAndLayout(this.arrowButton.prefHeightProperty(), this.label.heightProperty(),
+                        this.label.layoutXProperty(), this.arrowButton.widthProperty(),
                         LEFT_PSEUDO_CLASS);
                 break;
             case SPLIT_TOP:
                 // bind arrowbutton width to label height
-                bindSizeAndLayout(arrowButton.prefWidthProperty(), label.widthProperty(),
-                        label.layoutYProperty(), arrowButton.heightProperty(),
+                this.bindSizeAndLayout(this.arrowButton.prefWidthProperty(), this.label.widthProperty(),
+                        this.label.layoutYProperty(), this.arrowButton.heightProperty(),
                         TOP_PSEUDO_CLASS);
                 break;
             case HIDDEN:
                 // unbind all and hide button
-                bindHidden();
+                this.bindHidden();
                 break;
         }
 
     }
 
     public SplitMode getSplitMode() {
-        return (splitMode == null) ? SplitMode.HIDDEN : splitMode.get();
+        return (this.splitMode == null) ? SplitMode.HIDDEN : this.splitMode.get();
     }
 
-    public ObjectProperty splitModeProperty() {
-        return splitMode;
+    public ObjectProperty<SplitMode> splitModeProperty() {
+        return this.splitMode;
     }
 
     public ButtonBase getButton() {
-        return label;
+        return this.label;
     }
 
     public ButtonBase getArrowButton() {
-        return arrowButton;
+        return this.arrowButton;
     }
 
     // Test suite
@@ -160,30 +161,30 @@ public class CustomSplitMenuButton extends Group {
     }
 
     public CustomSplitMenuButton(String text, SplitMode mode, MenuItem... items) {
-        label = new Button(text);
-        label.getStyleClass().setAll("label");
-        arrowButton = new Button();
+        this.label = new Button(text);
+        this.label.getStyleClass().setAll("label");
+        this.arrowButton = new Button();
         // bind the managed property to visibility.
         // we dont want to manage an invisible button.
-        arrowButton.managedProperty().bind(arrowButton.visibleProperty());
-        arrowButton.getStyleClass().setAll("arrow-button");
-        getStyleClass().setAll("split-menu-button");
-        getChildren().setAll(label, arrowButton);
+        this.arrowButton.managedProperty().bind(this.arrowButton.visibleProperty());
+        this.arrowButton.getStyleClass().setAll("arrow-button");
+        this.getStyleClass().setAll("split-menu-button");
+        this.getChildren().setAll(this.label, this.arrowButton);
         this.getStyleClass().add("big");
-        setSplitMode(mode);
+        this.setSplitMode(mode);
 
-        popup = new ContextMenu(items);
+        this.popup = new ContextMenu(items);
 
-        arrowButton.setOnAction(new EventHandler<>() {
+        this.arrowButton.setOnAction(new EventHandler<>() {
             boolean isOpen = false;
 
             @Override
             public void handle(ActionEvent actionEvent) {
-                isOpen = !isOpen;
-                if (isOpen) {
-                    popup.show(arrowButton, Side.BOTTOM, 0, 0);
+                this.isOpen = !this.isOpen;
+                if (this.isOpen) {
+                    CustomSplitMenuButton.this.popup.show(CustomSplitMenuButton.this.arrowButton, Side.BOTTOM, 0, 0);
                 } else {
-                    popup.hide();
+                    CustomSplitMenuButton.this.popup.hide();
                 }
             }
         });

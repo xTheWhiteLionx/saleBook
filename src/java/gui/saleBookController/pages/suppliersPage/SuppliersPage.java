@@ -7,8 +7,9 @@ import gui.ImageButton;
 import gui.saleBookController.pages.Page;
 import gui.saleBookController.pages.suppliersPage.functions.EditSupplierController;
 import gui.saleBookController.pages.suppliersPage.functions.NewSupplierController;
-import gui.util.StringUtils;
-import gui.util.TableViewUtils;
+import gui.FXutils.RibbonTabUtils;
+import utils.StringUtils;
+import gui.FXutils.TableViewUtils;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
@@ -20,7 +21,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import logic.order.Supplier;
+import logic.Supplier;
 import logic.saleBook.SaleBook;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,38 +34,83 @@ import java.util.function.Function;
 import static gui.DialogWindow.acceptedDeleteAlert;
 import static gui.DialogWindow.displayError;
 import static gui.Images.*;
-import static gui.saleBookController.pages.suppliersPage.functions.NewSupplierController.createSupplierController;
-import static gui.util.RibbonGroupUtil.createRibbonGroup;
+import static gui.saleBookController.pages.suppliersPage.functions.NewSupplierController.createNewSupplierController;
+import static gui.FXutils.RibbonGroupUtils.createRibbonGroup;
 
+/**
+ * This Page shows the supplier of the saleBook and handles the possible controls for it
+ *
+ * @author xthe_white_lionx
+ * @see gui.saleBookController.pages.Page
+ */
 public class SuppliersPage implements Initializable, Page {
 
+    /**
+     * The base pane
+     */
     @FXML
-    private Pane borderPane;
+    private Pane basePane;
+
+    /**
+     * search bar to search a supplier by its name
+     */
     @FXML
-    public TextField nameSearchbarTxtFld;
+    public TextField nameSearchbar;
+
+    /**
+     * Button to clean the search bar
+     */
     @FXML
     private Button cleanSearchBarBtn;
+
+    /**
+     * TableView to display the supplier of the saleBook
+     */
     @FXML
     public TableView<Supplier> supplierTblVw;
+
+    /**
+     * VBox which wraps the search bar and the tableView
+     */
     @FXML
     private VBox wrapVBox;
 
     /**
-     * The current {@link SaleBook}
+     * The current saleBook
      */
     private SaleBook saleBook;
+
     /**
-     *
+     * The current selected Supplier
      */
-    private Supplier currentSupplier;
+    private Supplier selectedSupplier;
+
+    /**
+     * FilteredList of the supplier for easier filtering
+     */
     private FilteredList<Supplier> suppliersFilteredList;
-    private RibbonTab suppliersTab;
+
+    /**
+     * The ribbonTab of this SupplierPage with controls
+     */
+    private RibbonTab ribbonTab;
+
+    /**
+     * Button to delete the selected supplier
+     */
     private Button deleteSupplierBtn;
+
+    /**
+     * Button to edit the selected supplier
+     */
     private Button editSupplierBtn;
 
 
     /**
-     * @return
+     * Create and loads a new SupplierPage
+     *
+     * @return the new created SupplierPage
+     * @throws IOException if the fxml page cannot be loaded
      */
     public static @NotNull SuppliersPage createSuppliersPage() throws IOException {
         FXMLLoader loader = new FXMLLoader(
@@ -74,30 +120,24 @@ public class SuppliersPage implements Initializable, Page {
         return loader.getController();
     }
 
-    /**
-     * @return
-     */
+
     @Override
-    public @NotNull Pane getPane() {
-        return this.borderPane;
+    public @NotNull Pane getBasePane() {
+        return this.basePane;
     }
 
     @Override
     public @NotNull RibbonTab getRibbonTab() {
-        return this.suppliersTab;
+        return this.ribbonTab;
     }
 
-    /**
-     * @param saleBook
-     */
     @Override
     public void setSaleBook(@NotNull SaleBook saleBook) {
         this.saleBook = saleBook;
-        this.initializeSearchBar();
     }
 
     /**
-     * Initializes the SuppliersPane.
+     * Initializes this SuppliersPage.
      *
      * @param url            unused
      * @param resourceBundle unused
@@ -105,12 +145,14 @@ public class SuppliersPage implements Initializable, Page {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.initializeRibbonTab();
+        this.initializeSearchBar();
         this.initializeTblVw();
     }
 
     /**
+     * Sets the suppliers of this supplierPage as ObservableList for filtering
      *
-     * @param suppliers
+     * @param suppliers observableList of the supplier which should be displayed
      */
     public void setSuppliers(@NotNull ObservableList<Supplier> suppliers) {
         this.suppliersFilteredList = new FilteredList<>(suppliers);
@@ -118,83 +160,15 @@ public class SuppliersPage implements Initializable, Page {
     }
 
     /**
-     *
-     */
-    private void initializeRibbonTab() {
-        this.suppliersTab = new RibbonTab("Suppliers");
-        Button newSupplierBtn = new ImageButton("new", ADD_IMAGE,
-                actionEvent -> this.handleAddSupplier());
-        this.deleteSupplierBtn = new ImageButton("delete", DELETE_IMAGE, actionEvent -> this.handleDeleteSupplier());
-        this.deleteSupplierBtn.setDisable(true);
-        this.editSupplierBtn = new ImageButton("edit", EDIT_IMAGE, actionEvent -> this.handleEditSupplier());
-        this.editSupplierBtn.setDisable(true);
-        RibbonGroup ribbonGroup = createRibbonGroup("organisation", newSupplierBtn,
-                this.editSupplierBtn, this.deleteSupplierBtn);
-        this.suppliersTab.getRibbonGroups().add(ribbonGroup);
-    }
-
-    private Function<Supplier, Hyperlink> labelWebPage(){
-        return supplier -> {
-            Hyperlink link = new Hyperlink(supplier.getName());
-            link.setOnAction(actionEvent -> {
-                if (Desktop.isDesktopSupported()) {
-                    try {
-                        Desktop.getDesktop().browse(supplier.getOrderWebpage());
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            });
-            return link;
-        };
-    }
-
-    /**
-     * Initialize the investment tab, the Tableview and
-     * sets the default values
-     */
-    private void initializeTblVw() {
-        TableViewUtils.addColumn(this.supplierTblVw, "name", this.labelWebPage());
-        this.supplierTblVw.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        this.supplierTblVw.prefHeightProperty().bind(this.wrapVBox.heightProperty());
-
-        this.supplierTblVw.getSelectionModel().selectedItemProperty().addListener(((observableValue,
-                                                                                    supplier, t1) -> {
-            this.currentSupplier = t1;
-            boolean isNull = t1 == null;
-            this.editSupplierBtn.setDisable(isNull);
-            this.deleteSupplierBtn.setDisable(isNull);
-        }));
-    }
-
-    /**
-     *
-     */
-    private void initializeSearchBar() {
-        this.nameSearchbarTxtFld.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.isEmpty()) {
-                // Compare name of every investment with filter text.
-                this.suppliersFilteredList.setPredicate(supplier -> true);
-                this.cleanSearchBarBtn.setVisible(false);
-            } else {
-                // If filter text is empty, display all platforms.
-                this.suppliersFilteredList.setPredicate(supplier ->
-                        StringUtils.containsIgnoreCase(supplier.getName(), newValue));
-                this.cleanSearchBarBtn.setVisible(true);
-            }
-        });
-    }
-
-    /**
-     *
+     * Opens a new EditSupplierController with the selected supplier
      */
     @FXML
     public void handleEditSupplier() {
-        if (this.currentSupplier != null) {
+        if (this.selectedSupplier != null) {
             try {
                 EditSupplierController editSupplierController =
-                        EditSupplierController.createEditSupplierController(this.currentSupplier,
-                        this.saleBook.getSupplierNames());
+                        EditSupplierController.createEditSupplierController(this.selectedSupplier,
+                                this.saleBook.getSupplierNames());
                 editSupplierController.getResult().ifPresent(dirty -> {
                     if (dirty) {
                         this.supplierTblVw.refresh();
@@ -207,24 +181,22 @@ public class SuppliersPage implements Initializable, Page {
     }
 
     /**
-     * Handles the cleaning of the searchbar and
+     * Handles the cleaning of the search bar and resets the filtering
      */
     @FXML
-    private void handleCleanSearchBar() {
-        this.nameSearchbarTxtFld.setText("");
-        this.suppliersFilteredList.setPredicate(supplier -> true);
+    public void handleCleanSearchBar() {
+        this.nameSearchbar.setText("");
         this.cleanSearchBarBtn.setVisible(false);
     }
 
     /**
-     * Handles the "Add" Button and hands over the value for
-     * a new Platform.
+     * Handles the "Add" Button and opens a newSupplierController
      */
     @FXML
-    private void handleAddSupplier() {
+    public void handleAddSupplier() {
         try {
             NewSupplierController newSupplierController =
-                    createSupplierController(this.saleBook.getSupplierNames());
+                    createNewSupplierController(this.saleBook.getSupplierNames());
             newSupplierController.getResult().ifPresent(supplier -> this.saleBook.addSupplier(supplier));
         } catch (IOException e) {
             displayError("failed to load newSupplierController", e);
@@ -232,13 +204,82 @@ public class SuppliersPage implements Initializable, Page {
     }
 
     /**
-     * Handles the "delete selected row" Button and
-     * deletes the selected platform.
+     * Handles the "delete" Button and deletes the selected supplier
      */
     @FXML
-    private void handleDeleteSupplier() {
+    public void handleDeleteSupplier() {
         if (acceptedDeleteAlert()) {
-            this.saleBook.removeSupplier(this.currentSupplier.getName());
+            this.saleBook.removeSupplier(this.selectedSupplier.getName());
         }
+    }
+
+    /**
+     * Initializes the ribbonTab
+     */
+    private void initializeRibbonTab() {
+        Button newSupplierBtn = new ImageButton("new", ADD_IMAGE,
+                actionEvent -> this.handleAddSupplier());
+        this.deleteSupplierBtn = new ImageButton("delete", DELETE_IMAGE, actionEvent -> this.handleDeleteSupplier());
+        this.deleteSupplierBtn.setDisable(true);
+        this.editSupplierBtn = new ImageButton("edit", EDIT_IMAGE, actionEvent -> this.handleEditSupplier());
+        this.editSupplierBtn.setDisable(true);
+        RibbonGroup organisationRibbonGroup = createRibbonGroup("organisation", newSupplierBtn,
+                this.editSupplierBtn, this.deleteSupplierBtn);
+        this.ribbonTab = RibbonTabUtils.createRibbonTab("Suppliers", organisationRibbonGroup);
+    }
+
+    /**
+     * Returns a function from a supplier to a Hyperlink with the supplier's name as text and
+     * the supplier's order webpage as link
+     *
+     * @return function from the supplier to a hyperlink
+     */
+    private Function<Supplier, Hyperlink> labelWebPage(){
+        return supplier -> {
+            Hyperlink link = new Hyperlink(supplier.getName());
+            link.setOnAction(actionEvent -> {
+                if (Desktop.isDesktopSupported()) {
+                    try {
+                        Desktop.getDesktop().browse(supplier.getOrderWebpage());
+                    } catch (IOException e) {
+                        displayError("can not open order webpage in browser", e);
+                    }
+                }
+            });
+            return link;
+        };
+    }
+
+    /**
+     * Initializes the Tableview
+     */
+    private void initializeTblVw() {
+        TableViewUtils.addColumn(this.supplierTblVw, "name", this.labelWebPage());
+        this.supplierTblVw.prefHeightProperty().bind(this.wrapVBox.heightProperty());
+        this.supplierTblVw.getSelectionModel().selectedItemProperty().addListener(
+                ((observableValue, oldSupplier, newSupplier) -> {
+            this.selectedSupplier = newSupplier;
+            boolean isNull = newSupplier == null;
+            this.editSupplierBtn.setDisable(isNull);
+            this.deleteSupplierBtn.setDisable(isNull);
+        }));
+    }
+
+    /**
+     * Initializes the search bar
+     */
+    private void initializeSearchBar() {
+        this.nameSearchbar.textProperty().addListener((observable, oldText, newText) -> {
+            if (newText.isEmpty()) {
+                // Compare name of every supplier with filter text.
+                this.suppliersFilteredList.setPredicate(supplier -> true);
+                this.cleanSearchBarBtn.setVisible(false);
+            } else {
+                // If filter text is empty, display all supplier.
+                this.suppliersFilteredList.setPredicate(supplier ->
+                        StringUtils.containsIgnoreCase(supplier.getName(), newText));
+                this.cleanSearchBarBtn.setVisible(true);
+            }
+        });
     }
 }

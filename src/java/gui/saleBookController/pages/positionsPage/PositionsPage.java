@@ -5,6 +5,7 @@ import com.pixelduke.control.ribbon.RibbonTab;
 import gui.ApplicationMain;
 import gui.CustomSplitMenuButton;
 import gui.CustomSplitMenuButton.SplitMode;
+import gui.FXutils.StageUtils;
 import gui.ImageButton;
 import gui.Images;
 import gui.ObservableTreeItemMapBinder;
@@ -14,9 +15,10 @@ import gui.saleBookController.pages.positionsPage.functions.*;
 import gui.saleBookController.pages.positionsPage.functions.add.NewCostController;
 import gui.saleBookController.pages.positionsPage.functions.add.NewItemController;
 import gui.saleBookController.pages.positionsPage.functions.add.MasterController;
-import gui.util.RibbonTabUtil;
-import gui.util.StringUtils;
-import gui.util.TreeColumnUtils;
+import gui.FXutils.RibbonTabUtils;
+import javafx.stage.Stage;
+import utils.StringUtils;
+import gui.FXutils.TreeTableViewUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,16 +33,18 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import logic.SparePart;
 import logic.products.position.State;
-import logic.products.Item;
+import logic.products.item.Item;
 import logic.products.position.Position;
 import logic.products.Product;
 import logic.saleBook.SaleBook;
 import org.controlsfx.control.textfield.CustomTextField;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 
@@ -58,7 +62,7 @@ import static gui.saleBookController.pages.positionsPage.functions.SaleControlle
 import static gui.saleBookController.pages.positionsPage.functions.SellingPriceCalculatorController.createSellingPriceCalculatorController;
 import static gui.saleBookController.pages.positionsPage.functions.add.NewCostController.createNewCostController;
 import static gui.saleBookController.pages.positionsPage.functions.add.NewItemController.createAddItemController;
-import static gui.util.RibbonGroupUtil.createRibbonGroup;
+import static gui.FXutils.RibbonGroupUtils.createRibbonGroup;
 
 /**
  * This class represents a PositionPage with his components.
@@ -68,6 +72,11 @@ import static gui.util.RibbonGroupUtil.createRibbonGroup;
  * @author xthe_white_lionx
  */
 public class PositionsPage implements Initializable, Page {
+    /**
+     *
+     */
+    public static String DIR_POSITIONS = "positions";
+
     /**
      * Button to clean the searchbar
      */
@@ -171,6 +180,11 @@ public class PositionsPage implements Initializable, Page {
     private Button setRepairedBtn;
 
     /**
+     * Button to add pictures to the current position
+     */
+    private Button addPictures;
+
+    /**
      * Button to add an item to the current position
      */
     private Button addItemBtn;
@@ -220,7 +234,7 @@ public class PositionsPage implements Initializable, Page {
     }
 
     /**
-     * Initializes the PositionsPane.
+     * Initializes the PositionsPage.
      *
      * @param url            unused
      * @param resourceBundle unused
@@ -255,7 +269,7 @@ public class PositionsPage implements Initializable, Page {
      * @return the base pane of this PositionPage
      */
     @Override
-    public @NotNull Pane getPane() {
+    public @NotNull Pane getBasePane() {
         return this.borderPane;
     }
 
@@ -357,14 +371,11 @@ public class PositionsPage implements Initializable, Page {
         );
         this.setRepairedBtn.setDisable(true);
 
+        this.addPictures = new ImageButton("add pictures", ADD_PICTURE,
+                actionEvent -> this.handleAddPictures());
+        this.addPictures.setDisable(true);
         this.saleBtn = new ImageButton("sale", SALE_IMAGE,
-                actionEvent -> {
-                    try {
-                        createSaleController(this.currPos, this.saleBook);
-                    } catch (IOException e) {
-                        displayError("failed to load saleController", e);
-                    }
-                });
+                actionEvent1 -> this.handleSale());
         this.saleBtn.setDisable(true);
 
         this.toShipBtn = new ImageButton("to ship", SHIPPED_IMAGE,
@@ -378,7 +389,7 @@ public class PositionsPage implements Initializable, Page {
         this.toShipBtn.setDisable(true);
 
         this.btnPerformanceCalculator = new MenuItem("performance calculator",
-                createImageView(CALCULATER_IMAGE, 16));
+                createImageView(CALCULATOR_IMAGE, 16));
         this.btnPerformanceCalculator.setOnAction(actionEvent ->
                 {
                     try {
@@ -391,7 +402,7 @@ public class PositionsPage implements Initializable, Page {
 
         this.btnSellingPriceCalculator = new CustomSplitMenuButton("selling price calculator",
                 SplitMode.SPLIT_BOTTOM, this.btnPerformanceCalculator);
-        this.btnSellingPriceCalculator.setGraphic(new ImageView(CALCULATER_IMAGE));
+        this.btnSellingPriceCalculator.setGraphic(new ImageView(CALCULATOR_IMAGE));
         this.btnSellingPriceCalculator.setOnAction(actionEvent -> {
             try {
                 createSellingPriceCalculatorController(this.currPos);
@@ -403,7 +414,7 @@ public class PositionsPage implements Initializable, Page {
 
         RibbonGroup ribbonGroupPositionFunctions = createRibbonGroup("position", this.addItemBtn,
                 this.dividePositionBtn, this.combinePositionWithBtn, this.setReceivedBtn,
-                this.addCostBtn, this.setRepairedBtn, this.saleBtn, this.toShipBtn,
+                this.addCostBtn, this.setRepairedBtn, this.addPictures, this.saleBtn, this.toShipBtn,
                 this.btnSellingPriceCalculator);
 
         Button filterBtn = new ImageButton("filter", FILTER_IMAGE, actionEvent ->
@@ -417,8 +428,20 @@ public class PositionsPage implements Initializable, Page {
         RibbonGroup ribbonGroupOrganisation = createRibbonGroup("organisation", filterBtn, this.editBtn,
                 this.deleteBtn);
 
-        this.positionsTab = RibbonTabUtil.createRibbonTab("Positions", ribbonGroupNew,
+        this.positionsTab = RibbonTabUtils.createRibbonTab("Positions", ribbonGroupNew,
                 ribbonGroupPositionFunctions, ribbonGroupOrganisation);
+    }
+
+    /**
+     * Handles the add picture button and adds the pictures to the directory of the current
+     * position
+     */
+    private void handleAddPictures() {
+        try {
+            AddPicturesController.loadAddPicturesController(this.currPos.getId(), this.saleBook);
+        } catch (IOException e) {
+            displayError("failed to load AddPicturesController", e);
+        }
     }
 
     /**
@@ -512,17 +535,16 @@ public class PositionsPage implements Initializable, Page {
      * sets the default values
      */
     private void initializeTblVw() {
-        //TODO 07.01.2024 add image at creation
-        TreeColumnUtils.addColumn(this.trTblVw, "icon", this.createIcon());
-        TreeColumnUtils.addColumn(this.trTblVw, "id", Product::getId);
-        TreeColumnUtils.addColumn(this.trTblVw, "type", Product::getSimpleName);
-        TreeColumnUtils.addColumn(this.trTblVw, "items", Product -> {
+        TreeTableViewUtils.addColumn(this.trTblVw, "icon", this.createIcon());
+        TreeTableViewUtils.addColumn(this.trTblVw, "id", Product::getId);
+        TreeTableViewUtils.addColumn(this.trTblVw, "type", Product::getSimpleName);
+        TreeTableViewUtils.addColumn(this.trTblVw, "items", Product -> {
             if (Product instanceof Position position){
                 return position.getItems().size();
             }
             return "";
         });
-        TreeColumnUtils.addColumn(this.trTblVw, "state", Product -> {
+        TreeTableViewUtils.addColumn(this.trTblVw, "state", Product -> {
             if (Product instanceof Position position){
                 return position.getState();
             }
@@ -547,13 +569,12 @@ public class PositionsPage implements Initializable, Page {
             }
         });
 
-        this.idSearchbarTxtFld.textProperty().addListener((observableValue, oldValue, newValue) -> {
-            if (!newValue.isEmpty()) {
-                if(!newValue.matches("[,.]") && StringUtils.isValidNumber(newValue)){
-                    int searchedId = Integer.parseInt(newValue);
-                    this.root.setFilter(position -> position.getId() == searchedId);
+        this.idSearchbarTxtFld.textProperty().addListener((observableValue, oldText, newText) -> {
+            if (!newText.isEmpty()) {
+                if(!newText.matches("[,.]") && StringUtils.isValidNumber(newText)){
+                    this.root.setFilter(position -> String.valueOf(position.getId()).startsWith(newText));
                 } else {
-                    this.root.setFilter(position -> false);
+                    this.root.filterAll();
                 }
                 this.cleanSearchBarBtn.setVisible(true);
             } else {
@@ -571,7 +592,17 @@ public class PositionsPage implements Initializable, Page {
             MasterController masterController =
                     MasterController.createMasterController(this.saleBook.getNextPosId(),
                             this.saleBook.getCategories(), this.saleBook.getNameToItemColor());
-            masterController.getResult().ifPresent(position -> this.saleBook.addPosition(position));
+            masterController.getResult().ifPresent(position -> {
+                this.saleBook.addPosition(position);
+                File dir = new File(DIR_POSITIONS);
+                if (!dir.isDirectory()){
+                    dir.mkdir();
+                }
+                File positionDir = new File(dir, String.valueOf(position.getId()));
+                positionDir.mkdir();
+                File picturesDir = new File(positionDir, "pictures");
+                picturesDir.mkdir();
+            });
         } catch (IOException e) {
             displayError("fail to load masterController", e);
         }
@@ -586,7 +617,7 @@ public class PositionsPage implements Initializable, Page {
         if (product instanceof Position position) {
             this.currPos = position;
             this.detailPositionPane.setPosition(position);
-            this.detailScrllPn.setContent(this.detailPositionPane.getVbox());
+            this.detailScrllPn.setContent(this.detailPositionPane.getBasePane());
 
             State state = position.getState();
             this.btnSellingPriceCalculator.setDisable(false);
@@ -599,7 +630,8 @@ public class PositionsPage implements Initializable, Page {
             this.addItemBtn.setDisable(state.compareTo(State.SOLD) >= 0);
             this.btnPerformanceCalculator.setDisable(false);
             this.btnSellingPriceCalculator.setDisable(false);
-            this.saleBtn.setDisable(state != State.REPAIRED);
+            this.addPictures.setDisable(false);
+            this.saleBtn.setDisable(state != State.RECEIVED && state != State.REPAIRED);
             this.toShipBtn.setDisable(state != State.SOLD);
         } else if (product instanceof Item item) {
             this.currPos = null;
@@ -608,7 +640,7 @@ public class PositionsPage implements Initializable, Page {
             } catch (IOException e) {
                 displayError("failed to load detailItemPane", e);
             }
-            this.detailScrllPn.setContent(this.detailItemPane.getVBox());
+            this.detailScrllPn.setContent(this.detailItemPane.getBasePane());
 
             this.btnSellingPriceCalculator.setDisable(true);
             this.dividePositionBtn.setDisable(true);
@@ -620,6 +652,7 @@ public class PositionsPage implements Initializable, Page {
             this.btnPerformanceCalculator.setDisable(true);
             this.btnSellingPriceCalculator.setDisable(true);
             this.saleBtn.setDisable(true);
+            this.addPictures.setDisable(true);
             this.toShipBtn.setDisable(true);
         }
         this.editBtn.setDisable(false);
@@ -696,6 +729,30 @@ public class PositionsPage implements Initializable, Page {
             } else if (value instanceof Item item) {
                 int positionId = selectedItem.getParent().getValue().getId();
                 this.saleBook.removeItem(positionId, item.getId());
+            }
+        }
+    }
+
+    /**
+     * Handles the sale Button and sales the selected position
+     */
+    private void handleSale() {
+        boolean accepted = true;
+        if (this.currPos.getState().compareTo(State.REPAIRED) < 0) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+            StageUtils.styleStage(stage);
+            alert.setHeaderText("items of this position are still broken");
+            alert.setContentText("make sure to mark them as broken before selling them");
+            alert.getButtonTypes().add(ButtonType.CANCEL);
+            Optional<ButtonType> result = alert.showAndWait();
+            accepted = result.isPresent() && result.get() == ButtonType.OK;
+        }
+        if (accepted) {
+            try {
+                createSaleController(this.currPos, this.saleBook);
+            } catch (IOException e) {
+                displayError("failed to load saleController", e);
             }
         }
     }

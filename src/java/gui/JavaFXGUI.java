@@ -1,22 +1,24 @@
 package gui;
 
+import gui.saleBookController.pages.assetsPage.AssetsPage;
 import gui.saleBookController.pages.ordersPage.OrdersPage;
 import gui.saleBookController.pages.positionsPage.PositionsPage;
 import gui.saleBookController.pages.profitAndLossAccountPage.ProfitAndLossAccountPage;
 import gui.saleBookController.pages.sparePartsPage.SparePartsPage;
 import gui.saleBookController.pages.suppliersPage.SuppliersPage;
 import gui.saleBookController.pages.tenthPartPage.TenthPartPage;
-import gui.util.LabelUtils;
+import gui.FXutils.LabelUtils;
 import javafx.animation.PauseTransition;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.util.Duration;
+import logic.Asset;
 import logic.GUIConnector;
 import logic.SparePart;
 import logic.order.Order;
-import logic.order.Supplier;
-import logic.products.Item;
+import logic.Supplier;
+import logic.products.item.Item;
 import logic.products.Product;
 import logic.products.position.Position;
 import org.controlsfx.control.textfield.TextFields;
@@ -28,10 +30,8 @@ import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
 
-import static gui.util.LabelUtils.setMoneyAndColor;
-
+import static gui.FXutils.LabelUtils.setMoneyAndColor;
 
 /**
  * This class is responsible for changing the gui when the logic deems it
@@ -39,6 +39,7 @@ import static gui.util.LabelUtils.setMoneyAndColor;
  *
  * @author xthe_white_lionx
  */
+//TODO 08.01.2024 JavaDoc
 public class JavaFXGUI implements GUIConnector {
 
     /**
@@ -77,6 +78,11 @@ public class JavaFXGUI implements GUIConnector {
     /**
      *
      */
+    private final AssetsPage assetsPage;
+
+    /**
+     *
+     */
     private final TreeItem<Product> root;
 
     /**
@@ -107,7 +113,8 @@ public class JavaFXGUI implements GUIConnector {
                      @NotNull Label totalPerformanceLabel, @NotNull TenthPartPage tenthPartPage,
                      @NotNull ProfitAndLossAccountPage profitAndLossAccountPage,
                      @NotNull SuppliersPage suppliersPage,
-                     @NotNull OrdersPage ordersPage, @NotNull Label status) {
+                     @NotNull OrdersPage ordersPage, @NotNull AssetsPage assetsPage,
+                     @NotNull Label status) {
         this.positionsPage = positionsPage;
         this.root = positionsPage.getTrTblVw().getRoot();
         this.tenthPartPage = tenthPartPage;
@@ -116,6 +123,7 @@ public class JavaFXGUI implements GUIConnector {
         this.profitAndLossAccountPage = profitAndLossAccountPage;
         this.suppliersPage = suppliersPage;
         this.ordersPage = ordersPage;
+        this.assetsPage = assetsPage;
         this.status = status;
     }
 
@@ -143,16 +151,6 @@ public class JavaFXGUI implements GUIConnector {
         return format(value) + " " + LabelUtils.SYMBOL_OF_CURRENCY;
     }
 
-    /**
-     *
-     * @param fn
-     * @return
-     */
-    public static @NotNull Function<Position, String> formatMoney(
-            @NotNull Function<Position, Number> fn) {
-        return position -> formatMoney(fn.apply(position));
-    }
-
     @Override
     public void displaySpareParts(@NotNull ObservableList<SparePart> spareParts) {
         this.sparePartsPage.setSpareParts(spareParts);
@@ -160,7 +158,7 @@ public class JavaFXGUI implements GUIConnector {
 
     @Override
     public void displaySparePartNames(@NotNull Collection<String> nameOfSpareParts) {
-        TextFields.bindAutoCompletion(this.sparePartsPage.nameSearchbarTxtFld, nameOfSpareParts);
+        TextFields.bindAutoCompletion(this.sparePartsPage.searchBar, nameOfSpareParts);
     }
 
     @Override
@@ -178,8 +176,8 @@ public class JavaFXGUI implements GUIConnector {
     }
 
     @Override
-    public void displayCategories(@NotNull Collection<String> models) {
-        this.positionsPage.setCategories(models);
+    public void displayCategories(@NotNull Collection<String> categories) {
+        this.positionsPage.setCategories(categories);
     }
 
     @Override
@@ -189,12 +187,17 @@ public class JavaFXGUI implements GUIConnector {
 
     @Override
     public void displaySupplierNames(@NotNull Set<String> supplierNames){
-        TextFields.bindAutoCompletion(this.suppliersPage.nameSearchbarTxtFld, supplierNames);
+        TextFields.bindAutoCompletion(this.suppliersPage.nameSearchbar, supplierNames);
     }
 
     @Override
     public void displayOrders(@NotNull ObservableList<Order> orders) {
         this.ordersPage.setOrders(orders);
+    }
+
+    @Override
+    public void displayAssets(@NotNull ObservableList<Asset> assets) {
+        this.assetsPage.setAssets(assets);
     }
 
     @Override

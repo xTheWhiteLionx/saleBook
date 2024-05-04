@@ -8,7 +8,8 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane fx:id="mainPane" prefHeight="101.0" prefWidth="251.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.saleBookController.pages.positionsPage.functions.add.NewCostController">
+<BorderPane fx:id="mainPane" prefHeight="101.0" prefWidth="251.0"
+            xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.saleBookController.pages.positionsPage.functions.add.NewCostController">
    <bottom>
    </bottom>
    <padding>
@@ -38,7 +39,7 @@
    <bottom>
       <ButtonBar BorderPane.alignment="CENTER">
          <buttons>
-            <Button fx:id="applyBtn" defaultButton="true" mnemonicParsing="false" onAction="#handleApply" text="apply" />
+            <Button fx:id="applyBtn" disable="true" defaultButton="true" mnemonicParsing="false" onAction="#handleApply" text="apply" />
             <Button fx:id="cancelBtn" cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" text="cancel" />
          </buttons>
          <BorderPane.margin>

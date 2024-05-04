@@ -3,7 +3,6 @@ package logic;
 import gui.ObservableTreeItemMapBinder;
 import javafx.collections.ObservableList;
 import logic.order.Order;
-import logic.order.Supplier;
 import logic.products.position.Position;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,11 +26,11 @@ public interface GUIConnector {
     void displayPositions(@NotNull Collection<Position> positions);
 
     /**
-     * Displays the specified models in the filter, to filter the positions.
+     * Displays the specified categories in the filter, to filter the positions.
      *
-     * @param models the models of the positions
+     * @param categories the categories of the positions
      */
-    void displayCategories(@NotNull Collection<String> models);
+    void displayCategories(@NotNull Collection<String> categories);
 
     /**
      * Displays the specified spareParts
@@ -67,6 +66,13 @@ public interface GUIConnector {
      * @param orders the orders which should be displayed
      */
     void displayOrders(@NotNull ObservableList<Order> orders);
+
+    /**
+     * Displays the specified assets
+     *
+     * @param assets the assets which should be displayed
+     */
+    void displayAssets(@NotNull ObservableList<Asset> assets);
 
     /**
      * Displays the specified repairServiceSales

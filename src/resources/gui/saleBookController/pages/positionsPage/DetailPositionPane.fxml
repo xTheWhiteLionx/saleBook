@@ -11,7 +11,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="vbox" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.saleBookController.pages.positionsPage.DetailPositionPane">
+<VBox fx:id="vbox" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="gui.saleBookController.pages.positionsPage.DetailPositionPane">
     <Label text="position details">
         <font>
             <Font name="System Bold" size="18.0" />

@@ -2,7 +2,7 @@ package gui.saleBookController.pages.sparePartsPage.functions;
 
 import gui.ApplicationMain;
 import gui.saleBookController.pages.FunctionDialog;
-import gui.util.ChoiceBoxUtils;
+import gui.FXutils.ChoiceBoxUtils;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,78 +22,112 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import static gui.DialogWindow.displayError;
-import static gui.util.StageUtils.createStyledStage;
-import static gui.util.TextFieldUtils.isPositive;
+import static gui.FXutils.StageUtils.createStyledStage;
+import static gui.FXutils.TextFieldUtils.isPositive;
 
+/**
+ * NewSparePartController is a controller to create a new sparePart
+ *
+ * @see gui.saleBookController.pages.FunctionDialog
+ * @author xthe_white_lionx
+ */
 public class NewSparePartController extends FunctionDialog<SparePart> implements Initializable {
 
+    /**
+     * TextField to set the name
+     */
     @FXML
     public TextField nameTxtFld;
+
+    /**
+     * ChoiceBox to choose the condition
+     */
     @FXML
     public ChoiceBox<Condition> conditionChcBx;
+
+    /**
+     * TextField to set the unit
+     */
     @FXML
     public TextField unitTxtFld;
+
+    /**
+     * TextField to set the quantity
+     */
     @FXML
     private TextField quantityTxtFld;
+
+    /**
+     * Label to display the quantity unit
+     */
     @FXML
-    public Label amountUnitLbl;
+    public Label quantityUnitLbl;
+
+    /**
+     * ChoiceBox to choose the category
+     */
     @FXML
     private ChoiceBox<String> categoryChcBx;
+
+    /**
+     * Button to apply the new created sparePart
+     */
     @FXML
     private Button btnApply;
+
+    /**
+     * Button to cancel the creation
+     */
     @FXML
     private Button btnCancel;
 
 
     /**
+     * Creates and loads a new NewSparePartController
      *
-     * @param nameOfSpareParts
-     * @param units
-     * @return
-     * @throws IOException
+     * @param nameOfSpareParts name of the already existing spareParts for autocompletion
+     * @param units already existing units for autocompletion
+     * @param categories already existing categories for autocompletion
+     * @return the new created NewSparePartController
+     * @throws IOException if the fxml file could not be loaded
      */
     public static @NotNull NewSparePartController createSparePartController(@NotNull Set<String> nameOfSpareParts,
                                                                    @NotNull Set<String> units,
-                                                                            @NotNull Set<String> models) throws IOException {
+                                                                            @NotNull Set<String> categories) throws IOException {
         FXMLLoader loader = new FXMLLoader(ApplicationMain.class.getResource(
                 "saleBookController/pages/sparePartsPage/functions/" +
                         "NewSparePartController.fxml"));
 
-        int width = 400;
-        int height = 300;
-        final Stage newStage = createStyledStage(new Scene(loader.load(), width, height));
+        final Stage newStage = createStyledStage(new Scene(loader.load()));
         newStage.setTitle("new spare part");
-        newStage.setMinWidth(width);
-        newStage.setMinHeight(height);
+        newStage.setMinWidth(400D);
+        newStage.setMinHeight(300D);
         newStage.initModality(Modality.APPLICATION_MODAL);
         NewSparePartController controller = loader.getController();
-        controller.initialize(nameOfSpareParts, units, models);
+        controller.initialize(nameOfSpareParts, units, categories);
         newStage.showAndWait();
         return controller;
     }
 
     /**
+     * Initializes the controls for autocompletion and sets the chose able categories
      *
-     * @param nameOfSpareParts
-     * @param units
-     * @param models
+     * @param nameOfSpareParts name of the already existing spareParts for autocompletion
+     * @param units already existing units for autocompletion
+     * @param categories already existing categories for autocompletion
      */
     private void initialize(@NotNull Set<String> nameOfSpareParts, @NotNull Set<String> units,
-                            @NotNull Set<String> models){
+                            @NotNull Set<String> categories){
         TextFields.bindAutoCompletion(this.nameTxtFld, nameOfSpareParts);
         TextFields.bindAutoCompletion(this.unitTxtFld, units);
-        ChoiceBoxUtils.addItems(this.categoryChcBx, models);
+        ChoiceBoxUtils.addItems(this.categoryChcBx, categories);
     }
 
     /**
      * Creates and adds a changeListener to the controller items
      * to regular the accessibility of the apply button
      */
-    private void initializeListener() {
-        this.unitTxtFld.textProperty().addListener((observableValue, s, t1) -> {
-            this.amountUnitLbl.setText(t1);
-        });
-
+    private void initializeBooleanBinding() {
         BooleanBinding inputsValid = new BooleanBinding() {
             {
                 this.bind(NewSparePartController.this.nameTxtFld.textProperty(), NewSparePartController.this.unitTxtFld.textProperty(),
@@ -110,7 +144,7 @@ public class NewSparePartController extends FunctionDialog<SparePart> implements
     }
 
     /**
-     * Initializes the application.
+     * Initializes this controller.
      *
      * @param url            unused
      * @param resourceBundle unused
@@ -118,12 +152,10 @@ public class NewSparePartController extends FunctionDialog<SparePart> implements
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ChoiceBoxUtils.addItems(this.conditionChcBx, Condition.class);
-        String defaultUnit = "pieces";
-        this.unitTxtFld.setText(defaultUnit);
-        this.amountUnitLbl.setText(defaultUnit);
-        this.quantityTxtFld.setText("1");
-        this.btnApply.setDisable(true);
-        this.initializeListener();
+        this.unitTxtFld.textProperty().addListener((observableValue, oldText, newText) -> {
+            this.quantityUnitLbl.setText(newText);
+        });
+        this.initializeBooleanBinding();
     }
 
     /**
@@ -136,8 +168,8 @@ public class NewSparePartController extends FunctionDialog<SparePart> implements
     }
 
     /**
-     * Handles the "Apply" Button and hands over
-     * the (new) {@link }
+     * Handles the "Apply" Button, sets the result to the new created sparePart and
+     * closes the window
      */
     @FXML
     private void handleApply() {

@@ -10,7 +10,8 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane stylesheets="@../css/Global.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.saleBookController.ShortcutsController">
+<BorderPane fx:id="basePane" stylesheets="@../css/Global.css" xmlns="http://javafx.com/javafx/11.0.2"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.saleBookController.ShortcutsController">
    <bottom>
    </bottom>
    <bottom>
@@ -24,7 +25,7 @@
       </ButtonBar>
    </bottom>
    <center>
-      <GridPane fx:id="gridPane">
+      <GridPane>
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" />
           <ColumnConstraints hgrow="SOMETIMES" />
@@ -40,7 +41,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="Description" GridPane.columnIndex="1">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="Description">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
@@ -48,7 +49,7 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </Text>
-            <Text layoutX="115.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="Shortcut key">
+            <Text layoutX="115.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="Shortcut key" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
@@ -56,72 +57,72 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </Text>
-            <Text layoutX="115.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="saves the current file" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Text layoutX="115.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="saves the current file" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Text>
-            <Text layoutX="115.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="CTRL + S" GridPane.rowIndex="1">
+            <Text layoutX="115.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="CTRL + S" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Text>
-            <Text layoutX="15.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="CTRL + SHIFT + S" GridPane.rowIndex="2">
+            <Text layoutX="15.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="CTRL + SHIFT + S" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Text>
-            <Text layoutX="15.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="CTRL + O" GridPane.rowIndex="3">
+            <Text layoutX="15.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="CTRL + O" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Text>
-            <Text layoutX="119.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="save as dialog" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Text layoutX="119.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="save as dialog" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Text>
-            <Text layoutX="119.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="open file dialog" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <Text layoutX="119.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="open file dialog" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Text>
-            <Text layoutX="15.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="CTRL + N" GridPane.rowIndex="4">
+            <Text layoutX="15.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="CTRL + N" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Text>
-            <Text layoutX="119.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="creates a new saleBook" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <Text layoutX="119.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="creates a new saleBook" GridPane.rowIndex="4">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Text>
-            <Text layoutX="15.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="CTRL + T" GridPane.rowIndex="5">
+            <Text layoutX="15.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="CTRL + T" GridPane.columnIndex="1" GridPane.rowIndex="5">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Text>
-            <Text layoutX="119.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="changes theme" GridPane.columnIndex="1" GridPane.rowIndex="5">
+            <Text layoutX="119.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="changes theme" GridPane.rowIndex="5">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Text>
-            <Text layoutX="15.0" layoutY="180.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="ENTER + ALT" GridPane.rowIndex="6">
+            <Text layoutX="15.0" layoutY="180.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="ENTER + ALT" GridPane.columnIndex="1" GridPane.rowIndex="6">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Text>
-            <Text layoutX="119.0" layoutY="180.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="fullsize " GridPane.columnIndex="1" GridPane.rowIndex="6">
+            <Text layoutX="119.0" layoutY="180.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="fullsize " GridPane.rowIndex="6">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Text>
-            <Text layoutX="15.0" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="F1" GridPane.rowIndex="7">
+            <Text layoutX="15.0" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="F1" GridPane.columnIndex="1" GridPane.rowIndex="7">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Text>
-            <Text layoutX="119.0" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="opens the help page" GridPane.columnIndex="1" GridPane.rowIndex="7">
+            <Text layoutX="119.0" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="opens the help page" GridPane.rowIndex="7">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>

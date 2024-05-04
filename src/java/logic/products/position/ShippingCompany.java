@@ -1,7 +1,6 @@
 package logic.products.position;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -9,7 +8,7 @@ import java.net.URISyntaxException;
 /**
  *
  */
-@SuppressWarnings("unused")
+//TODO 08.01.2024 JavaDoc
 public enum ShippingCompany {
     /** The DHL shippingCompany */
     DHL("https://www.dhl.de/de/privatkunden/pakete-empfangen/verfolgen.html?lang=de&idc="),

@@ -1,6 +1,8 @@
 package logic.order;
 
 import logic.SparePart;
+import logic.Supplier;
+import utils.BigDecimalUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -8,12 +10,13 @@ import java.math.BigDecimal;
 import java.util.*;
 
 /**
- * This class represents an order. An Order has a supplier, a cost and a mapping
+ * This class represents an order.
+ * An order has a supplier, a cost and a mapping
  * from spare parts to their order quantity.
  *
  * @author xThe_white_Lionx
  */
-public class Order {
+public class Order implements Comparable<Order>{
 
     /**
      * The id of the order
@@ -26,7 +29,7 @@ public class Order {
     /**
      * The cost of the order
      */
-    private BigDecimal cost;
+    private BigDecimal value;
 
     /**
      * The spare parts of the order mapped to their quantity
@@ -39,14 +42,14 @@ public class Order {
      * @param id the id of the order
      * @param supplier the supplier of the order
      * @param sparePartToOrderQuantity mapping from the spare part to the ordered quantity
-     * @param cost the cost of the order
+     * @param value the value of the order
      */
     public Order(int id, @NotNull Supplier supplier,
                  @NotNull Map<SparePart, Integer> sparePartToOrderQuantity,
-                 @NotNull BigDecimal cost) {
+                 @NotNull BigDecimal value) {
         this.id = id;
         this.supplier = supplier;
-        this.cost = cost;
+        this.value = value;
         this.sparePartToOrderQuantity = sparePartToOrderQuantity;
     }
 
@@ -78,12 +81,12 @@ public class Order {
     }
 
     /**
-     * Returns the ordered spare parts
+     * Returns a copy of the ordered spare parts
      *
-     * @return the ordered spare parts
+     * @return a copy of the ordered spare parts
      */
     public @NotNull Set<SparePart> getSpareParts(){
-        return new HashSet<>(this.sparePartToOrderQuantity.keySet());
+        return Collections.unmodifiableSet(this.sparePartToOrderQuantity.keySet());
     }
 
     /**
@@ -102,33 +105,46 @@ public class Order {
      *
      * @return the cost of this order
      */
-    public @NotNull BigDecimal getCost() {
-        return this.cost;
+    public @NotNull BigDecimal getValue() {
+        return this.value;
     }
 
     /**
      * Sets the cost of this order to the specified cost
      *
-     * @param cost the new cost of this order
+     * @param value the new cost of this order
      * @throws IllegalArgumentException if the specified cost is less then 0
      */
-    public void setCost(@NotNull BigDecimal cost) {
-        if (cost.doubleValue() < 0) {
-            throw new IllegalArgumentException("cost must be greater equals 0 but is " + cost);
+    public void setValue(@NotNull BigDecimal value) {
+        if (!BigDecimalUtils.isPositive(value)) {
+            throw new IllegalArgumentException("cost must be greater equals 0 but is " + value);
         }
-        this.cost = cost;
+        this.value = value;
     }
 
     /**
      * Returns the order quantity to which the specified {@link SparePart} is mapped,
      * or {@code null} if this order contains no mapping for the orderedSparePart.
      *
-     * @param orderedSparePart
+     * @param orderedSparePart the spareParts that should be removed
      * @return the ordered amount of the specified orderSparePart of this order
      * @throws IllegalArgumentException if the specified orderedSparePart is null
      */
     public @Nullable Integer removeSparePart(@NotNull SparePart orderedSparePart){
         return this.sparePartToOrderQuantity.remove(orderedSparePart);
+    }
+
+    @Override
+    public int compareTo(@NotNull Order o) {
+        int result = this.id - o.id;
+        if (result == 0){
+           result = this.supplier.compareTo(o.supplier);
+        }
+        if (result == 0){
+            result = this.value.compareTo(o.value);
+        }
+
+        return result;
     }
 
     @Override
@@ -141,12 +157,12 @@ public class Order {
         }
         return this.id == order.id && Objects.equals(this.supplier, order.supplier)
                 && Objects.equals(this.sparePartToOrderQuantity, order.sparePartToOrderQuantity)
-                && Objects.equals(this.cost, order.cost);
+                && Objects.equals(this.value, order.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.id, this.supplier, this.sparePartToOrderQuantity, this.cost);
+        return Objects.hash(this.id, this.supplier, this.sparePartToOrderQuantity, this.value);
     }
 
     @Override
@@ -155,8 +171,7 @@ public class Order {
                 "id=" + this.id +
                 ", supplier=" + this.supplier +
                 ", sparePartToOrderQuantity=" + this.sparePartToOrderQuantity +
-                ", cost=" + this.cost +
+                ", cost=" + this.value +
                 '}';
     }
-
 }

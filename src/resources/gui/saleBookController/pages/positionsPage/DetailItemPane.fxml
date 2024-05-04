@@ -13,7 +13,8 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="vb" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.saleBookController.pages.positionsPage.DetailItemPane">
+<VBox fx:id="baseVbx" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="gui.saleBookController.pages.positionsPage.DetailItemPane">
    <children>
         <Label text="item details">
             <font>

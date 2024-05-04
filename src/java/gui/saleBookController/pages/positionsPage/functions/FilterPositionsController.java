@@ -2,9 +2,7 @@ package gui.saleBookController.pages.positionsPage.functions;
 
 import gui.ApplicationMain;
 import gui.ObservableTreeItemMapBinder;
-import gui.util.ChoiceBoxUtils;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -13,7 +11,6 @@ import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import logic.Quarter;
-import logic.products.Product;
 import logic.products.position.Position;
 import logic.products.position.State;
 
@@ -25,35 +22,94 @@ import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
-import static gui.util.StageUtils.createStyledStage;
+import static gui.FXutils.StageUtils.createStyledStage;
 import static logic.Quarter.getQuarterOfMonth;
 
+/**
+ * This class represents the controller for the filter of the positions
+ *
+ * @author xthe_white_lionx
+ */
 public class FilterPositionsController implements Initializable {
+    /**
+     * ChoiceBox of the state to filter
+     */
     @FXML
     private ChoiceBox<State> statusChoiceBox;
+
+    /**
+     * ChoiceBox of the category to filter
+     */
     @FXML
     private ChoiceBox<String> categoryChcBx;
+
+    /**
+     * ChoiceBox of the months to filter
+     */
     @FXML
     private ChoiceBox<Month> monthChcBox;
+
+    /**
+     * RadioButton to enable the monthChcBox
+     */
     @FXML
     private RadioButton rdBtnFilterMonth;
+
+    /**
+     * ChoiceBox of the quarters to filter
+     */
     @FXML
     private ChoiceBox<Quarter> quarterChcBox;
+
+    /**
+     * RadioButton to enable the quarterChoiceBox
+     */
     @FXML
     private RadioButton rdBtnFilterQuarter;
+
+    /**
+     * Spinner to set the year to filter
+     */
     @FXML
     private Spinner<Integer> yearSpinner;
+
+    /**
+     * CheckBox to enable the yearSpinner
+     */
     @FXML
     private CheckBox yearCheckBox;
+
+    /**
+     * Button to apply the filter elements
+     */
     @FXML
     private Button applyBtn;
+
+    /**
+     * Button to reset the current filter
+     */
     @FXML
     private Button resetBtn;
 
+    /**
+     * The Stage of this FilterPositionController
+     */
     private Stage stage;
+
+    /**
+     * The root and his items which should be filtered
+     */
     private ObservableTreeItemMapBinder<Integer> root;
 
-    public static FilterPositionsController CreateFilterPositionsController(ObservableTreeItemMapBinder<Integer> root) throws IOException {
+    /**
+     * Creates and loads a new FilterPositionController
+     *
+     * @param root the root and his items which should be filtered
+     * @return the new created FilterPositionController
+     * @throws IOException if the fxml file could not be loaded
+     */
+    public static FilterPositionsController CreateFilterPositionsController(ObservableTreeItemMapBinder<Integer> root)
+            throws IOException {
         FXMLLoader loader = new FXMLLoader(
                 ApplicationMain.class.getResource("saleBookController/pages/positionsPage/" +
                         "functions/FilterPositionsController.fxml"));
@@ -65,19 +121,17 @@ public class FilterPositionsController implements Initializable {
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
         FilterPositionsController controller = loader.getController();
-        controller.setStage(stage);
-        controller.setRoot(root);
+        controller.stage = stage;
+        controller.root = root;
         return controller;
     }
 
-    private void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
-    private void setRoot(ObservableTreeItemMapBinder<Integer> root) {
-        this.root = root;
-    }
-
+    /**
+     * Initializes this controller
+     *
+     * @param url unused
+     * @param resourceBundle unused
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         LocalDate currentDate = LocalDate.now();
@@ -144,14 +198,20 @@ public class FilterPositionsController implements Initializable {
         this.cleanFilter();
     }
 
+    /**
+     * Displays this controller and waits for the interaction of the user
+     */
     public void showAndWait(){
         this.stage.showAndWait();
     }
 
+    /**
+     * Sets the filter options for the category filter
+     *
+     * @param categories the filter options
+     */
     public void setCategories(Collection<String> categories) {
-        String currentValue = this.categoryChcBx.getValue();
-        ChoiceBoxUtils.setItems(this.categoryChcBx, categories);
-        this.categoryChcBx.setValue(currentValue);
+        this.categoryChcBx.getItems().setAll(categories);
     }
 
     /**
@@ -184,7 +244,7 @@ public class FilterPositionsController implements Initializable {
     }
 
     /**
-     * Cleans the options of the filter items to their default values
+     * Cleans the options of the filter controls to their default values
      */
     private void cleanFilter() {
         this.categoryChcBx.setValue(null);
@@ -214,6 +274,9 @@ public class FilterPositionsController implements Initializable {
         this.applyBtn.setDisable(false);
     }
 
+    /**
+     * Handles the cancel button and closes the window
+     */
     public void handleCancel() {
         this.stage.close();
     }

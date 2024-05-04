@@ -3,29 +3,28 @@ package gui;
 import javafx.collections.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 /**
- * A wrapper class that binds the values of an {@link ObservableMap} to an {@link ObservableList}. The items in the list
- * will match the values in the map. This class is not synchronized.
+ * A wrapper class that binds the elements of an {@link ObservableSet} to an {@link ObservableList}.
+ * The items in the list will match the elements in the set.
+ * This class is not synchronized.
  *
- * @param <K> the type used for keys of the ObservableMap
- * @param <V> the type used for values of the ObservableMap
+ * @param <T> the type used for the elements of the ObservableSet
  */
 public class ObservableListSetBinder<T> implements SetChangeListener<T> {
 
     /**
-     *
+     * ObservableList bound to the values of the ObservableSet
      */
-    private final ObservableList<T> list;
+    private final ObservableList<T> observableList;
 
     /**
+     * Creates an ObservableListSetBinder bounded to the specified set
      *
-     * @param set
+     * @param set from which the values should be bound
      */
     public ObservableListSetBinder(@NotNull ObservableSet<T> set) {
         // initialise the list
-        this.list = FXCollections.observableArrayList(set);
+        this.observableList = FXCollections.observableArrayList(set);
 
         // listen for changes
         set.addListener(this);
@@ -36,17 +35,17 @@ public class ObservableListSetBinder<T> implements SetChangeListener<T> {
      *
      * @return unmodifiable ObservableList
      */
-    public @NotNull ObservableList<T> getList() {
-        return FXCollections.unmodifiableObservableList(this.list);
+    public @NotNull ObservableList<T> getObservableList() {
+        return FXCollections.unmodifiableObservableList(this.observableList);
     }
 
     @Override
     public void onChanged(Change<? extends T> change) {
         if (change.wasRemoved()) {
-            this.list.remove(change.getElementRemoved());
+            this.observableList.remove(change.getElementRemoved());
         }
         if (change.wasAdded()) {
-            this.list.add(change.getElementAdded());
+            this.observableList.add(change.getElementAdded());
         }
     }
 }

@@ -3,34 +3,39 @@ package gui;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
-import logic.products.Item;
+import logic.products.item.Item;
 import logic.products.Product;
 import logic.products.position.Position;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
+ * A PositionTreeItem class.
  *
+ * @author xthe_white_lionx
  */
 public class PositionTreeItem extends TreeItem<Product> implements ListChangeListener<Item> {
 
     /**
-     *
+     * ObservableList of the direct children of this PositionTreeItem
      */
     ObservableList<TreeItem<Product>> children;
 
     /**
+     * Creates a new PositionTreeItem with the specified position
      *
-     * @param position
+     * @param position value of this PositionTreeItem
      */
     public PositionTreeItem(Position position) {
         super(position);
         this.children = this.getChildren();
-        for (Item item : position.getItems()) {
+        ObservableList<Item> itemObservableList = position.getItemObservableList();
+        for (Item item : itemObservableList) {
             this.children.add(new TreeItem<>(item));
         }
-        position.getItemObservableList().addListener(this);
+        itemObservableList.addListener(this);
     }
 
     @Override
@@ -45,18 +50,13 @@ public class PositionTreeItem extends TreeItem<Product> implements ListChangeLis
 
             if (change.wasRemoved()) {
                 List<? extends Item> removed = change.getRemoved();
-                int offSet = 0;
+
+                Set<Integer> ids = new HashSet<>();
                 for (Item item : removed) {
-                    while (offSet < this.children.size()) {
-                        TreeItem<Product> child = this.children.get(offSet);
-                        if (child.getValue() instanceof Item itemChild && itemChild.getId() == item.getId()) {
-                            this.children.remove(offSet);
-                            break;
-                        } else {
-                            offSet++;
-                        }
-                    }
+                    ids.add(item.getId());
                 }
+                this.children.removeIf(
+                        productTreeItem -> ids.contains(productTreeItem.getValue().getId()));
             }
         }
     }

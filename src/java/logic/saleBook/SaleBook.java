@@ -1,23 +1,24 @@
 package logic.saleBook;
 
-import gui.Message;
-import gui.ObservableListMapBinder;
-import gui.ObservableListSetBinder;
 import gui.ObservableTreeItemMapBinder;
-import gui.util.LabelUtils;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableMap;
-import javafx.collections.ObservableSet;
+import gui.FXutils.LabelUtils;
+import logic.Asset;
 import logic.GUIConnector;
-import logic.ItemColor;
+import logic.products.item.ItemColor;
 import logic.SparePart;
+import logic.manager.AssetManager;
+import logic.manager.OrdersManager;
+import logic.manager.PositionsManager;
+import logic.manager.SparePartsManager;
+import logic.manager.SuppliersManager;
 import logic.order.Order;
-import logic.order.Supplier;
-import logic.products.Item;
+import logic.Supplier;
+import logic.products.item.Item;
 import logic.products.position.Position;
 import logic.products.position.PositionData;
 import logic.products.position.ShippingCompany;
-import logic.products.position.State;
+import utils.BigDecimalUtils;
+import gui.FXutils.FXCollectionsUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,46 +32,21 @@ import java.util.*;
  *
  * @author xthe_white_lionx
  */
-public class SaleBook extends SaleBookImpl {
+public class SaleBook extends AbstractSaleBook {
+    /**
+     *
+     */
+    //TODO 20.04.2024
+    private final SparePartsManager sparePartsManager;
 
-    /**
-     * Set of the name of the spareParts
-     */
-    private final Set<String> sparePartNames = new HashSet<>();
-    /**
-     * Set of units of the sparParts
-     */
-    private final Set<String> sparePartUnits = new HashSet<>();
-    /**
-     * ObservableSet of the categories of this saleBook
-     */
-    private ObservableSet<String> categoryObsSet;
+    private final PositionsManager positionsManager;
 
-    /**
-     * ObservableSet of the spareParts of this saleBook
-     */
-    private final ObservableSet<SparePart> sparePartsObsSet;
+    private final SuppliersManager suppliersManager;
 
-    /**
-     * ObservableMap of positions mapped to their matching id
-     */
-    private ObservableMap<Integer, Position> idToPositionObsMap;
-    /**
-     * ObservableMap of suppliers mapped their matching name
-     */
-    private final ObservableMap<String, Supplier> nameToSupplierObsMap;
-    /**
-     * ObservableMap of orders mapped to their matching id
-     */
-    private final ObservableMap<Integer, Order> idToOrderObsMap;
-    /**
-     * Map of itemColors mapped to their occurrence in this saleBook
-     */
-    private final Map<ItemColor, Integer> itemColorOccurrences = new HashMap<>();
-    /**
-     * Map of ItemColors mapped to their names
-     */
-    private final Map<String, ItemColor> nameToItemColor = new HashMap<>();
+    private final OrdersManager ordersManager;
+
+    private final AssetManager assetManager;
+
     /**
      * Volume of the sales
      */
@@ -93,11 +69,11 @@ public class SaleBook extends SaleBookImpl {
      */
     public SaleBook(@NotNull GUIConnector gui) {
         super();
-        this.sparePartsObsSet = FXCollections.observableSet(new TreeSet<>());
-        this.idToPositionObsMap = FXCollections.observableMap(new TreeMap<>());
-        this.categoryObsSet = FXCollections.observableSet(new TreeSet<>());
-        this.nameToSupplierObsMap = FXCollections.observableMap(new TreeMap<>());
-        this.idToOrderObsMap = FXCollections.observableMap(new TreeMap<>());
+        this.sparePartsManager = new SparePartsManager();
+        this.positionsManager = new PositionsManager();
+        this.suppliersManager = new SuppliersManager();
+        this.ordersManager = new OrdersManager();
+        this.assetManager = new AssetManager();
         this.gui = gui;
 
         this.displaySaleBook();
@@ -111,59 +87,20 @@ public class SaleBook extends SaleBookImpl {
      */
     public SaleBook(@NotNull SaleBookData saleBookData, @NotNull GUIConnector gui) {
         super(saleBookData.repairServiceSales, saleBookData.extraordinaryIncome,
-                saleBookData.paid, saleBookData.fixedCosts, saleBookData.nextPosId,
-                saleBookData.nextOrderId);
+                saleBookData.paid, saleBookData.fixedCosts);
 
-        Set<SparePart> spareParts = new TreeSet<>();
-        for (SparePart sparePart : saleBookData.getSpareParts()) {
-            this.sparePartNames.add(sparePart.getName());
-            this.sparePartUnits.add(sparePart.getUnit());
-            spareParts.add(sparePart);
-        }
-        this.sparePartsObsSet = FXCollections.observableSet(spareParts);
-        this.initializeIdToPositionMap(saleBookData.getPositionData());
-
-        Map<String, Supplier> nameToSupplier = new TreeMap<>();
-        for (Supplier supplier : saleBookData.getSuppliers()) {
-            nameToSupplier.put(supplier.getName(), supplier);
-        }
-        this.nameToSupplierObsMap = FXCollections.observableMap(nameToSupplier);
-
-        Map<Integer, Order> idToOrder = new TreeMap<>();
-        for (Order order : saleBookData.getOrders()) {
-            idToOrder.put(order.getId(), order);
-        }
-        this.idToOrderObsMap = FXCollections.observableMap(idToOrder);
-
+        this.sparePartsManager = new SparePartsManager(saleBookData.getSpareParts());
+        ItemColor.setItemColors(saleBookData.getItemColors());
+        Position[] positions = this.createPositions(saleBookData.getPositionData());
+        this.positionsManager = new PositionsManager(positions,
+                saleBookData.getNextPosId());
+        this.suppliersManager = new SuppliersManager(saleBookData.getSuppliers());
+        this.ordersManager = new OrdersManager(saleBookData.getOrders(),
+                saleBookData.getNextOrderId());
+        this.assetManager = new AssetManager(saleBookData.getAssets(),
+                saleBookData.getNextAssetId());
         this.gui = gui;
         this.displaySaleBook();
-    }
-
-    /**
-     * Initializes the idToPositionObsMap.
-     *
-     * @param positionData the positions data
-     */
-    private void initializeIdToPositionMap(PositionData[] positionData) {
-        Map<Integer, Position> idToPosition = new TreeMap<>();
-        Set<String> categorySet = new TreeSet<>();
-
-        for (PositionData positionDatum : positionData) {
-            Position position = new Position(positionDatum);
-            idToPosition.put(position.getId(), position);
-            categorySet.add(position.getCategory());
-            this.variableCosts = this.variableCosts.add(position.getPurchasingPrice()).add(position.getCost());
-            if (position.isSold()) {
-                this.salesVolume = this.salesVolume.add(position.getSellingPrice());
-            }
-            for (Item item : position.getItems()) {
-                ItemColor itemColor = item.getItemColor();
-                this.itemColorOccurrences.merge(itemColor, 1, Integer::sum);
-                this.nameToItemColor.put(itemColor.getName(), itemColor);
-            }
-        }
-        this.idToPositionObsMap = FXCollections.observableMap(idToPosition);
-        this.categoryObsSet = FXCollections.observableSet(categorySet);
     }
 
     /**
@@ -172,7 +109,7 @@ public class SaleBook extends SaleBookImpl {
      * @return sparePart names
      */
     public @NotNull Set<String> getSparePartNames() {
-        return this.sparePartNames;
+        return this.sparePartsManager.getSparePartNames();
     }
 
     /**
@@ -181,7 +118,7 @@ public class SaleBook extends SaleBookImpl {
      * @return spareParts units
      */
     public @NotNull Set<String> getSparePartUnits() {
-        return this.sparePartUnits;
+        return this.sparePartsManager.getSparePartUnits();
     }
 
     /**
@@ -190,7 +127,7 @@ public class SaleBook extends SaleBookImpl {
      * @return positions categories
      */
     public @NotNull Set<String> getCategories() {
-        return this.categoryObsSet;
+        return this.positionsManager.getCategories();
     }
 
     /**
@@ -199,7 +136,7 @@ public class SaleBook extends SaleBookImpl {
      * @return spareParts
      */
     public @NotNull Set<SparePart> getSpareParts() {
-        return new TreeSet<>(this.sparePartsObsSet);
+        return new TreeSet<>(this.sparePartsManager.getSparePartsObsSet());
     }
 
     /**
@@ -208,7 +145,7 @@ public class SaleBook extends SaleBookImpl {
      * @return the positions of this saleBook
      */
     public @NotNull Collection<Position> getPositions() {
-        return this.idToPositionObsMap.values();
+        return this.positionsManager.getPositions();
     }
 
     /**
@@ -217,7 +154,16 @@ public class SaleBook extends SaleBookImpl {
      * @return the orders of this saleBook
      */
     public @NotNull Collection<Order> getOrders() {
-        return this.idToOrderObsMap.values();
+        return this.ordersManager.getOrders();
+    }
+
+    /**
+     * Returns the assets of this saleBook
+     *
+     * @return the assets of this saleBook
+     */
+    public @NotNull Collection<Asset> getAssets() {
+        return this.assetManager.getAssets();
     }
 
     /**
@@ -226,7 +172,7 @@ public class SaleBook extends SaleBookImpl {
      * @return the suppliers of this saleBook
      */
     public @NotNull Collection<Supplier> getSuppliers() {
-        return this.nameToSupplierObsMap.values();
+        return this.suppliersManager.getSuppliers();
     }
 
     /**
@@ -235,7 +181,7 @@ public class SaleBook extends SaleBookImpl {
      * @return ItemColor mapped to their name
      */
     public @NotNull Map<String, ItemColor> getNameToItemColor() {
-        return new HashMap<>(this.nameToItemColor);
+        return ItemColor.getItemColorMap();
     }
 
     /**
@@ -243,8 +189,34 @@ public class SaleBook extends SaleBookImpl {
      *
      * @return the salesVolume of this saleBook
      */
-    public @NotNull BigDecimal getSalesVolume(){
+    public @NotNull BigDecimal getSalesVolume() {
         return this.salesVolume;
+    }
+
+    /**
+     * Returns the id for the next creation of a position
+     *
+     * @return the id for the next creation of a position
+     */
+    public int getNextPosId() {
+        return this.positionsManager.getNextPosId();
+    }
+
+    /***
+     * Returns the id for the next creation of an order
+     *
+     * @return the id for the next creation of an order
+     */
+    public int getNextOrderId() {
+        return this.ordersManager.getNextOrderId();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getNextAssetId() {
+        return this.assetManager.getNextAssetId();
     }
 
     /**
@@ -253,13 +225,11 @@ public class SaleBook extends SaleBookImpl {
      * @param sparePart the sparePart which should be added
      */
     public void addSparePart(@NotNull SparePart sparePart) {
-        boolean added = this.sparePartsObsSet.add(sparePart);
+        boolean added = this.sparePartsManager.addSparePart(sparePart);
         if (added) {
-            this.sparePartNames.add(sparePart.getName());
-            this.sparePartUnits.add(sparePart.getUnit());
+            this.gui.displaySparePartNames(this.sparePartsManager.getSparePartNames());
             this.gui.updateStatus(String.format("spare part %s successfully added",
                     sparePart.getName()));
-            this.gui.displaySparePartNames(this.sparePartNames);
         }
     }
 
@@ -268,62 +238,35 @@ public class SaleBook extends SaleBookImpl {
      *
      * @param sparePart the sparePart which should be removed
      */
-    public void removeSparePart(@NotNull SparePart sparePart) {
-        boolean removed = this.sparePartsObsSet.remove(sparePart);
+    public boolean removeSparePart(@NotNull SparePart sparePart) {
+        boolean removed = this.sparePartsManager.removeSparePart(sparePart);
         if (removed) {
-            String deletedName = sparePart.getName();
-            String deletedUnit = sparePart.getUnit();
-            boolean containsName = false;
-            boolean containsUnit = false;
-            Iterator<SparePart> iterator = this.sparePartsObsSet.iterator();
-            while (iterator.hasNext() && (!containsName || !containsUnit)) {
-                SparePart part = iterator.next();
-                if (part.getName().equals(deletedName)) {
-                    containsName = true;
-                }
-                if (sparePart.getUnit().equals(deletedUnit)) {
-                    containsUnit = true;
-                }
-            }
-            if (!containsName) {
-                this.sparePartNames.remove(deletedName);
-                this.gui.displaySparePartNames(this.sparePartNames);
-            }
-            if (!containsUnit) {
-                this.sparePartUnits.remove(deletedUnit);
-            }
+            this.gui.displaySparePartNames(this.sparePartsManager.getSparePartNames());
             this.gui.updateStatus(String.format("spare part %s successfully deleted",
                     sparePart.getName()));
+            return true;
         }
+        return false;
     }
 
     /**
      * Adds the specified position to this saleBook
      *
      * @param position the position which should be added
+     * @return
      * @throws IllegalArgumentException if the id of the specified position is already used
      */
-    public void addPosition(@NotNull Position position) {
-        int id = position.getId();
-        if (this.nextPosId != id){
-            throw new IllegalArgumentException("expected id is %d but is %d".formatted(
-                    this.nextPosId, id));
+    public boolean addPosition(@NotNull Position position) {
+        boolean added = this.positionsManager.addPosition(position);
+        if (added) {
+            this.gui.displayCategories(this.positionsManager.getCategories());
+            if (position.getSellingPrice() != null) {
+                this.addSale(position.getSellingPrice());
+            }
+            this.gui.updateStatus(String.format("position %d successfully added", position.getId()));
+            return true;
         }
-
-        this.idToPositionObsMap.put(id, position);
-        this.categoryObsSet.add(position.getCategory());
-        this.gui.displayCategories(this.categoryObsSet);
-        if (position.getSellingPrice() != null) {
-            this.addSale(position.getSellingPrice());
-        }
-        List<Item> items = position.getItems();
-        for (Item item : items) {
-            ItemColor itemColor = item.getItemColor();
-            this.itemColorOccurrences.merge(itemColor, 1, Integer::sum);
-            this.nameToItemColor.put(itemColor.getName(), itemColor);
-        }
-        this.gui.updateStatus(Message.added.formatMessage("position %d".formatted(id)));
-        this.nextPosId++;
+        return false;
     }
 
     /**
@@ -331,21 +274,18 @@ public class SaleBook extends SaleBookImpl {
      *
      * @param posId id of the position to which the item should be added
      * @param item  the item which should be added
+     * @return
      * @throws IllegalArgumentException if no position with the specified posId exist
      */
-    public void addItemToPosition(int posId, @NotNull Item item) {
-        Position position = this.idToPositionObsMap.get(posId);
-        if (position == null) {
-            throw new IllegalArgumentException("no position for id " + posId);
+    public boolean addItemToPosition(int posId, @NotNull Item item) {
+        boolean added = this.positionsManager.addItemToPosition(posId, item);
+        if (added) {
+            this.gui.displayPositions(this.positionsManager.getPositions());
+            this.gui.updateStatus(String.format("item %d of position %d successfully added",
+                    item.getId(), posId));
+            return true;
         }
-
-        position.addItem(item);
-        ItemColor itemColor = item.getItemColor();
-        this.itemColorOccurrences.merge(itemColor, 1, Integer::sum);
-        this.nameToItemColor.put(itemColor.getName(), itemColor);
-        this.gui.displayPositions(this.idToPositionObsMap.values());
-        this.gui.updateStatus(String.format("item %d of position %d successfully added",
-                item.getId(), posId));
+        return false;
     }
 
     /**
@@ -355,12 +295,17 @@ public class SaleBook extends SaleBookImpl {
      * @throws IllegalArgumentException if there is no position with the specified, id
      */
     public @NotNull Position removePosition(int id) {
-        Position position = this.idToPositionObsMap.remove(id);
+        Position position = this.positionsManager.removePosition(id);
         if (position == null) {
             throw new IllegalArgumentException("no position for id " + id);
         }
 
-        this.removePosition(position);
+        if (position.getSellingPrice() != null) {
+            this.subtractSale(position.getSellingPrice());
+        }
+        this.variableCosts = this.variableCosts.subtract(position.getCost())
+                .subtract(position.getPurchasingPrice());
+        this.updateTotalPerformance();
         this.gui.updateStatus(String.format("position %d successfully deleted", id));
         return position;
     }
@@ -373,29 +318,15 @@ public class SaleBook extends SaleBookImpl {
      * @throws IllegalArgumentException if there is no position with the specified positionId or
      *                                  if the target position doesn't contain the item with the specified itemId
      */
-    public void removeItem(int positionId, int itemId) {
-        Position position = this.idToPositionObsMap.get(positionId);
-        if (position == null) {
-            throw new IllegalArgumentException("no position for id " + positionId);
-        }
-        if (position.getItems().size() <= 1) {
-            throw new IllegalArgumentException("a position must have at least 1 item");
-        }
-
-        Item item = position.removeItemById(itemId);
+    public @NotNull Item removeItem(int positionId, int itemId) {
+        Item item = this.positionsManager.removeItem(positionId, itemId);
         if (item == null) {
             throw new IllegalArgumentException("no item in the position for id " + itemId);
         }
-
-        ItemColor itemColor = item.getItemColor();
-        Integer occurrence = this.itemColorOccurrences.merge(itemColor, -1, Integer::sum);
-        if (occurrence == 0) {
-            this.itemColorOccurrences.remove(itemColor);
-            this.nameToItemColor.remove(itemColor.getName());
-        }
-        this.gui.displayPositions(this.idToPositionObsMap.values());
+        this.gui.displayPositions(this.positionsManager.getPositions());
         this.gui.updateStatus(String.format("item %d of position %d successfully deleted", itemId
                 , positionId));
+        return item;
     }
 
     /**
@@ -404,14 +335,9 @@ public class SaleBook extends SaleBookImpl {
      *
      * @param positionId   the id of the searched position
      * @param receivedDate the date on which the position was received
-     * @throws IllegalArgumentException if there is no position with the specified positionId
      */
     public void setReceived(int positionId, @NotNull LocalDate receivedDate) {
-        Position position = this.idToPositionObsMap.get(positionId);
-        if (position == null) {
-            throw new IllegalArgumentException("no position for id " + positionId);
-        }
-        position.setReceived(receivedDate);
+        this.positionsManager.setReceived(positionId, receivedDate);
         this.gui.refreshPosition();
         this.gui.updateStatus(String.format("position %d set on received", positionId));
     }
@@ -424,11 +350,7 @@ public class SaleBook extends SaleBookImpl {
      * @throws IllegalArgumentException if there is no position with the specified positionId
      */
     public void addCostToPosition(int positionId, @NotNull BigDecimal newCost) {
-        Position position = this.idToPositionObsMap.get(positionId);
-        if (position == null) {
-            throw new IllegalArgumentException("no position for id " + positionId);
-        }
-        position.addCost(newCost);
+        this.positionsManager.addCostToPosition(positionId, newCost);
         this.variableCosts = this.variableCosts.add(newCost);
         this.gui.refreshPosition();
         this.gui.updateStatus(String.format("cost %.2f %s add to position %d", newCost,
@@ -446,18 +368,8 @@ public class SaleBook extends SaleBookImpl {
      *                                  sparePartsToCount is null
      */
     public void repairPosition(int positionId, @NotNull Map<SparePart, Integer> sparePartsToCount) {
-        Position position = this.idToPositionObsMap.get(positionId);
-        if (position == null) {
-            throw new IllegalArgumentException("no position for id " + positionId);
-        }
-
-        position.setState(State.REPAIRED);
-        for (SparePart sparePart : this.sparePartsObsSet) {
-            Integer count = sparePartsToCount.get(sparePart);
-            if (count != null && count > 0) {
-                sparePart.use(count);
-            }
-        }
+        this.positionsManager.repairPosition(positionId);
+        this.sparePartsManager.useSparParts(sparePartsToCount);
         this.gui.refreshPosition();
         this.gui.refreshSpareParts();
         this.gui.updateStatus(String.format("position %d repaired", positionId));
@@ -473,12 +385,7 @@ public class SaleBook extends SaleBookImpl {
      */
     public void sale(int positionId, @NotNull LocalDate sellingDate,
                      @NotNull BigDecimal sellingPrice) {
-        Position position = this.idToPositionObsMap.get(positionId);
-        if (position == null) {
-            throw new IllegalArgumentException("no position for id " + positionId);
-        }
-        position.sale(sellingDate, sellingPrice);
-        this.addSale(sellingPrice);
+        this.positionsManager.sale(positionId, sellingDate, sellingPrice);
         this.gui.refreshPosition();
         this.gui.updateStatus(String.format("position %d sold", positionId));
     }
@@ -496,11 +403,7 @@ public class SaleBook extends SaleBookImpl {
      */
     public void shipped(int positionId, @NotNull ShippingCompany shippingCompany,
                         @NotNull String trackingNumber, @NotNull BigDecimal shippingCost) {
-        Position position = this.idToPositionObsMap.get(positionId);
-        if (position == null) {
-            throw new IllegalArgumentException("no position for id " + positionId);
-        }
-        position.send(shippingCompany, trackingNumber, shippingCost);
+        this.positionsManager.shipped(positionId, shippingCompany, trackingNumber, shippingCost);
         this.variableCosts = this.variableCosts.add(shippingCost);
         this.gui.refreshPosition();
         this.gui.updateStatus(String.format("position %d shipped", positionId));
@@ -536,8 +439,13 @@ public class SaleBook extends SaleBookImpl {
      * Adds the specified payment to the paid
      *
      * @param payment the payment which should be added
+     * @throws IllegalArgumentException if the payment is negative
      */
     public void addPayment(@NotNull BigDecimal payment) {
+        if (!BigDecimalUtils.isPositive(payment)) {
+            throw new IllegalArgumentException("payment is negative");
+        }
+
         this.paid = this.paid.add(payment);
         this.gui.displayPaid(this.paid);
         BigDecimal tenthPartTotalSales = this.repairServiceSales.add(this.salesVolume.add(this.extraordinaryIncome)).divide(BigDecimal.TEN, RoundingMode.HALF_UP);
@@ -554,28 +462,14 @@ public class SaleBook extends SaleBookImpl {
      * @throws IllegalArgumentException if there is no position with the specified positionId
      */
     public void dividePosition(int positionId) {
-        Position position = this.idToPositionObsMap.get(positionId);
-        if (position == null) {
-            throw new IllegalArgumentException("no position for id " + positionId);
-        }
-
-        int[] positionIds = new int[position.getItems().size() - 1];
-        for (int i = 0, positionIdsLength = positionIds.length; i < positionIdsLength; i++) {
-            positionIds[i] = this.nextPosId++;
-        }
-
-        Position[] newPositions = position.divide(positionIds);
-
-        if (newPositions != null && newPositions.length > 0) {
+        Position[] positions = this.positionsManager.dividePosition(positionId);
+        if (positions != null && positions.length > 0) {
             StringBuilder builder =
                     new StringBuilder(String.format("position %d divided in ", positionId));
-            for (int i = 0, newPositionsLength = newPositions.length; i < newPositionsLength; i++) {
-                Position currentPosition = newPositions[i];
-                int currentId = currentPosition.getId();
-                this.idToPositionObsMap.put(currentId, currentPosition);
+            for (int i = 0, positionsLength = positions.length; i < positionsLength; i++) {
                 builder.append(" ");
-                builder.append(currentId);
-                if (i < positionIds.length - 1) {
+                builder.append(positions[i].getId());
+                if (i < positionsLength - 1) {
                     builder.append(",");
                 }
             }
@@ -589,11 +483,11 @@ public class SaleBook extends SaleBookImpl {
      * @param order the order which should be added
      */
     public void addOrder(@NotNull Order order) {
-        int orderId = order.getId();
-        this.idToOrderObsMap.put(orderId, order);
-        this.addFixedCost(order.getCost());
-        this.gui.updateStatus(String.format("order %d added", orderId));
-        this.nextOrderId++;
+        boolean added = this.ordersManager.addOrder(order);
+        if (added) {
+            this.addFixedCost(order.getValue());
+            this.gui.updateStatus(String.format("order %d added", order.getId()));
+        }
     }
 
     /**
@@ -603,15 +497,12 @@ public class SaleBook extends SaleBookImpl {
      * @throws IllegalArgumentException if there is no order with the specified orderId
      */
     public void orderReceived(int orderId) {
-        Order order = this.idToOrderObsMap.remove(orderId);
+        Order order = this.ordersManager.removeOrder(orderId);
         if (order == null) {
             throw new IllegalArgumentException("no order for id " + orderId);
         }
-        for (SparePart orderedSparePart : order.getSpareParts()) {
-            this.storeReceivedSparePart(order, orderedSparePart);
-        }
-        this.gui.displayOrderedSpareParts(order.getSpareParts());
-        this.gui.refreshSpareParts();
+        this.sparePartsManager.storeSpareParts(order.getSparePartToOrderQuantity());
+        this.updateDisplayOrder(order);
         this.gui.updateStatus(String.format("order %d received", orderId));
     }
 
@@ -622,11 +513,11 @@ public class SaleBook extends SaleBookImpl {
      * @throws IllegalArgumentException if there is no order with the specified orderId
      */
     public void cancelOrder(int orderId) {
-        Order order = this.idToOrderObsMap.remove(orderId);
+        Order order = this.ordersManager.removeOrder(orderId);
         if (order == null) {
             throw new IllegalArgumentException("no order for id " + orderId);
         }
-        this.addFixedCost(order.getCost().negate());
+        this.addFixedCost(order.getValue().negate());
         this.gui.displayOrderedSpareParts(Set.of());
         this.gui.updateStatus(String.format("order %d canceled", orderId));
     }
@@ -634,20 +525,23 @@ public class SaleBook extends SaleBookImpl {
     /**
      * Consumes a spare part of the order with the specified orderId
      *
-     * @param orderId the id of the order from which the spare part should be consumed
+     * @param orderId          the id of the order from which the spare part should be consumed
      * @param orderedSparePart the spare part which was received
      * @throws IllegalArgumentException if there is no order with the specified orderId
      */
     public void sparePartReceived(int orderId, @NotNull SparePart orderedSparePart) {
-        Order order = this.idToOrderObsMap.get(orderId);
+        Order order = this.ordersManager.getOrder(orderId);
         if (order == null) {
             throw new IllegalArgumentException("no order for id " + orderId);
         }
-        this.storeReceivedSparePart(order, orderedSparePart);
-        this.gui.displayOrderedSpareParts(order.getSpareParts());
-        this.gui.refreshSpareParts();
-        this.gui.updateStatus(String.format("spare part %s of order %d received",
-                orderedSparePart.getName(), orderId));
+        Integer orderQuantity = order.getOrderQuantity(orderedSparePart);
+        if (orderQuantity != null && orderQuantity > 0) {
+            this.sparePartsManager.storeSparePart(orderedSparePart, orderQuantity);
+
+            this.updateDisplayOrder(order);
+            this.gui.updateStatus(String.format("spare part %s of order %d received",
+                    orderedSparePart.getName(), orderId));
+        }
     }
 
     /**
@@ -656,10 +550,11 @@ public class SaleBook extends SaleBookImpl {
      * @param supplier the supplier which should be added
      */
     public void addSupplier(@NotNull Supplier supplier) {
-        String supplierName = supplier.getName();
-        this.nameToSupplierObsMap.put(supplierName, supplier);
-        this.gui.displaySupplierNames(this.nameToSupplierObsMap.keySet());
-        this.gui.updateStatus(String.format("supplier %s added", supplierName));
+        boolean added = this.suppliersManager.addSupplier(supplier);
+        if (added) {
+            this.gui.displaySupplierNames(this.suppliersManager.getSupplierNames());
+            this.gui.updateStatus(String.format("supplier %s added", supplier.getName()));
+        }
     }
 
     /**
@@ -668,9 +563,9 @@ public class SaleBook extends SaleBookImpl {
      * @param supplierName the name of the supplier which should be deleted
      */
     public void removeSupplier(@NotNull String supplierName) {
-        if (!supplierName.isEmpty()) {
-            this.nameToSupplierObsMap.remove(supplierName);
-            this.gui.displaySupplierNames(this.nameToSupplierObsMap.keySet());
+        Supplier removedSupplier = this.suppliersManager.removeSupplier(supplierName);
+        if (removedSupplier != null) {
+            this.gui.displaySupplierNames(this.suppliersManager.getSupplierNames());
             this.gui.updateStatus(String.format("supplier %s deleted", supplierName));
         }
     }
@@ -682,21 +577,23 @@ public class SaleBook extends SaleBookImpl {
      * @return the supplier
      */
     public @Nullable Supplier getSupplierByName(@NotNull String supplierName) {
-        return this.nameToSupplierObsMap.get(supplierName);
+        return this.suppliersManager.getSupplier(supplierName);
     }
 
     /**
-     *
-     *
      * @param repairServiceSales
      * @param extraordinaryIncome
      * @param paid
      */
+    //TODO 08.01.2024 JavaDoc
     public void recalculateTenthPartPage(BigDecimal repairServiceSales, BigDecimal extraordinaryIncome,
                                          BigDecimal paid) {
         this.repairServiceSales = repairServiceSales;
+        this.gui.displayRepairServiceSale(repairServiceSales);
         this.extraordinaryIncome = extraordinaryIncome;
+        this.gui.displayExtraordinaryIncome(extraordinaryIncome);
         this.paid = paid;
+        this.gui.displayPaid(paid);
         this.displayTenthPart();
     }
 
@@ -706,41 +603,58 @@ public class SaleBook extends SaleBookImpl {
      * @return name of the suppliers
      */
     public @NotNull Set<String> getSupplierNames() {
-        return this.nameToSupplierObsMap.keySet();
+        return this.suppliersManager.getSupplierNames();
     }
 
     /**
      * Combines the position with the specified positionId with the positions with the specified positionIds.
      * All positions have to be at least at the state received
      *
-     * @param positionId the id of one position which should be combined
+     * @param positionId  the id of one position which should be combined
      * @param positionIds the id of the other position which should be combined with
      * @throws IllegalArgumentException if no positionId to combine with were given or
-     * some positionId does not match to any position
+     *                                  some positionId does not match to any position
      */
     public void combinePositions(int positionId, int @NotNull ... positionIds) {
-        if (positionIds.length < 1) {
-            throw new IllegalArgumentException("");
-        }
-
-        for (int currId : positionIds) {
-            if (!this.idToPositionObsMap.containsKey(currId)) {
-                throw new IllegalArgumentException("no position found for id " + currId);
-            }
-        }
-
-        Position combindPosition = this.removePosition(positionId);
-
-        for (int id : positionIds) {
-            Position currPosition = this.removePosition(id);
-            combindPosition = combindPosition.combine(this.nextPosId, currPosition);
-        }
-        this.idToPositionObsMap.put(combindPosition.getId(), combindPosition);
+        Position position = this.positionsManager.combinePositions(positionId, positionIds);
         this.gui.refreshPosition();
-        this.gui.updateStatus("combined to the new position " + this.nextPosId);
-        this.nextPosId++;
+        this.gui.updateStatus("combined to the new position " + position.getId());
     }
 
+    /**
+     * Adds the specified asset to this saleBook if the asset with the id is not added yet.
+     *
+     * @param asset that should be added
+     * @return true if the asset were added otherwise false
+     */
+    public boolean addAsset(@NotNull Asset asset) {
+        boolean added = this.assetManager.addAsset(asset);
+        if (added) {
+            this.gui.updateStatus(String.format("asset %d added", asset.getId()));
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Removes the asset with the specified assetId
+     *
+     * @param assetId the id of the asset that should be removed
+     * @throws IllegalArgumentException if no asset with the specified id exist
+     */
+    public void removeAsset(int assetId) {
+        Asset asset = this.assetManager.removeAsset(assetId);
+
+        if (asset == null) {
+            throw new IllegalArgumentException("no asset for ID " + assetId);
+        }
+        this.gui.updateStatus(String.format("asset %d deleted", assetId));
+    }
+
+    /**
+     * @param message
+     */
+    //TODO 18.04.2024
     public void updateStatus(String message) {
         this.gui.updateStatus(message);
     }
@@ -756,14 +670,11 @@ public class SaleBook extends SaleBookImpl {
         if (!super.equals(o)) {
             return false;
         }
-        return Objects.equals(this.sparePartNames, saleBook.sparePartNames) &&
-                Objects.equals(this.sparePartUnits, saleBook.sparePartUnits) && Objects.equals(this.categoryObsSet, saleBook.categoryObsSet) &&
-                Objects.equals(this.sparePartsObsSet, saleBook.sparePartsObsSet) &&
-                Objects.equals(this.idToPositionObsMap, saleBook.idToPositionObsMap) &&
-                Objects.equals(this.nameToSupplierObsMap, saleBook.nameToSupplierObsMap) &&
-                Objects.equals(this.idToOrderObsMap, saleBook.idToOrderObsMap) &&
-                Objects.equals(this.itemColorOccurrences, saleBook.itemColorOccurrences) &&
-                Objects.equals(this.nameToItemColor, saleBook.nameToItemColor) &&
+        return Objects.equals(this.sparePartsManager, saleBook.sparePartsManager) &&
+                Objects.equals(this.positionsManager, saleBook.positionsManager) &&
+                Objects.equals(this.suppliersManager, saleBook.suppliersManager) &&
+                Objects.equals(this.ordersManager, saleBook.ordersManager) &&
+                Objects.equals(this.assetManager, saleBook.assetManager) &&
                 Objects.equals(this.salesVolume, saleBook.salesVolume) &&
                 Objects.equals(this.variableCosts, saleBook.variableCosts) &&
                 Objects.equals(this.gui, saleBook.gui);
@@ -771,34 +682,53 @@ public class SaleBook extends SaleBookImpl {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), this.sparePartNames, this.sparePartUnits, this.categoryObsSet, this.sparePartsObsSet,
-                this.idToPositionObsMap, this.nameToSupplierObsMap, this.idToOrderObsMap, this.itemColorOccurrences,
-                this.nameToItemColor, this.salesVolume, this.variableCosts, this.gui);
+        return Objects.hash(super.hashCode(), this.sparePartsManager, this.positionsManager,
+                this.suppliersManager, this.ordersManager, this.assetManager, this.salesVolume,
+                this.variableCosts, this.gui);
     }
 
     @Override
     public String toString() {
         return "SaleBook{" +
-                "nameOfSpareParts=" + this.sparePartNames +
-                ", units=" + this.sparePartUnits +
-                ", models=" + this.categoryObsSet +
-                ", sparePartsObsSet=" + this.sparePartsObsSet +
-                ", idToPositionObsMap=" + this.idToPositionObsMap +
-                ", nameToSupplierObsMap=" + this.nameToSupplierObsMap +
-                ", idToOrderObsMap=" + this.idToOrderObsMap +
-                ", itemColorOccurrences=" + this.itemColorOccurrences +
-                ", nameToItemColor=" + this.nameToItemColor +
+                "sparePartsManager=" + this.sparePartsManager +
+                ", positionsManager=" + this.positionsManager +
+                ", supplierManager=" + this.suppliersManager +
+                ", ordersManager=" + this.ordersManager +
+                ", assetManager=" + this.assetManager +
                 ", salesVolume=" + this.salesVolume +
-                ", variableCost=" + this.variableCosts +
+                ", variableCosts=" + this.variableCosts +
                 ", gui=" + this.gui +
-                ", repairServiceSales=" + this.repairServiceSales +
-                ", extraordinaryIncome=" + this.extraordinaryIncome +
-                ", paid=" + this.paid +
-                ", fixedCosts=" + this.fixedCosts +
-                ", nextPosId=" + this.nextPosId +
-                ", nextOrderId=" + this.nextOrderId +
                 '}';
     }
+
+    /**
+     * Initializes the positionsManager.
+     *
+     * @param positionData the positions data
+     */
+    private Position[] createPositions(@NotNull PositionData[] positionData) {
+        Position[] result = new Position[positionData.length];
+
+        for (int i = 0; i < positionData.length; i++) {
+            Position position = new Position(positionData[i], ItemColor.getItemColorMap());
+            result[i] = position;
+            this.variableCosts = this.variableCosts.add(position.getPurchasingPrice()).add(position.getCost());
+            if (position.isSold()) {
+                this.salesVolume = this.salesVolume.add(position.getSellingPrice());
+            }
+        }
+        return result;
+    }
+
+    /**
+     * @param order
+     */
+    //TODO 20.04.2024
+    private void updateDisplayOrder(Order order) {
+        this.gui.displayOrderedSpareParts(order.getSpareParts());
+        this.gui.refreshSpareParts();
+    }
+
 
     /**
      * Recalculates the totalPerformance and displays the new calculated totalPerformance
@@ -812,14 +742,16 @@ public class SaleBook extends SaleBookImpl {
      * Displays the components of this saleBook
      */
     private void displaySaleBook() {
-        this.gui.displaySpareParts(new ObservableListSetBinder<>(this.sparePartsObsSet).getList());
-        this.gui.displaySparePartNames(this.sparePartNames);
-        ObservableTreeItemMapBinder<Integer> root = new ObservableTreeItemMapBinder<>(this.idToPositionObsMap);
+        this.gui.displaySpareParts(FXCollectionsUtils.toObservableList(this.sparePartsManager.getSparePartsObsSet()));
+        this.gui.displaySparePartNames(this.sparePartsManager.getSparePartNames());
+        ObservableTreeItemMapBinder<Integer> root =
+                new ObservableTreeItemMapBinder<>(this.positionsManager.getIdToPositionObsMap());
         this.gui.displayPositions(root);
-        this.gui.displaySuppliers(new ObservableListMapBinder<>(this.nameToSupplierObsMap).getList());
-        this.gui.displaySupplierNames(this.nameToSupplierObsMap.keySet());
-        this.gui.displayOrders(new ObservableListMapBinder<>(this.idToOrderObsMap).getList());
-        this.gui.displayCategories(new ObservableListSetBinder<>(this.categoryObsSet).getList());
+        this.gui.displaySuppliers(FXCollectionsUtils.toObservableList(this.suppliersManager.getNameToSupplierObsMap()));
+        this.gui.displaySupplierNames(this.getSupplierNames());
+        this.gui.displayOrders(FXCollectionsUtils.toObservableList(this.ordersManager.getIdToOrderObsMap()));
+        this.gui.displayAssets(FXCollectionsUtils.toObservableList(this.assetManager.getIdToAssetObsMap()));
+        this.gui.displayCategories(this.positionsManager.getCategories());
         this.gui.displaySales(this.salesVolume);
         this.gui.displayRepairServiceSale(this.repairServiceSales);
         this.gui.displayExtraordinaryIncome(this.extraordinaryIncome);
@@ -846,25 +778,6 @@ public class SaleBook extends SaleBookImpl {
         this.gui.displayProfitAndLossAccountBalance(this.salesVolume.subtract(this.variableCosts)
                 .subtract(this.fixedCosts));
     }
-
-    /**
-     * Stores the order quantity of the specified receivedSparePart of the specified order
-     *
-     * @param order the order in which the spare part is
-     * @param receivedSparePart the sparePart which was received
-     */
-    private void storeReceivedSparePart(@NotNull Order order, @NotNull SparePart receivedSparePart) {
-        Integer orderQuantity = order.removeSparePart(receivedSparePart);
-        if (orderQuantity != null) {
-            for (SparePart sparePart : this.sparePartsObsSet) {
-                if (sparePart.equals(receivedSparePart)) {
-                    sparePart.addQuantity(orderQuantity);
-                    break;
-                }
-            }
-        }
-    }
-
 
     /**
      * Displays the tenth part, which includes the sale volume, tenth part of the income and the balance
@@ -899,38 +812,6 @@ public class SaleBook extends SaleBookImpl {
         if (!sale.equals(BigDecimal.ZERO)) {
             this.salesVolume = this.salesVolume.subtract(sale);
             this.displayTenthPart();
-        }
-    }
-
-    /**
-     * Removes the specified position and updates the performance of this saleBook
-     *
-     * @param position the position which should be removed
-     */
-    private void removePosition(@NotNull Position position) {
-        if (position.getSellingPrice() != null) {
-            this.subtractSale(position.getSellingPrice());
-        }
-        this.variableCosts = this.variableCosts.subtract(position.getCost());
-        this.updateTotalPerformance();
-        String deletedModel = position.getCategory();
-        boolean containsModel = false;
-        for (Position pos : this.idToPositionObsMap.values()) {
-            if (pos.getCategory().equals(deletedModel)) {
-                containsModel = true;
-                break;
-            }
-        }
-        if (!containsModel) {
-            this.categoryObsSet.remove(deletedModel);
-        }
-        List<Item> items = position.getItems();
-        for (Item item : items) {
-            ItemColor color = item.getItemColor();
-            Integer occurrence = this.itemColorOccurrences.merge(color, -1, Integer::sum);
-            if (occurrence == 0) {
-                this.itemColorOccurrences.remove(color);
-            }
         }
     }
 }

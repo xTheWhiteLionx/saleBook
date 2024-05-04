@@ -23,3 +23,8 @@
 .date-picker .date-cell :disabled  {
     -fx-background-color: #7e7e7e;
 }
+
+.split-menu-button .label {
+    -fx-content-display: bottom;
+    -fx-graphic-text-gap: 0;
+}

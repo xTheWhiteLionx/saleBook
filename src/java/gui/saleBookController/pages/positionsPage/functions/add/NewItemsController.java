@@ -14,11 +14,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import logic.Condition;
-import logic.ItemColor;
+import logic.products.item.ItemColor;
 import logic.Variant;
-import logic.products.Item;
+import logic.products.item.Item;
 import logic.products.position.Position;
-import org.controlsfx.control.textfield.TextFields;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -27,10 +26,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static gui.DialogWindow.displayError;
-import static gui.util.ChoiceBoxUtils.createChoiceBox;
+import static gui.FXutils.ChoiceBoxUtils.createChoiceBox;
 
+/**
+ * This class represents a Controller to create some items and adds them to the position
+ *
+ * @author xthe_white_lionx
+ * @see gui.saleBookController.pages.FunctionDialog
+ */
 public class NewItemsController extends FunctionDialog<Position> implements Initializable {
     /**
      * Button to apply the new items
@@ -44,30 +51,30 @@ public class NewItemsController extends FunctionDialog<Position> implements Init
      * The main pane of this controller
      */
     @FXML
-    private BorderPane borderPane;
+    private BorderPane basePane;
     /**
-     * GridPane
+     * GridPane to display the input for the items
      */
     @FXML
     public GridPane itemsGridPane;
     /**
-     *
+     * The ChoiceBox of the variant of each item stored in a list for easier access
      */
     public final List<ChoiceBox<Variant>> variantChcBxs = new ArrayList<>();
     /**
-     *
+     * The ChoiceBox of the condition of each item stored in a list for easier access
      */
     public final List<ChoiceBox<Condition>> conditionChcBxs = new ArrayList<>();
     /**
-     *
+     * The ComboBox for the name of the itemColor of each item stored in a list for easier access
      */
-    public final List<TextField> itemColorNameTxtFlds = new ArrayList<>();
+    public final List<ComboBox<String>> itemColorNameComboBoxes = new ArrayList<>();
     /**
-     *
+     * The ColorPicker for the color of the itemColor of each item stored in a list for easier access
      */
     public final List<ColorPicker> itemColorPickers = new ArrayList<>();
     /**
-     *
+     * The TextArea of the error description of each item stored in a list for easier access
      */
     public final List<TextArea> errorDescriptionTxtAreas = new ArrayList<>();
 
@@ -77,23 +84,26 @@ public class NewItemsController extends FunctionDialog<Position> implements Init
     public Position position;
 
     /**
-     *
+     * Mapping from the name of an ItemColor to the ItemColor needed
+     * for binding and autocompletion
      */
     private Map<String, ItemColor> nameToItemColor;
 
     /**
-     *
+     * The MasterController needed to notify if the items are created
      */
     private MasterController masterController;
 
     /**
+     * Creates and loads a new AddItemsController
      *
-     * @param masterController
-     * @param nameToItemColor
-     * @return
+     * @param masterController needed to notify if the items are created
+     * @param nameToItemColor  mapping from the name of an ItemColor to the ItemColor needed
+     *                         for binding and autocompletion
+     * @return the new created AddItemsController
      * @throws IOException If the matching fxml could not be loaded
      */
-    public static @NotNull NewItemsController createAddItemsController(@NotNull MasterController  masterController,
+    public static @NotNull NewItemsController createAddItemsController(@NotNull MasterController masterController,
                                                                        @NotNull Map<String, ItemColor> nameToItemColor)
             throws IOException {
         FXMLLoader loader = new FXMLLoader(
@@ -107,30 +117,29 @@ public class NewItemsController extends FunctionDialog<Position> implements Init
     }
 
     /**
-     * @return
+     * Returns the base pane of this controller
+     *
+     * @return the base pane of this controller
      */
-    public @NotNull Pane getPane() {
-        return this.borderPane;
+    public @NotNull Pane getBasePane() {
+        return this.basePane;
     }
 
+    /**
+     * Initializes the controller.
+     *
+     * @param url            unused
+     * @param resourceBundle unused
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.itemsGridPane = new GridPane();
-        Label conditionLbl = new Label("condition");
-        GridPane.setMargin(conditionLbl, new Insets(5));
-        Label variantLbl = new Label("variant");
-        GridPane.setMargin(variantLbl, new Insets(5));
-        Label colorLbl = new Label("color");
-        GridPane.setMargin(colorLbl, new Insets(5));
-        Label errorDescriptionLbl = new Label("error description");
-        GridPane.setMargin(errorDescriptionLbl, new Insets(5));
-        this.itemsGridPane.addRow(0, conditionLbl, variantLbl, colorLbl, errorDescriptionLbl);
-
         this.addItemControls(true);
     }
 
     /**
-     * @param position
+     * Sets the position of this controller to which the new created items will be added
+     *
+     * @param position the position the new created items will be added
      */
     public void setPosition(@NotNull Position position) {
         this.position = position;
@@ -150,16 +159,17 @@ public class NewItemsController extends FunctionDialog<Position> implements Init
      *
      * @param isFirstItem true if the item is the first item for the position
      */
-    private void addItemControls(boolean isFirstItem){
+    private void addItemControls(boolean isFirstItem) {
         ChoiceBox<Condition> conditionChoiceBox = createChoiceBox(Condition.class);
         this.conditionChcBxs.add(conditionChoiceBox);
         GridPane.setMargin(conditionChoiceBox, new Insets(5));
         ChoiceBox<Variant> variantChoiceBox = createChoiceBox(Variant.class);
         this.variantChcBxs.add(variantChoiceBox);
         GridPane.setMargin(variantChoiceBox, new Insets(5));
-        TextField itemColorNameTxtFld = new TextField();
-        itemColorNameTxtFld.setPromptText("color name");
-        this.itemColorNameTxtFlds.add(itemColorNameTxtFld);
+        ComboBox<String> itemColorNameComboBox = new ComboBox<>();
+        itemColorNameComboBox.setEditable(true);
+        itemColorNameComboBox.setPromptText("color name");
+        this.itemColorNameComboBoxes.add(itemColorNameComboBox);
         TextArea errorDescriptionTxtArea = new TextArea();
         errorDescriptionTxtArea.setPromptText("error description");
         errorDescriptionTxtArea.setPrefHeight(80);
@@ -168,15 +178,15 @@ public class NewItemsController extends FunctionDialog<Position> implements Init
         this.errorDescriptionTxtAreas.add(errorDescriptionTxtArea);
 
         this.applyBtn.setDisable(this.isAnyInputInvalid());
-        itemColorNameTxtFld.textProperty().addListener((observableValue, s, t1) ->
+        itemColorNameComboBox.valueProperty().addListener((observableValue, s, t1) ->
                 this.applyBtn.setDisable(this.isAnyInputInvalid()));
 
         ColorPicker itemColorPicker = new ColorPicker();
         this.itemColorPickers.add(itemColorPicker);
-        this.bind(itemColorNameTxtFld, itemColorPicker);
-        HBox hBox = new HBox(itemColorNameTxtFld, itemColorPicker);
+        this.bind(itemColorNameComboBox, itemColorPicker);
+        HBox hBox = new HBox(itemColorNameComboBox, itemColorPicker);
         hBox.setAlignment(Pos.CENTER);
-        HBox.setMargin(itemColorNameTxtFld, new Insets(5));
+        HBox.setMargin(itemColorNameComboBox, new Insets(5));
         HBox.setMargin(itemColorPicker, new Insets(5));
         int index = this.itemsGridPane.getRowCount();
 
@@ -186,7 +196,7 @@ public class NewItemsController extends FunctionDialog<Position> implements Init
             deleteButton.setOnAction(actionEvent -> {
                 this.conditionChcBxs.remove(conditionChoiceBox);
                 this.variantChcBxs.remove(variantChoiceBox);
-                this.itemColorNameTxtFlds.remove(itemColorNameTxtFld);
+                this.itemColorNameComboBoxes.remove(itemColorNameComboBox);
                 this.errorDescriptionTxtAreas.remove(errorDescriptionTxtArea);
                 this.applyBtn.setDisable(this.isAnyInputInvalid());
 
@@ -199,21 +209,21 @@ public class NewItemsController extends FunctionDialog<Position> implements Init
     }
 
     /**
+     * Initializes the specified fields of this controller and binds
+     * each itemColorNameTextField to the itemColorPicker of the same row
      *
-     *
-     * @param masterController
-     * @param nameToItemColor
+     * @param masterController needed to notify if the items are created
+     * @param nameToItemColor  mapping from the name of an ItemColor to the ItemColor needed
+     *                         for binding and autocompletion
      */
     private void initialize(@NotNull MasterController masterController,
                             @NotNull Map<String, ItemColor> nameToItemColor) {
         this.masterController = masterController;
         this.nameToItemColor = nameToItemColor;
 
-        for (int i = 0; i < this.itemColorNameTxtFlds.size(); i++) {
-            this.bind(this.itemColorNameTxtFlds.get(i), this.itemColorPickers.get(i));
+        for (int i = 0; i < this.itemColorNameComboBoxes.size(); i++) {
+            this.bind(this.itemColorNameComboBoxes.get(i), this.itemColorPickers.get(i));
         }
-
-        this.borderPane.setCenter(new ScrollPane(this.itemsGridPane));
     }
 
     /**
@@ -221,9 +231,10 @@ public class NewItemsController extends FunctionDialog<Position> implements Init
      *
      * @return true, if any input is invalid, otherwise false
      */
-    private boolean isAnyInputInvalid(){
-        for (TextField colorNameTxtFld : this.itemColorNameTxtFlds) {
-            if(colorNameTxtFld.getText().isEmpty()){
+    private boolean isAnyInputInvalid() {
+        for (ComboBox<String> colorNameComboBox : this.itemColorNameComboBoxes) {
+            String value = colorNameComboBox.getValue();
+            if (value == null || colorNameComboBox.getValue().isEmpty()) {
                 return true;
             }
         }
@@ -231,15 +242,16 @@ public class NewItemsController extends FunctionDialog<Position> implements Init
     }
 
     /**
-     * Binds the specified colorPicker to the specified itemColorNameTxtFld
+     * Binds the specified colorPicker to the specified itemColorComboBox
      *
-     * @param itemColorNameTxtFld the textField to bind the colorPicker on
-     * @param colorPicker the colorPicker which should be bound
+     * @param itemColorComboBox the ComboBox to bind the colorPicker on
+     * @param colorPicker         the ColorPicker which should be bound
      */
-    private void bind(@NotNull TextField itemColorNameTxtFld, @NotNull ColorPicker colorPicker) {
+    private void bind(@NotNull ComboBox<String> itemColorComboBox, @NotNull ColorPicker colorPicker) {
         if (this.nameToItemColor != null) {
-            TextFields.bindAutoCompletion(itemColorNameTxtFld, this.nameToItemColor.keySet());
-            itemColorNameTxtFld.textProperty().addListener((observableValue, oldText, newText) -> {
+            Set<String> possibleSuggestions = new TreeSet<>(this.nameToItemColor.keySet());
+            itemColorComboBox.getItems().setAll(possibleSuggestions);
+            itemColorComboBox.valueProperty().addListener((observableValue, oldText, newText) -> {
                 ItemColor itemColor = this.nameToItemColor.get(newText);
                 if (itemColor != null) {
                     colorPicker.setValue(itemColor.getColor());
@@ -258,10 +270,10 @@ public class NewItemsController extends FunctionDialog<Position> implements Init
             id = this.position.getNextItemId();
             Condition condition = this.conditionChcBxs.get(i).getValue();
             Variant variant = this.variantChcBxs.get(i).getValue();
-            String itemColorName = this.itemColorNameTxtFlds.get(i).getText();
+            String itemColorName = this.itemColorNameComboBoxes.get(i).getValue();
             Color itemColor = this.itemColorPickers.get(i).getValue();
             String errorDescription = this.errorDescriptionTxtAreas.get(i).getText();
-            Item item = new Item(id, condition, variant, new ItemColor(itemColorName, itemColor),
+            Item item = new Item(id, condition, variant, ItemColor.getItemColor(itemColorName, itemColor),
                     errorDescription);
             this.position.addItem(item);
         }

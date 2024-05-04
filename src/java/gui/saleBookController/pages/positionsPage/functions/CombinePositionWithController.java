@@ -2,9 +2,8 @@ package gui.saleBookController.pages.positionsPage.functions;
 
 import gui.ApplicationMain;
 import gui.saleBookController.pages.FunctionDialog;
-import gui.util.TableViewUtils;
+import gui.FXutils.TableViewUtils;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -13,7 +12,6 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import logic.products.position.Position;
 import logic.products.position.State;
 import org.jetbrains.annotations.NotNull;
@@ -23,20 +21,29 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.ResourceBundle;
 
-import static gui.util.StageUtils.createStyledStage;
+import static gui.FXutils.StageUtils.createStyledStage;
 
+/**
+ * This controller collects the selected ids of the positions which should be combined with
+ *
+ * @see gui.saleBookController.pages.FunctionDialog
+ * @author xthe_white_lionx
+ */
 public class CombinePositionWithController extends FunctionDialog<int[]> implements Initializable {
 
-
+    /**
+     * TableView to display the combinable positions
+     */
     @FXML
     private TableView<Position> positionsTblVw;
 
     /**
+     * Creates and loads a new CombinePositionWithController
      *
-     * @param posId
-     * @param positions
-     * @return
-     * @throws IOException
+     * @param posId the id of the position to combine with
+     * @param positions all position not filtered yet
+     * @return the new created CombinePositionWithController
+     * @throws IOException if the fxml file could not be loaded
      */
     public static CombinePositionWithController createCombinePositionWithController(int posId,
                                                                                     @NotNull Collection<Position> positions)
@@ -58,20 +65,27 @@ public class CombinePositionWithController extends FunctionDialog<int[]> impleme
     }
 
     /**
+     * Initializes the specified fields of this
      *
-     * @param posId
-     * @param positions
+     * @param posId the id of the position to combine with
+     * @param positions all position not filtered yet
      */
     private void initialize(int posId, @NotNull Collection<Position> positions) {
-        ObservableList<Position> items = this.positionsTblVw.getItems();
+        ObservableList<Position> tableVwItems = this.positionsTblVw.getItems();
         for (Position position : positions) {
             State state = position.getState();
             if (position.getId() != posId && (state == State.RECEIVED || state == State.REPAIRED)){
-                items.add(position);
+                tableVwItems.add(position);
             }
         }
     }
 
+    /**
+     * Initializes the fields of this controller.
+     *
+     * @param url            unused
+     * @param resourceBundle unused
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.positionsTblVw.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -84,11 +98,11 @@ public class CombinePositionWithController extends FunctionDialog<int[]> impleme
      */
     @FXML
     private void handleApply() {
-        ObservableList<Position> selectedItems = this.positionsTblVw.getSelectionModel().getSelectedItems();
-        int size = selectedItems.size();
+        ObservableList<Position> selectedPositions = this.positionsTblVw.getSelectionModel().getSelectedItems();
+        int size = selectedPositions.size();
         int [] selectedIds = new int[size];
         for (int i = 0; i < size; i++) {
-            selectedIds[i] = selectedItems.get(i).getId();
+            selectedIds[i] = selectedPositions.get(i).getId();
         }
         this.result = selectedIds;
         this.handleCancel();

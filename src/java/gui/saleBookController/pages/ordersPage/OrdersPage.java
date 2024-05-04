@@ -7,24 +7,23 @@ import gui.DialogWindow;
 import gui.ImageButton;
 import gui.saleBookController.pages.Page;
 import gui.saleBookController.pages.ordersPage.functions.NewOrderController;
-import gui.util.StageUtils;
-import gui.util.StringUtils;
-import gui.util.TableViewUtils;
+import gui.FXutils.StageUtils;
+import utils.StringUtils;
+import gui.FXutils.TableViewUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import logic.SparePart;
 import logic.order.Order;
 import logic.saleBook.SaleBook;
-import logic.utils.BigDecimalUtils;
 import org.controlsfx.control.textfield.CustomTextField;
 import org.controlsfx.control.textfield.TextFields;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +36,7 @@ import static gui.DialogWindow.acceptedDeleteAlert;
 import static gui.Images.*;
 import static gui.JavaFXGUI.formatMoney;
 import static gui.saleBookController.pages.ordersPage.functions.NewOrderController.createNewOrderController;
-import static gui.util.RibbonGroupUtil.createRibbonGroup;
+import static gui.FXutils.RibbonGroupUtils.createRibbonGroup;
 
 /**
  * This class displays the orders of the saleBook and has some controls to interact with.
@@ -140,7 +139,7 @@ public class OrdersPage implements Initializable, Page {
         TableViewUtils.addColumn(this.orderTblVw, "supplier", order ->
                 order.getSupplier().getName());
         TableViewUtils.addColumn(this.orderTblVw, "cost", order ->
-                formatMoney(order.getCost()));
+                formatMoney(order.getValue()));
         this.orderTblVw.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         this.orderTblVw.getSelectionModel().selectedItemProperty().addListener(
                 (observableValue, oldValue, newValue) -> {
@@ -188,23 +187,38 @@ public class OrdersPage implements Initializable, Page {
         });
     }
 
+    /**
+     * Sets the saleBook of this OrderPage
+     *
+     * @param saleBook the saleBook which should be set
+     */
     @Override
     public void setSaleBook(@NotNull SaleBook saleBook) {
         this.saleBook = saleBook;
     }
 
+    /**
+     * Returns the base pane of this OrderPage
+     *
+     * @return the base pane of this OrderPage
+     */
     @Override
-    public @NotNull Pane getPane() {
+    public @NotNull Pane getBasePane() {
         return this.pane;
     }
 
+    /**
+     * Returns the RibbonTab of this OrderPage
+     *
+     * @return the RibbonTab of this OrderPage
+     */
     @Override
     public @NotNull RibbonTab getRibbonTab() {
         return this.orderRibbonTab;
     }
 
     /**
-     * Initializes the ribbonTab by adding the controls
+     * Initializes the ribbonTab and his controls
      */
     private void initializeRibbonTab() {
         this.orderRibbonTab = new RibbonTab("Orders");
@@ -296,8 +310,8 @@ public class OrdersPage implements Initializable, Page {
     private void handleAddOrder() {
         if (this.saleBook.getSuppliers().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            Scene scene = alert.getDialogPane().getScene();
-            StageUtils.styleScene(scene);
+            Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+            StageUtils.styleStage(stage);
             alert.setContentText("Please add a supplier first");
             alert.showAndWait();
         } else {

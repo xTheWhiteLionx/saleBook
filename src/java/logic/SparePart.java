@@ -21,7 +21,7 @@ public class SparePart implements Comparable<SparePart> {
      */
     private Condition condition;
     /**
-     * The category of this spare part 
+     * The category of this spare part
      */
     private String category;
     /**
@@ -40,8 +40,8 @@ public class SparePart implements Comparable<SparePart> {
      * @param condition the condition of the spare part
      * @param unit      the unit of the quantity
      * @param quantity  the quantity of the spare parts in the stock
-     * @throws IllegalArgumentException if the name or the unit is empty or the quantity
-     *                                  is less or equals 0
+     * @throws IllegalArgumentException if the name, the unit or the category is empty or the
+     *                                  quantity is less or equals 0
      */
     public SparePart(@NotNull String name, @NotNull Condition condition, @NotNull String unit,
                      @NotNull String category, int quantity) {
@@ -50,6 +50,9 @@ public class SparePart implements Comparable<SparePart> {
         }
         if (unit.isEmpty()) {
             throw new IllegalArgumentException("unit is empty");
+        }
+        if (category.isEmpty()) {
+            throw new IllegalArgumentException("category ist empty");
         }
         if (quantity < 0) {
             throw new IllegalArgumentException("quantity must be greater equals 0 but is "
@@ -68,7 +71,7 @@ public class SparePart implements Comparable<SparePart> {
      *
      * @return the name of this spare part
      */
-    public String getName() {
+    public @NotNull String getName() {
         return this.name;
     }
 
@@ -90,7 +93,7 @@ public class SparePart implements Comparable<SparePart> {
      *
      * @return the condition of this spare part
      */
-    public Condition getCondition() {
+    public @NotNull Condition getCondition() {
         return this.condition;
     }
 
@@ -108,7 +111,7 @@ public class SparePart implements Comparable<SparePart> {
      *
      * @return the category for which this spare part is
      */
-    public String getCategory() {
+    public @NotNull String getCategory() {
         return this.category;
     }
 
@@ -116,8 +119,13 @@ public class SparePart implements Comparable<SparePart> {
      * Sets the category for which this spare part is
      *
      * @param category the new model of this spare part
+     * @throws IllegalArgumentException if the category is empty
      */
     public void setCategory(@NotNull String category) {
+        if (category.isEmpty()) {
+            throw new IllegalArgumentException("category ist empty");
+        }
+
         this.category = category;
     }
 
@@ -126,7 +134,7 @@ public class SparePart implements Comparable<SparePart> {
      *
      * @return the unit of this spare part
      */
-    public String getUnit() {
+    public @NotNull String getUnit() {
         return this.unit;
     }
 
@@ -220,7 +228,7 @@ public class SparePart implements Comparable<SparePart> {
             return false;
         }
         return this.quantity == sparePart.quantity && Objects.equals(this.name, sparePart.name) &&
-                this.condition == sparePart.condition && Objects.equals(this.category,sparePart.category) &&
+                this.condition == sparePart.condition && Objects.equals(this.category, sparePart.category) &&
                 Objects.equals(this.unit, sparePart.unit);
     }
 

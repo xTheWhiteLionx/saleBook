@@ -14,13 +14,31 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.function.Predicate;
 
+/**
+ * A TreeItem class, that likewise works as wrapper and binds the values of an {@link ObservableMap}
+ * to an {@link ObservableList}.
+ * The items in the list will match the values in the map.
+ * This class is not synchronized.
+ *
+ * @param <K> the type used for keys of the ObservableMap
+ */
 public class ObservableTreeItemMapBinder<K> extends TreeItem<Product>
         implements MapChangeListener<K, Position> {
+
+    /**
+     * ObservableList of the direct children of this TreeItem, which are bound to the values of the ObservableMap
+     */
     private final ObservableList<TreeItem<Product>> children;
+
+    /**
+     * The FilteredList of the children of this TreeItem
+     */
     private final FilteredList<TreeItem<Product>> filteredList;
 
     /**
-     * @param map
+     * Creates a new ObservableTreeItemMapBinder
+     *
+     * @param map from which the values should be bound
      */
     public ObservableTreeItemMapBinder(@NotNull ObservableMap<K, Position> map) {
         super();
@@ -35,8 +53,9 @@ public class ObservableTreeItemMapBinder<K> extends TreeItem<Product>
     }
 
     /**
+     * Sets the predicate of the filter of the filterList
      *
-     * @param filter
+     * @param filter the filter to which the elements of the filterList should be tested
      */
     public void setFilter(@NotNull Predicate<Position> filter) {
         this.filteredList.setPredicate(item -> {
@@ -49,14 +68,10 @@ public class ObservableTreeItemMapBinder<K> extends TreeItem<Product>
     }
 
     /**
-     *
+     * Sets the filter of the filtered List to false for all items, so that no item will be shown
      */
-    public void resetFilter(){
-        this.filteredList.setPredicate(item -> true);
-    }
-
-    public @NotNull FilteredList<TreeItem<Product>> getFilteredList() {
-        return this.filteredList;
+    public void filterAll(){
+        this.filteredList.setPredicate(item -> false);
     }
 
     @Override

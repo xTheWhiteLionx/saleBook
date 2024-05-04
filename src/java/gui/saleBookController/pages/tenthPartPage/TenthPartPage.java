@@ -1,14 +1,16 @@
 package gui.saleBookController.pages.tenthPartPage;
 
+import com.pixelduke.control.ribbon.RibbonGroup;
 import com.pixelduke.control.ribbon.RibbonTab;
 import gui.ApplicationMain;
 import gui.DialogWindow;
 import gui.ImageButton;
 import gui.Images;
 import gui.saleBookController.pages.Page;
-import gui.saleBookController.pages.tenthPartPage.functions.EditTenthPartPage;
-import gui.saleBookController.pages.tenthPartPage.functions.TextFieldDialog;
-import gui.util.RibbonGroupUtil;
+import gui.saleBookController.pages.tenthPartPage.functions.EditTenthPartController;
+import gui.TextFieldDialog;
+import gui.FXutils.RibbonGroupUtils;
+import gui.FXutils.RibbonTabUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -16,7 +18,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import logic.saleBook.SaleBook;
-import logic.utils.BigDecimalUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -24,30 +25,70 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
+ * This Page shows the taxes of the saleBook and handles the possible controls for it
  *
+ * @author xthe_white_lionx
+ * @see gui.saleBookController.pages.Page
  */
 public class TenthPartPage implements Initializable, Page {
 
+    /**
+     * Label to display the service sales
+     */
     @FXML
     public Label repairServiceSalesLbl;
+
+    /**
+     * Label to display the extraordinary income
+     */
     @FXML
     public Label extraordinaryIncomeLbl;
+
+    /**
+     * Label to display the service sales
+     */
     @FXML
     public Label salesLbl;
+
+    /**
+     * Label to display the tenth part of the total sales
+     */
     @FXML
     public Label tenthPartTotalSalesLbl;
+
+    /**
+     * Label to display the paid of tenth part of the total sales
+     */
     @FXML
     public Label paidLbl;
+
+    /**
+     * Label to display the balance
+     */
     @FXML
     public Label balanceLbl;
-    @FXML
-    private Pane pane;
 
+    /**
+     * The base pane of this TenthPartPage
+     */
+    @FXML
+    private Pane basePane;
+
+    /**
+     * The saleBook of this TenthPartPage
+     */
     private SaleBook saleBook;
+
+    /**
+     * The RibbonTab of this TenthPartPage
+     */
     private RibbonTab ribbonTab;
 
     /**
-     * @return
+     * Creates and loads a new TenthPartPage
+     *
+     * @return the new created TenthPartPage
+     * @throws IOException if the fxml cannot be loaded
      */
     public static @NotNull TenthPartPage createTenthPartPage() throws IOException {
         FXMLLoader loader = new FXMLLoader(
@@ -63,8 +104,8 @@ public class TenthPartPage implements Initializable, Page {
     }
 
     @Override
-    public @NotNull Pane getPane() {
-        return this.pane;
+    public @NotNull Pane getBasePane() {
+        return this.basePane;
     }
 
     @Override
@@ -72,9 +113,14 @@ public class TenthPartPage implements Initializable, Page {
         return this.ribbonTab;
     }
 
+    /**
+     * Initializes this page
+     *
+     * @param url unused
+     * @param resourceBundle unused
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.ribbonTab = new RibbonTab("Tenth part");
         Button addRepairServiceSaleBtn = new ImageButton("add repair service sale", Images.ADD_IMAGE,
                 actionEvent -> this.addRepairServiceSale());
         Button addExtraordinaryIncome = new ImageButton("add extraordinary income" , Images.ADD_IMAGE,
@@ -82,50 +128,57 @@ public class TenthPartPage implements Initializable, Page {
         Button addPayment = new ImageButton("add payment" , Images.ADD_IMAGE,
                 actionEvent -> this.addPayment());
         Button editBtn = new ImageButton("edit", Images.EDIT_IMAGE, actionEvent -> this.edit());
-        this.ribbonTab.getRibbonGroups().addAll(RibbonGroupUtil.createRibbonGroup("functions", addRepairServiceSaleBtn
-        , addExtraordinaryIncome, addPayment), RibbonGroupUtil.createRibbonGroup("organisation", editBtn));
+        RibbonGroup functionRibbonGroup = RibbonGroupUtils.createRibbonGroup("functions", addRepairServiceSaleBtn
+                , addExtraordinaryIncome, addPayment);
+        RibbonGroup organisationRibbonGroup = RibbonGroupUtils.createRibbonGroup("organisation", editBtn);
+        this.ribbonTab = RibbonTabUtils.createRibbonTab("Tenth part",
+                functionRibbonGroup, organisationRibbonGroup);
     }
 
+    /**
+     * Opens a new TextFieldDialog to add the new repair service sale
+     */
     private void addRepairServiceSale() {
         try {
             TextFieldDialog textFieldDialog = TextFieldDialog.createTextFieldDialog("repair service sale");
-            textFieldDialog.getResult().ifPresent(text -> this.saleBook.
-                    addRepairServiceSale(BigDecimalUtils.parse(text)));
-        } catch (IOException e) {
-            DialogWindow.displayError("failed to load textFieldDialog", e);
-        }
-    }
-
-    private void addExtraordinaryIncome() {
-        try {
-            TextFieldDialog textFieldDialog = TextFieldDialog.createTextFieldDialog("extraordinary income");
-            textFieldDialog.getResult().ifPresent(text -> this.saleBook.
-                    addExtraordinaryIncome(BigDecimalUtils.parse(text)));
-        } catch (IOException e) {
-            DialogWindow.displayError("failed to load textFieldDialog", e);
-        }
-    }
-
-   private void addPayment() {
-        try {
-            TextFieldDialog textFieldDialog = TextFieldDialog.createTextFieldDialog("payment");
-            textFieldDialog.getResult().ifPresent(text -> this.saleBook.
-                    addPayment(BigDecimalUtils.parse(text)));
+            textFieldDialog.getResult().ifPresent(bigDecimal -> this.saleBook.addRepairServiceSale(bigDecimal));
         } catch (IOException e) {
             DialogWindow.displayError("failed to load textFieldDialog", e);
         }
     }
 
     /**
-     *
+     * Opens a new TextFieldDialog to add the new extraordinary income
+     */
+    private void addExtraordinaryIncome() {
+        try {
+            TextFieldDialog textFieldDialog = TextFieldDialog.createTextFieldDialog("extraordinary income");
+            textFieldDialog.getResult().ifPresent(bigDecimal -> this.saleBook.addExtraordinaryIncome(bigDecimal));
+        } catch (IOException e) {
+            DialogWindow.displayError("failed to load textFieldDialog", e);
+        }
+    }
+
+    /**
+     * Opens a new TextFieldDialog to add the new payment
+     */
+   private void addPayment() {
+        try {
+            TextFieldDialog textFieldDialog = TextFieldDialog.createTextFieldDialog("payment");
+            textFieldDialog.getResult().ifPresent(bigDecimal -> this.saleBook.addPayment(bigDecimal));
+        } catch (IOException e) {
+            DialogWindow.displayError("failed to load textFieldDialog", e);
+        }
+    }
+
+    /**
+     * Opens a new EditTenthPartController
      */
     private void edit() {
-        // TODO: 01.11.2023 implement
-        System.out.println("hier könnte jetzt etwas passieren");
         try {
-            EditTenthPartPage editTenthPage = EditTenthPartPage.createEditTenthPartPage(this.saleBook);
+            EditTenthPartController.createEditTenthPartController(this.saleBook);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            DialogWindow.displayError("failed to load EditTenthPartController", e);
         }
     }
 }

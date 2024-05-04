@@ -5,7 +5,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.prefs.Preferences;
 
 /**
+ * This class contains the configuration
  *
+ * @author xthe_white_lionx
  */
 public class Config {
 

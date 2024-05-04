@@ -7,17 +7,26 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * A special type of Button that has an image and displays the image above
+ * the text
+ *
+ * @author xthe_white_lionx
+ */
 public class ImageButton extends Button {
 
     /**
+     * Creates a new ImageButton
      *
-     * @param label
-     * @param image
-     * @param actionEvent
+     * @param text the new text of the button
+     * @param image the graphic of the button
+     * @param actionEvent event that should happen if the button is on action
      */
-    public ImageButton(String label, Image image, EventHandler<ActionEvent> actionEvent) {
-        super(label, new ImageView(image));
+    public ImageButton(@NotNull String text, @NotNull Image image,
+                       @NotNull EventHandler<ActionEvent> actionEvent) {
+        super(text, new ImageView(image));
         this.setContentDisplay(ContentDisplay.TOP);
         this.setOnAction(actionEvent);
         this.setAlignment(Pos.CENTER);
