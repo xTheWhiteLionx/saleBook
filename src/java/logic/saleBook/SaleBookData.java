@@ -7,15 +7,15 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
 import javafx.scene.paint.Color;
 import logic.Asset;
+import logic.manager.OrdersManager;
 import logic.products.item.ItemColor;
 import logic.ProgressListener;
 import logic.ProgressReader;
 import logic.ProgressWriter;
-import logic.SparePart;
 import logic.order.Order;
 import logic.Supplier;
-import logic.products.position.Position;
 import logic.products.position.PositionData;
+import logic.sparePart.SparePartData;
 import utils.CollectionsUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,7 +45,7 @@ public class SaleBookData extends AbstractSaleBook {
     /**
      * Spare parts of this saleBookData
      */
-    private final SparePart[] spareParts;
+    private final SparePartData[] sparePartData;
 
     /**
      * Position data of this saleBookData
@@ -95,16 +95,17 @@ public class SaleBookData extends AbstractSaleBook {
     public SaleBookData(@NotNull SaleBook saleBook) {
         super(saleBook.repairServiceSales, saleBook.extraordinaryIncome,
                 saleBook.paid, saleBook.fixedCosts);
-        this.spareParts = saleBook.getSpareParts().toArray(new SparePart[0]);
+        this.sparePartData = saleBook.getSparePartsManager().toSparePartData();
         this.itemColors = ItemColor.getItemColorMap().values().toArray(new ItemColor[0]);
-        this.positionData = CollectionsUtils.toArray(saleBook.getPositions(), PositionData::new,
+        this.positionData = CollectionsUtils.toArray(saleBook.getPositionsManager().getPositions(), PositionData::new,
                 new PositionData[0]);
-        this.suppliers = saleBook.getSuppliers().toArray(new Supplier[0]);
-        this.orders = saleBook.getOrders().toArray(new Order[0]);
-        this.assets = saleBook.getAssets().toArray(new Asset[0]);
-        this.nextPosId = saleBook.getNextPosId();
-        this.nextOrderId = saleBook.getNextOrderId();
-        this.nextAssetId = saleBook.getNextAssetId();
+        this.suppliers = saleBook.getSuppliersManager().getSuppliers().toArray(new Supplier[0]);
+        OrdersManager ordersManager = saleBook.getOrdersManager();
+        this.orders = ordersManager.getOrders().toArray(new Order[0]);
+        this.nextOrderId = ordersManager.getNextOrderId();
+        this.assets = saleBook.getAssetsManager().getAssets().toArray(new Asset[0]);
+        this.nextPosId = saleBook.getPositionsManager().getNextPosId();
+        this.nextAssetId = saleBook.getAssetsManager().getNextAssetId();
     }
 
     /**
@@ -150,8 +151,8 @@ public class SaleBookData extends AbstractSaleBook {
      *
      * @return the spare parts of this saleBookData
      */
-    public @NotNull SparePart[] getSpareParts() {
-        return this.spareParts;
+    public @NotNull SparePartData[] getSparePartData() {
+        return this.sparePartData;
     }
 
     /**
@@ -272,7 +273,7 @@ public class SaleBookData extends AbstractSaleBook {
         }
         return this.nextPosId == that.nextPosId && this.nextOrderId == that.nextOrderId &&
                 this.nextAssetId == that.nextAssetId &&
-                Objects.deepEquals(this.spareParts, that.spareParts) &&
+                Objects.deepEquals(this.sparePartData, that.sparePartData) &&
                 Objects.deepEquals(this.positionData, that.positionData) &&
                 Objects.deepEquals(this.itemColors, that.itemColors) &&
                 Objects.deepEquals(this.suppliers, that.suppliers) &&
@@ -283,7 +284,7 @@ public class SaleBookData extends AbstractSaleBook {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(),
-                Arrays.hashCode(this.spareParts),
+                Arrays.hashCode(this.sparePartData),
                 Arrays.hashCode(this.positionData),
                 Arrays.hashCode(this.itemColors),
                 Arrays.hashCode(this.suppliers),
@@ -297,7 +298,7 @@ public class SaleBookData extends AbstractSaleBook {
     @Override
     public String toString() {
         return "SaleBookData{" +
-                "spareParts=" + Arrays.toString(this.spareParts) +
+                "spareParts=" + Arrays.toString(this.sparePartData) +
                 ", positionData=" + Arrays.toString(this.positionData) +
                 ", itemColors=" + Arrays.toString(this.itemColors) +
                 ", suppliers=" + Arrays.toString(this.suppliers) +

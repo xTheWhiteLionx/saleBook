@@ -77,6 +77,27 @@ public class Supplier implements Comparable<Supplier> {
         this.orderWebpage = orderWebpage;
     }
 
+    /**
+     * Compares this supplier to the specified other supplier.
+     * A supplier is greater than another if the supplier name is lexicographically greater than the another or
+     * if the orderWebpage is greater, by the definition of URI, than the other supplier
+     *
+     * @param other the supplier to be compared.
+     * @return  the value {@code 0} if the argument supplier is equal to
+     *          this supplier; a value less than {@code 0} if this supplier
+     *          is less than the supplier argument; and a
+     *          value greater than {@code 0} if this string is
+     *          greater than the supplier argument.
+     */
+    @Override
+    public int compareTo(@NotNull Supplier other) {
+        int result = this.name.compareTo(other.name);
+        if (result == 0) {
+            result = this.orderWebpage.compareTo(other.orderWebpage);
+        }
+        return result;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -100,26 +121,5 @@ public class Supplier implements Comparable<Supplier> {
                 "name='" + this.name + '\'' +
                 ", orderWebpage=" + this.orderWebpage +
                 '}';
-    }
-
-    /**
-     * Compares this supplier to the specified other supplier.
-     * A supplier is greater than another if the supplier name is lexicographically greater than the another or
-     * if the orderWebpage is greater, by the definition of URI, than the other supplier
-     *
-     * @param other the supplier to be compared.
-     * @return  the value {@code 0} if the argument supplier is equal to
-     *          this supplier; a value less than {@code 0} if this supplier
-     *          is less than the supplier argument; and a
-     *          value greater than {@code 0} if this string is
-     *          greater than the supplier argument.
-     */
-    @Override
-    public int compareTo(@NotNull Supplier other) {
-        int result = this.name.compareTo(other.name);
-        if (result == 0) {
-            result = this.orderWebpage.compareTo(other.orderWebpage);
-        }
-        return result;
     }
 }

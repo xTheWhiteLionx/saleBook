@@ -9,6 +9,13 @@ import org.jetbrains.annotations.NotNull;
  * @author xthe_white_lionx
  */
 public class SpinnerUtils {
+
+    /**
+     * Suppresses default constructor, ensuring non-instantiability.
+     */
+    private SpinnerUtils() {
+    }
+
     /**
      * Creates a new SpinnerValueFactory with 0 as minimum value,
      * {@link Integer#MAX_VALUE} as maximum value and the specified initial value

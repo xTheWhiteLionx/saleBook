@@ -24,7 +24,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import logic.Asset;
 import logic.saleBook.SaleBook;
-import utils.LocalDateUtil;
+import utils.LocalDateUtils;
 import org.controlsfx.control.textfield.CustomTextField;
 import org.jetbrains.annotations.NotNull;
 
@@ -128,11 +128,11 @@ public class AssetsPage implements Initializable, Page {
         TableViewUtils.addColumn(this.assetTblVw, "supplier", asset ->
                 asset.getSupplier().getName());
         TableViewUtils.addColumn(this.assetTblVw, "purchasing date", asset ->
-                LocalDateUtil.format(asset.getPurchasingDate()));
+                LocalDateUtils.format(asset.getPurchasingDate()));
         TableViewUtils.addColumn(this.assetTblVw, "arrival date", asset -> {
             LocalDate arrivalDate = asset.getArrivalDate();
             if (arrivalDate != null) {
-                return LocalDateUtil.format(arrivalDate);
+                return LocalDateUtils.format(arrivalDate);
             }
             return null;
         });
@@ -241,7 +241,7 @@ public class AssetsPage implements Initializable, Page {
      */
     private void handleDeleteAsset() {
         if (acceptedDeleteAlert()){
-            this.saleBook.removeAsset(this.currAsset.getId());
+            this.saleBook.getAssetsManager().removeAsset(this.currAsset.getId());
         }
     }
 
@@ -268,7 +268,7 @@ public class AssetsPage implements Initializable, Page {
      * Handles the "new" order button.
      */
     private void handleAddAsset() {
-        if (this.saleBook.getSuppliers().isEmpty()) {
+        if (this.saleBook.getSuppliersManager().getSuppliers().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
             StageUtils.styleStage(stage);
@@ -277,7 +277,7 @@ public class AssetsPage implements Initializable, Page {
         } else {
             try {
                 NewAssetController newAssetController = createAssetController(this.saleBook);
-                newAssetController.getResult().ifPresent(asset -> this.saleBook.addAsset(asset));
+                newAssetController.getResult().ifPresent(asset -> this.saleBook.getAssetsManager().addAsset(asset));
             } catch (IOException e) {
                 DialogWindow.displayError("fail to load new asset controller", e);
             }

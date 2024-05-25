@@ -18,5 +18,7 @@ public interface Product {
      *
      * @return the simple class name of the implemented class
      */
-   String getSimpleName();
+   default String getSimpleName(){
+       return this.getClass().getSimpleName();
+   }
 }

@@ -1,8 +1,13 @@
 package utils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * This class inherits some Utilities for {@link Collection}.
@@ -10,6 +15,12 @@ import java.util.function.Function;
  * @author xthe_white_lionx
  */
 public class CollectionsUtils {
+
+    /**
+     * Suppresses default constructor, ensuring non-instantiability.
+     */
+    private CollectionsUtils() {
+    }
 
     /**
      * Returns an array containing all of the mapped values of the values of the values;
@@ -36,5 +47,40 @@ public class CollectionsUtils {
             result[i++] = mapper.apply(value);
         }
         return result;
+    }
+
+    /**
+     * @param values
+     * @param predicate
+     * @param <T>
+     * @return
+     */
+    public static <T> boolean areValid(Collection<T> values, Predicate<? super T> predicate) {
+        boolean areValid = true;
+        Iterator<T> iterator = values.iterator();
+        while (areValid && iterator.hasNext()) {
+            T value = iterator.next();
+            if (!predicate.test(value)) {
+                areValid = false;
+            }
+        }
+        return areValid;
+    }
+
+    /**
+     *
+     * @param collection
+     * @param accu
+     * @param combiner
+     * @return
+     * @param <E>
+     * @param <R>
+     */
+    public static <E, R> @NotNull R reduce(Iterable<E> collection, R accu,
+                                   BiFunction<? super E, ? super R, ? extends R> combiner) {
+        for (E element : collection) {
+            accu = combiner.apply(element, accu);
+        }
+        return accu;
     }
 }

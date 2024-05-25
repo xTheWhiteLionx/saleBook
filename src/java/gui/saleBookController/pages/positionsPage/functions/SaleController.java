@@ -138,7 +138,7 @@ public class SaleController implements Initializable {
     @FXML
     private void handleApply() {
         BigDecimal sellingPrice = BigDecimalUtils.parse(this.sellingPriceTxtField.getText());
-        this.saleBook.sale(this.position.getId(), this.sellingDatePicker.getValue(), sellingPrice);
+        this.saleBook.getPositionsManager().sale(this.position.getId(), this.sellingDatePicker.getValue(), sellingPrice);
         this.handleCancel();
     }
 

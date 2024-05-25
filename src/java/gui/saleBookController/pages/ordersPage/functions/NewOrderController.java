@@ -1,11 +1,16 @@
 package gui.saleBookController.pages.ordersPage.functions;
 
 import gui.ApplicationMain;
+import gui.DialogWindow;
 import gui.SpinnerTableCell;
 import gui.SpinnerTableColumn;
 import gui.saleBookController.pages.FunctionDialog;
 import gui.FXutils.ChoiceBoxUtils;
 import gui.FXutils.LabelUtils;
+import gui.saleBookController.pages.sparePartsPage.functions.NewSparePartController;
+import javafx.event.ActionEvent;
+import javafx.scene.control.*;
+import logic.manager.SparePartsManager;
 import utils.StringUtils;
 import gui.FXutils.TableViewUtils;
 import javafx.collections.ObservableList;
@@ -13,15 +18,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import logic.Condition;
-import logic.SparePart;
+import logic.sparePart.SparePart;
 import logic.order.Order;
 import logic.Supplier;
 import logic.saleBook.SaleBook;
@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.*;
 
 import static gui.FXutils.StageUtils.createStyledStage;
@@ -59,6 +60,13 @@ public class NewOrderController extends FunctionDialog<Order> implements Initial
      */
     @FXML
     private Label orderCostCurrencyLbl;
+
+    /**
+     *
+     */
+    @FXML
+    public DatePicker orderDatePicker;
+
     /**
      * Button to apply the input
      */
@@ -118,6 +126,7 @@ public class NewOrderController extends FunctionDialog<Order> implements Initial
                 SpinnerTableCell.MaxValueType.UNLIMITED);
         this.sparePartsTblVw.getColumns().add(this.spinnerTableColumn);
 
+        this.orderDatePicker.setValue(LocalDate.now());
         LabelUtils.setCurrencies(this.orderCostCurrencyLbl);
         this.orderCostTxtFld.textProperty().addListener((observableValue, oldValue, newValue) ->
                 this.applyBtn.setDisable(!StringUtils.isValidNumber(newValue)));
@@ -128,9 +137,10 @@ public class NewOrderController extends FunctionDialog<Order> implements Initial
      */
     @FXML
     public void handleApply() {
-        Supplier supplier = this.saleBook.getSupplierByName(this.supplierChcBx.getValue());
+        Supplier supplier = this.saleBook.getSuppliersManager().getSupplier(this.supplierChcBx.getValue());
         if (supplier != null) {
-            this.result = new Order(this.orderId, supplier, this.spinnerTableColumn.getSparePartToSpinnerValue(),
+            this.result = new Order(this.orderId, this.orderDatePicker.getValue(), supplier,
+                    this.spinnerTableColumn.getSparePartToSpinnerValue(),
                     BigDecimalUtils.parse(this.orderCostTxtFld.getText()));
             this.handleCancel();
         }
@@ -153,14 +163,34 @@ public class NewOrderController extends FunctionDialog<Order> implements Initial
      */
     private void setSaleBook(@NotNull SaleBook saleBook) {
         this.saleBook = saleBook;
-        this.orderId = saleBook.getNextOrderId();
-        Set<SparePart> spareParts = saleBook.getSpareParts();
+        this.orderId = saleBook.getOrdersManager().getNextOrderId();
+        Set<SparePart> spareParts = saleBook.getSparePartsManager().getSpareParts();
         ObservableList<SparePart> tblVwItems = this.sparePartsTblVw.getItems();
         for (SparePart sparePart : spareParts) {
-            if(sparePart.getCondition().equals(Condition.NEW)){
+            if(sparePart.getCondition() == Condition.NEW){
                 tblVwItems.add(sparePart);
             }
         }
-        ChoiceBoxUtils.addItems(this.supplierChcBx, saleBook.getSupplierNames());
+        ChoiceBoxUtils.addItems(this.supplierChcBx, saleBook.getSuppliersManager().getSupplierNames());
+    }
+
+    /**
+     *
+     * @param actionEvent
+     */
+    @FXML
+    private void addNewSparePart(ActionEvent actionEvent) {
+        try {
+            SparePartsManager sparePartsManager = this.saleBook.getSparePartsManager();
+            NewSparePartController sparePartController =
+                    NewSparePartController.createSparePartController(sparePartsManager.getSparePartNames(),
+                    sparePartsManager.getSparePartUnits(), this.saleBook.getPositionsManager().getCategories());
+            sparePartController.getResult().ifPresent(sparePart -> {
+                //TODO 22.05.2024 check if sparePart already exists
+                this.sparePartsTblVw.getItems().add(sparePart);
+            });
+        } catch (IOException e) {
+            DialogWindow.displayError(e);
+        }
     }
 }

@@ -2,15 +2,15 @@ package logic.manager;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
+import logic.GUIConnector;
 import logic.Supplier;
 import gui.FXutils.FXCollectionsUtils;
+import logic.saleBook.SaleBook;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnmodifiableView;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  *
@@ -18,15 +18,39 @@ import java.util.TreeMap;
 public class SuppliersManager {
 
     /**
+     *
+     */
+    private final SaleBook saleBook;
+
+    /**
+     *
+     */
+    private final GUIConnector gui;
+
+    /**
      * ObservableMap of suppliers mapped their matching name
      */
     private final ObservableMap<String, Supplier> nameToSupplierObsMap;
 
-    public SuppliersManager() {
+    /**
+     * @param saleBook
+     * @param gui
+     */
+    public SuppliersManager(SaleBook saleBook, @NotNull GUIConnector gui) {
+        this.saleBook = saleBook;
+        this.gui = gui;
         this.nameToSupplierObsMap = FXCollections.observableMap(new TreeMap<>());
     }
 
-    public SuppliersManager(Supplier[] suppliers){
+    /**
+     * @param saleBook
+     * @param suppliers
+     * @param gui
+     */
+    public SuppliersManager(SaleBook saleBook, @NotNull Supplier[] suppliers,
+                            @NotNull GUIConnector gui) {
+        this.saleBook = saleBook;
+        this.gui = gui;
         this.nameToSupplierObsMap = FXCollectionsUtils.toObservableMap(suppliers, Supplier::getName);
     }
 
@@ -44,15 +68,16 @@ public class SuppliersManager {
      * @return the suppliers of this suppliersManager
      */
     public @NotNull Collection<Supplier> getSuppliers() {
-        return this.nameToSupplierObsMap.values();
+        return new TreeSet<>(this.nameToSupplierObsMap.values());
     }
 
     /**
      *
      * @return
      */
+    @UnmodifiableView
     public @NotNull Set<String> getSupplierNames() {
-        return this.nameToSupplierObsMap.keySet();
+        return Collections.unmodifiableSet(this.nameToSupplierObsMap.keySet());
     }
 
     /**
@@ -69,9 +94,15 @@ public class SuppliersManager {
      * Adds the specified supplier to this supplierManager
      *
      * @param supplier the supplier which should be added
+     * @return
      */
     public boolean addSupplier(@NotNull Supplier supplier) {
-        return this.nameToSupplierObsMap.put(supplier.getName(), supplier) == null;
+        boolean added = this.nameToSupplierObsMap.putIfAbsent(supplier.getName(), supplier) == null;
+        if (added) {
+            this.gui.displaySupplierNames(this.getSupplierNames());
+            this.gui.updateStatus(String.format("supplier %s added", supplier.getName()));
+        }
+        return added;
     }
 
     /**
@@ -79,8 +110,13 @@ public class SuppliersManager {
      *
      * @param supplierName the name of the supplier which should be deleted
      */
-    public Supplier removeSupplier(@NotNull String supplierName) {
-        return this.nameToSupplierObsMap.remove(supplierName);
+    public @Nullable Supplier removeSupplier(@NotNull String supplierName) {
+        Supplier removedSupplier = this.nameToSupplierObsMap.remove(supplierName);
+        if (removedSupplier != null) {
+            this.gui.displaySupplierNames(this.getSupplierNames());
+            this.gui.updateStatus(String.format("supplier %s deleted", supplierName));
+        }
+        return removedSupplier;
     }
 
     @Override

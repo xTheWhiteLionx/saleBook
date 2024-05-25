@@ -18,7 +18,7 @@ import java.util.*;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static utils.BigDecimalUtils.calcPercent;
 import static utils.BigDecimalUtils.isPositive;
-import static utils.LocalDateUtil.areAcceptableDates;
+import static utils.LocalDateUtils.areAcceptableDates;
 
 /**
  * This class represents a position. Each Position can be identified by his id in the
@@ -279,6 +279,14 @@ public class Position extends AbstractPosition implements Product, Comparable<Po
     }
 
     /**
+     *
+     * @return
+     */
+    public BigDecimal getTotalCost() {
+        return this.purchasingPrice.add(this.cost);
+    }
+
+    /**
      * Sets the receivedDate of this position, if this position is not received yet then use
      * the methode {@link #setReceived(LocalDate)}
      *
@@ -417,7 +425,7 @@ public class Position extends AbstractPosition implements Product, Comparable<Po
      * To get an id for an item use the {@link #getNextItemId()} methode.
      *
      * @param item the item to be added to this position
-     * @return
+     * @return {@code true} if the item was successfully added, otherwise {@code false}
      * @throws IllegalArgumentException if the id of the specified item is already used
      */
     public boolean addItem(@NotNull Item item) {
@@ -428,9 +436,8 @@ public class Position extends AbstractPosition implements Product, Comparable<Po
         boolean added = this.items.add(item);
         if (added){
             this.nextItemId++;
-            return true;
         }
-        return false;
+        return added;
     }
 
     /**
@@ -553,10 +560,10 @@ public class Position extends AbstractPosition implements Product, Comparable<Po
         return null;
     }
 
-    @Override
-    public String getSimpleName() {
-        return this.getClass().getSimpleName();
-    }
+//    @Override
+//    public String getSimpleName() {
+//        return this.getClass().getSimpleName();
+//    }
 
     /**
      * Compares this position to the specified other position.

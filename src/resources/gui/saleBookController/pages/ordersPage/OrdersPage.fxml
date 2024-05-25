@@ -12,8 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.textfield.CustomTextField?>
 
-<AnchorPane fx:id="pane" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="gui.saleBookController.pages.ordersPage.OrdersPage">
+<AnchorPane fx:id="pane" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.saleBookController.pages.ordersPage.OrdersPage">
    <children>
         <SplitPane dividerPositions="0.5" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <VBox>
@@ -33,14 +32,15 @@
                            </Label>
                         </left>
                         <right>
-                           <Button fx:id="cleanOrderSearchBarBtn"
-                                   onAction="#handleCleanOrderSearchBar" style="-fx-background-color: transparent;"
-                                   text="x" textAlignment="CENTER" visible="false" />
+                           <Button fx:id="cleanOrderSearchBarBtn" onAction="#handleCleanOrderSearchBar" style="-fx-background-color: transparent;" text="x" textAlignment="CENTER" visible="false" />
                         </right>
                      </CustomTextField>
                   </items>
                </ToolBar>
-                  <TableView fx:id="orderTblVw" />
+               <TableView fx:id="orderTblVw">
+                  <columnResizePolicy>
+                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                  </columnResizePolicy></TableView>
             </children>
          </VBox>
             <VBox fx:id="wrapVBox1" alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0">

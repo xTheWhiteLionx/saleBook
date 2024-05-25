@@ -11,9 +11,15 @@ import java.time.format.FormatStyle;
  *
  * @author xthe_white_lionx
  */
-public class LocalDateUtil {
+public class LocalDateUtils {
     /** The date pattern that is used for conversion. Change as you wish. */
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
+
+    /**
+     * Suppresses default constructor, ensuring non-instantiability.
+     */
+    private LocalDateUtils() {
+    }
 
     /**
      * Checks if the end date is after the start date or are equals

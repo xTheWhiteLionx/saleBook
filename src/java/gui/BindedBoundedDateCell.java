@@ -2,7 +2,7 @@ package gui;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.DateCell;
-import utils.LocalDateUtil;
+import utils.LocalDateUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDate;
@@ -38,7 +38,7 @@ public class BindedBoundedDateCell extends DateCell {
     public BindedBoundedDateCell(@Nullable ObjectProperty<LocalDate> minDate,
                                  @Nullable ObjectProperty<LocalDate> maxDate) {
         if (minDate != null && maxDate != null) {
-            if (!LocalDateUtil.areAcceptableDates(minDate.get(), maxDate.get())){
+            if (!LocalDateUtils.areAcceptableDates(minDate.get(), maxDate.get())){
                 throw new IllegalArgumentException("the minDate is after the maxDate");
             }
         }

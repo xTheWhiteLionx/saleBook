@@ -1,6 +1,7 @@
 package gui.FXutils;
 
-import gui.ObservableListMapBinder;
+import gui.ObservableListKeyBinder;
+import gui.ObservableListValuesBinder;
 import gui.ObservableListSetBinder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +19,12 @@ import java.util.function.Function;
  *  @author xthe_white_lionx
  */
 public class FXCollectionsUtils {
+
+    /**
+     * Suppresses default constructor, ensuring non-instantiability.
+     */
+    private FXCollectionsUtils() {
+    }
 
     /**
      * Creates an observable List bound to the specified observableSet
@@ -38,9 +45,23 @@ public class FXCollectionsUtils {
      * @param <K>     type of the Keys
      * @param <V>     type of the Values
      */
-    public static <K, V> ObservableList<V> toObservableList(ObservableMap<K,V> observableMap) {
-        return new ObservableListMapBinder<>(observableMap).getObservableList();
+    public static <K, V> ObservableList<V> toObservableValuesList(ObservableMap<K,V> observableMap) {
+        return new ObservableListValuesBinder<>(observableMap).getObservableList();
     }
+
+    /**
+     * Creates an observable List bound to the specified observableMap
+     *
+     * @param observableMap Map of the values that should be bound
+     * @return a new observable Map with the specific values
+     * @param <K>     type of the Keys
+     * @param <V>     type of the Values
+     */
+    public static <K, V> ObservableList<K> toObservableKeyList(ObservableMap<K,V> observableMap) {
+        return new ObservableListKeyBinder<>(observableMap).getObservableList();
+    }
+
+
 
     /**
      * Creates an observable Map from the specified values, using the natural ordering of its keys.
@@ -55,7 +76,7 @@ public class FXCollectionsUtils {
      * @param <V>     type of the Values
      */
     public static <K extends Comparable<K>, V> ObservableMap<K,V> toObservableMap(
-           @NotNull V[] values, @NotNull Function<V, K> mapping) {
+            @NotNull V[] values, @NotNull Function<? super V, ? extends K> mapping) {
         Map<K, V> result = new TreeMap<>();
         for (V value : values) {
             K key = mapping.apply(value);

@@ -4,6 +4,7 @@ import gui.ObservableTreeItemMapBinder;
 import javafx.collections.ObservableList;
 import logic.order.Order;
 import logic.products.position.Position;
+import logic.sparePart.SparePart;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
@@ -37,7 +38,7 @@ public interface GUIConnector {
      *
      * @param spareParts the spareParts which should be displayed
      */
-    void displaySpareParts(@NotNull ObservableList<SparePart> spareParts);
+    void displaySpareParts(@NotNull ObservableList<logic.sparePart.SparePart> spareParts);
 
     /**
      * Displays the specified sparePartNames for the autocompletion of the searchbar
@@ -175,4 +176,6 @@ public interface GUIConnector {
      * @param message the message which should be displayed
      */
     void updateStatus(@NotNull String message);
+
+    void refreshOrders();
 }

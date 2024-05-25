@@ -24,7 +24,7 @@ public class TableViewUtils {
      * @param <T>            type to which the table elements will be extracted (display type)
      */
     public static <S, T> void addColumn(@NotNull TableView<S> tableView, @NotNull String columnTitle,
-                                        @NotNull Function<S, T> valueExtractor) {
+                                        @NotNull Function<? super S, T> valueExtractor) {
         TableColumn<S, T> typColumn = new TableColumn<>(columnTitle);
         typColumn.setCellValueFactory(f -> new SimpleObjectProperty<>(valueExtractor.apply(f.getValue())));
         tableView.getColumns().add(typColumn);

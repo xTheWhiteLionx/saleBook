@@ -11,6 +11,12 @@ import org.jetbrains.annotations.NotNull;
 public class RibbonGroupUtils {
 
     /**
+     * Suppresses default constructor, ensuring non-instantiability.
+     */
+    private RibbonGroupUtils() {
+    }
+
+    /**
      * Creates a RibbonGroup with the specified title and nodes
      *
      * @param title the title of the ribbonGroup

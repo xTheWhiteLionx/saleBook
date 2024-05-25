@@ -2,7 +2,7 @@ package gui;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.control.TableColumn;
-import logic.SparePart;
+import logic.sparePart.SparePart;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,7 +43,7 @@ public class SpinnerTableColumn extends TableColumn<SparePart, Integer> {
                 };
 
         this.setCellFactory(tc -> new SpinnerTableCell(maxValueType, updateMap,
-                this.sparePartToSpinnerValue::getOrDefault));
+                this.sparePartToSpinnerValue::get));
         this.setOnEditCommit(
                 t -> updateMap.accept(t.getTableView().getItems().get(
                         t.getTablePosition().getRow()), t.getNewValue()));

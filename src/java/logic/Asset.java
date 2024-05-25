@@ -1,7 +1,7 @@
 package logic;
 
 import utils.BigDecimalUtils;
-import utils.LocalDateUtil;
+import utils.LocalDateUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -73,7 +73,7 @@ public class Asset implements Comparable<Asset>{
             throw new IllegalArgumentException("purchasingDate is in the future");
         }
         if (arrivalDate != null) {
-            if (!LocalDateUtil.areAcceptableDates(purchasingDate, arrivalDate)) {
+            if (!LocalDateUtils.areAcceptableDates(purchasingDate, arrivalDate)) {
                 throw new IllegalArgumentException("arrivalDate is before purchasingDate");
             }
             if (arrivalDate.isAfter(today)) {
@@ -179,7 +179,7 @@ public class Asset implements Comparable<Asset>{
      * the arrivalDate is in the future
      */
     public void setArrivalDate(@NotNull LocalDate arrivalDate) {
-        if (!LocalDateUtil.areAcceptableDates(this.purchasingDate, arrivalDate)) {
+        if (!LocalDateUtils.areAcceptableDates(this.purchasingDate, arrivalDate)) {
             throw new IllegalArgumentException("arrivalDate is before purchasingDate");
         }
         if (arrivalDate.isAfter(LocalDate.now())) {

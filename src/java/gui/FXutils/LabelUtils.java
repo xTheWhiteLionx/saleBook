@@ -22,6 +22,12 @@ public class LabelUtils {
      */
     public static final String SYMBOL_OF_CURRENCY = Currency.getInstance(Locale.getDefault()).getSymbol();
 
+    /**
+     * Suppresses default constructor, ensuring non-instantiability.
+     */
+    private LabelUtils() {
+    }
+
 
     /**
      * Sets the text of the given Labels to the

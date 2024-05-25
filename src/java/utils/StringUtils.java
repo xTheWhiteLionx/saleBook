@@ -9,6 +9,13 @@ import org.jetbrains.annotations.NotNull;
  * @author xthe_white_lionx
  */
 public class StringUtils {
+
+    /**
+     * Suppresses default constructor, ensuring non-instantiability.
+     */
+    private StringUtils() {
+    }
+
     /**
      * Returns true if and only if the specified main string contains the specified
      * substring. The upper and lower case of characters are ignored.

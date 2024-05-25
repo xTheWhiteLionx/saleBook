@@ -13,14 +13,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import logic.SparePart;
+import logic.manager.SparePartsManager;
+import logic.sparePart.SparePart;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collection;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import static gui.DialogWindow.displayError;
 import static gui.FXutils.StageUtils.createStyledStage;
@@ -50,13 +51,19 @@ public class RepairedController extends FunctionDialog<Map<SparePart, Integer>> 
     private SpinnerTableColumn spinnerTableColumn;
 
     /**
+     *
+     */
+    private SparePartsManager sparePartsManager;
+
+    /**
      * Creates and loads a new RepairedController
      *
-     * @param spareParts spareParts that could be used for the repair
+     * @param category
+     * @param sparePartsManager
      * @return the new created RepairedController
      */
     public static @NotNull RepairedController createRepairedController(
-            @NotNull Collection<SparePart> spareParts) throws IOException {
+            @NotNull String category, @NotNull SparePartsManager sparePartsManager) throws IOException {
         FXMLLoader loader = new FXMLLoader(
                 ApplicationMain.class.getResource("saleBookController/pages/positionsPage" +
                         "/functions/RepairedController.fxml"));
@@ -67,7 +74,7 @@ public class RepairedController extends FunctionDialog<Map<SparePart, Integer>> 
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
         RepairedController controller = loader.getController();
-        controller.setSpareParts(spareParts);
+        controller.initialize(category, sparePartsManager);
         stage.showAndWait();
         return controller;
     }
@@ -75,14 +82,14 @@ public class RepairedController extends FunctionDialog<Map<SparePart, Integer>> 
     /**
      * Initializes this controller
      *
-     * @param url unused
+     * @param url            unused
      * @param resourceBundle unused
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         TableViewUtils.addColumn(this.sparePartsTblVw, "name", SparePart::getName);
         TableViewUtils.addColumn(this.sparePartsTblVw, "condition", SparePart::getCondition);
-        TableViewUtils.addColumn(this.sparePartsTblVw, "in stock", SparePart::getQuantity);
+        TableViewUtils.addColumn(this.sparePartsTblVw, "in stock", this.sparePartsManager::getQuantity);
         this.spinnerTableColumn = new SpinnerTableColumn("used", SpinnerTableCell.MaxValueType.MAX_STOCK);
         this.sparePartsTblVw.getColumns().add(this.spinnerTableColumn);
     }
@@ -90,14 +97,21 @@ public class RepairedController extends FunctionDialog<Map<SparePart, Integer>> 
     /**
      * Sets the chose able spareParts of the TableView to the specified spareParts and filters them if needed
      *
-     * @param spareParts spareParts that could be used for the repair
+     * @param category
+     * @param sparePartsManager
      */
-    private void setSpareParts(@NotNull Collection<SparePart> spareParts) {
+    private void initialize(@NotNull String category,
+                            @NotNull SparePartsManager sparePartsManager) {
+        this.sparePartsManager = sparePartsManager;
         ObservableList<SparePart> items = this.sparePartsTblVw.getItems();
+        Set<SparePart> spareParts = sparePartsManager.getSpareParts();
         for (SparePart sparePart : spareParts) {
-            //show only spareParts which are in stock/available and usable
-            if (sparePart.getCondition().isUsable() && sparePart.getQuantity() > 0) {
-                items.add(sparePart);
+            if (sparePart.getCategory().equals(category)) {
+                //show only spareParts which are in stock/available and usable
+                Integer quantity = sparePartsManager.getQuantity(sparePart);
+                if (sparePart.getCondition().isUsable() && quantity != null && quantity > 0) {
+                    items.add(sparePart);
+                }
             }
         }
     }

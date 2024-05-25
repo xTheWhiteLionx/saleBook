@@ -102,24 +102,23 @@ public class EditTenthPartController implements javafx.fxml.Initializable {
         BigDecimal repairServiceSales = saleBook.getRepairServiceSales();
         BigDecimal extraordinaryIncome = saleBook.getExtraordinaryIncome();
         BigDecimal paid = saleBook.getPaid();
-        sales = saleBook.getSalesVolume();
+        this.sales = saleBook.getSalesVolume();
         BigDecimal tenthPartTotalIncome = repairServiceSales.add(extraordinaryIncome)
-                .add(sales).divide(BigDecimal.TEN, RoundingMode.HALF_UP);
+                .add(this.sales).divide(BigDecimal.TEN, RoundingMode.HALF_UP);
 
         this.repairServiceSalesTxtFld.setText(String.valueOf(repairServiceSales));
         this.repairServiceSalesTxtFld.textProperty().addListener((observableValue, oldText, newText) -> {
             if (StringUtils.isValidNumber(newText)){
                 this.tenthPartTotalSalesLbl.setText(String.valueOf(repairServiceSales.add(extraordinaryIncome)
-                        .add(sales).divide(BigDecimal.TEN, RoundingMode.HALF_UP)));
+                        .add(this.sales).divide(BigDecimal.TEN, RoundingMode.HALF_UP)));
             }
         });
         this.extraordinaryIncomeTxtFld.setText(String.valueOf(extraordinaryIncome));
         this.paidTxtFld.setText(String.valueOf(paid));
 
-        LabelUtils.setMoney(this.salesLbl, sales);
+        LabelUtils.setMoney(this.salesLbl, this.sales);
         this.tenthPartTotalSalesLbl.setText(String.valueOf(tenthPartTotalIncome));
         this.balanceLbl.setText(String.valueOf(paid.subtract(tenthPartTotalIncome)));
-
     }
 
     /**

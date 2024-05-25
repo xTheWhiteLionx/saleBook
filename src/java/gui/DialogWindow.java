@@ -26,7 +26,13 @@ public class DialogWindow {
     /**
      * The directory of the package of the json files
      */
-    public static final String DIRECTORY = "books";
+    private static final String DIRECTORY = "books";
+
+    /**
+     * Suppresses default constructor, ensuring non-instantiability.
+     */
+    private DialogWindow() {
+    }
 
     /**
      * Returns a json filtered FileChooser on initialized to this {@link #DIRECTORY}.
@@ -86,23 +92,8 @@ public class DialogWindow {
      * @throws NullPointerException if the specified element is null
      */
     public static void displayError(@NotNull String headerText, @NotNull Exception ex) {
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(stringWriter);
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        Alert alert = createErrorAlert(ex);
         alert.setHeaderText(headerText);
-        alert.setContentText(ex.getMessage());
-        DialogPane dialogPane = alert.getDialogPane();
-        Stage stage = (Stage) dialogPane.getScene().getWindow();
-        StageUtils.styleStage(stage);
-
-        ex.printStackTrace(printWriter);
-        printWriter.close();
-
-        GridPane gridPane = new GridPane();
-        gridPane.add(new Label("Exception stacktrace:"), 0, 0);
-        gridPane.add(new TextArea(stringWriter.toString()), 0, 1);
-
-        dialogPane.setExpandableContent(gridPane);
         alert.showAndWait();
     }
 
@@ -113,6 +104,15 @@ public class DialogWindow {
      * @throws NullPointerException if the specified element is null
      */
     public static void displayError(@NotNull Exception ex) {
+        createErrorAlert(ex).showAndWait();
+    }
+
+    /**
+     *
+     * @param ex
+     * @return
+     */
+    private static Alert createErrorAlert(@NotNull Exception ex){
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -129,6 +129,6 @@ public class DialogWindow {
         gridPane.add(new TextArea(stringWriter.toString()), 0, 1);
 
         dialogPane.setExpandableContent(gridPane);
-        alert.showAndWait();
+        return alert;
     }
 }

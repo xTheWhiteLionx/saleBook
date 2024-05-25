@@ -1,9 +1,12 @@
 package gui.saleBookController.pages.sparePartsPage.functions;
 
 import gui.ApplicationMain;
+import gui.FXutils.SpinnerUtils;
 import gui.saleBookController.pages.FunctionDialog;
 import gui.FXutils.ChoiceBoxUtils;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,9 +15,10 @@ import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import logic.Condition;
-import logic.SparePart;
+import logic.sparePart.SparePart;
 import org.controlsfx.control.textfield.TextFields;
 import org.jetbrains.annotations.NotNull;
+import utils.StringUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -62,6 +66,17 @@ public class NewSparePartController extends FunctionDialog<SparePart> implements
      */
     @FXML
     public Label quantityUnitLbl;
+
+    /**
+     *
+     */
+    public CheckBox minimumStockChckBx;
+
+    /**
+     *
+     */
+    @FXML
+    public Spinner<Integer> minimumStockSpinner;
 
     /**
      * ChoiceBox to choose the category
@@ -130,14 +145,20 @@ public class NewSparePartController extends FunctionDialog<SparePart> implements
     private void initializeBooleanBinding() {
         BooleanBinding inputsValid = new BooleanBinding() {
             {
-                this.bind(NewSparePartController.this.nameTxtFld.textProperty(), NewSparePartController.this.unitTxtFld.textProperty(),
-                        NewSparePartController.this.quantityTxtFld.textProperty());
+                this.bind(NewSparePartController.this.nameTxtFld.textProperty(),
+                        NewSparePartController.this.unitTxtFld.textProperty(),
+                        NewSparePartController.this.quantityTxtFld.textProperty(),
+                        NewSparePartController.this.minimumStockChckBx.selectedProperty(),
+                        NewSparePartController.this.minimumStockSpinner.valueProperty());
             }
 
             @Override
             protected boolean computeValue() {
-                return !NewSparePartController.this.unitTxtFld.getText().isEmpty() && !NewSparePartController.this.nameTxtFld.getText().isEmpty() &&
-                        isPositive(NewSparePartController.this.quantityTxtFld);
+                return !NewSparePartController.this.unitTxtFld.getText().isEmpty()
+                        && !NewSparePartController.this.nameTxtFld.getText().isEmpty()
+                        && isPositive(NewSparePartController.this.quantityTxtFld)
+                        && (NewSparePartController.this.minimumStockChckBx.isSelected()
+                        ^ NewSparePartController.this.minimumStockSpinner.getValue() == null);
             }
         };
         this.btnApply.disableProperty().bind(inputsValid.not());
@@ -152,6 +173,13 @@ public class NewSparePartController extends FunctionDialog<SparePart> implements
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ChoiceBoxUtils.addItems(this.conditionChcBx, Condition.class);
+        this.minimumStockSpinner.setValueFactory(SpinnerUtils.createValueFactory(0));
+        this.minimumStockChckBx.selectedProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (!newValue) {
+                this.minimumStockSpinner.getValueFactory().setValue(0);
+            }
+            this.minimumStockSpinner.setDisable(!newValue);
+        });
         this.unitTxtFld.textProperty().addListener((observableValue, oldText, newText) -> {
             this.quantityUnitLbl.setText(newText);
         });
@@ -174,8 +202,7 @@ public class NewSparePartController extends FunctionDialog<SparePart> implements
     @FXML
     private void handleApply() {
         this.result = new SparePart(this.nameTxtFld.getText(), this.conditionChcBx.getValue(),
-                this.unitTxtFld.getText(), this.categoryChcBx.getValue(),
-            Integer.parseInt(this.quantityTxtFld.getText()));
+                this.unitTxtFld.getText(), this.categoryChcBx.getValue(), this.minimumStockSpinner.getValue());
         this.handleCancel();
     }
 }

@@ -17,6 +17,7 @@ import gui.saleBookController.pages.positionsPage.functions.add.NewItemControlle
 import gui.saleBookController.pages.positionsPage.functions.add.MasterController;
 import gui.FXutils.RibbonTabUtils;
 import javafx.stage.Stage;
+import logic.products.item.ItemColor;
 import utils.StringUtils;
 import gui.FXutils.TreeTableViewUtils;
 import javafx.event.ActionEvent;
@@ -31,7 +32,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
-import logic.SparePart;
+import logic.sparePart.SparePart;
 import logic.products.position.State;
 import logic.products.item.Item;
 import logic.products.position.Position;
@@ -455,7 +456,7 @@ public class PositionsPage implements Initializable, Page {
      * Handles the divide button and divides the current position
      */
     private void handleDivide() {
-        this.saleBook.dividePosition(this.currPos.getId());
+        this.saleBook.getPositionsManager().dividePosition(this.currPos.getId());
     }
 
     /**
@@ -466,9 +467,9 @@ public class PositionsPage implements Initializable, Page {
             int currPosId = this.currPos.getId();
             CombinePositionWithController controller =
                     CombinePositionWithController.createCombinePositionWithController(
-                            currPosId, this.saleBook.getPositions());
+                            currPosId, this.saleBook.getPositionsManager().getPositions());
             controller.getResult().ifPresent(result ->
-                    this.saleBook.combinePositions(currPosId, result));
+                    this.saleBook.getPositionsManager().combinePositions(currPosId, result));
         } catch (IOException e) {
             displayError("failed to load combinePositionWithController", e);
         }
@@ -489,7 +490,7 @@ public class PositionsPage implements Initializable, Page {
                 }
             } else if (product instanceof Item item) {
                 try {
-                    functionDialog = createEditItemController(item, this.saleBook.getNameToItemColor());
+                    functionDialog = createEditItemController(item, ItemColor.getItemColorMap());
                 } catch (IOException e) {
                     displayError("failed to load editItemController", e);
                 }
@@ -590,10 +591,10 @@ public class PositionsPage implements Initializable, Page {
     private void handleNewPosition() {
         try {
             MasterController masterController =
-                    MasterController.createMasterController(this.saleBook.getNextPosId(),
-                            this.saleBook.getCategories(), this.saleBook.getNameToItemColor());
+                    MasterController.createMasterController(this.saleBook.getPositionsManager().getNextPosId(),
+                            this.saleBook.getCategories(), ItemColor.getItemColorMap());
             masterController.getResult().ifPresent(position -> {
-                this.saleBook.addPosition(position);
+                this.saleBook.getPositionsManager().addPosition(position);
                 File dir = new File(DIR_POSITIONS);
                 if (!dir.isDirectory()){
                     dir.mkdir();
@@ -667,7 +668,7 @@ public class PositionsPage implements Initializable, Page {
             ReceivedController receivedController =
                     createReceivedController(this.currPos.getOrderDate());
             receivedController.getResult().ifPresent(receivedDate ->
-                    this.saleBook.setReceived(this.currPos.getId(), receivedDate)
+                    this.saleBook.getPositionsManager().setReceived(this.currPos.getId(), receivedDate)
             );
         } catch (IOException e) {
             displayError("failed to load ReceivedController fxml", e);
@@ -681,7 +682,7 @@ public class PositionsPage implements Initializable, Page {
         try {
             NewCostController newCostController = createNewCostController();
             newCostController.getResult().ifPresent(value ->
-                    this.saleBook.addCostToPosition(this.currPos.getId(), value));
+                    this.saleBook.getPositionsManager().addCostToPosition(this.currPos.getId(), value));
         } catch (IOException e) {
             displayError("failed to load newCostController fxml", e);
         }
@@ -694,9 +695,9 @@ public class PositionsPage implements Initializable, Page {
         try {
             NewItemController newItemController =
                     createAddItemController(this.currPos.getNextItemId(),
-                            this.saleBook.getNameToItemColor());
+                            ItemColor.getItemColorMap());
             newItemController.getResult().ifPresent(item ->
-                    this.saleBook.addItemToPosition(this.currPos.getId(), item));
+                    this.saleBook.getPositionsManager().addItemToPosition(this.currPos.getId(), item));
         } catch (IOException e) {
             displayError("failed to load newCostItemController", e);
         }
@@ -707,11 +708,13 @@ public class PositionsPage implements Initializable, Page {
      */
     private void handleRepair() {
         try {
-            Collection<SparePart> spareParts = this.saleBook.getSpareParts();
+            Collection<SparePart> spareParts = this.saleBook.getSparePartsManager().getSpareParts();
             spareParts.removeIf(sparePart -> !sparePart.getCategory().equals(this.currPos.getCategory()));
-            RepairedController repairedController = createRepairedController(spareParts);
+            RepairedController repairedController =
+                    createRepairedController(this.currPos.getCategory(),
+                            this.saleBook.getSparePartsManager());
             repairedController.getResult().ifPresent(usedSpareParts ->
-                    this.saleBook.repairPosition(this.currPos.getId(), usedSpareParts));
+                    this.saleBook.getPositionsManager().repairPosition(this.currPos.getId(), usedSpareParts));
         } catch (IOException e) {
             displayError("failed to load repairedController", e);
         }
@@ -725,10 +728,10 @@ public class PositionsPage implements Initializable, Page {
             TreeItem<Product> selectedItem = this.trTblVw.getSelectionModel().getSelectedItem();
             Product value = selectedItem.getValue();
             if (value instanceof Position position) {
-                this.saleBook.removePosition(position.getId());
+                this.saleBook.getPositionsManager().removePosition(position.getId());
             } else if (value instanceof Item item) {
                 int positionId = selectedItem.getParent().getValue().getId();
-                this.saleBook.removeItem(positionId, item.getId());
+                this.saleBook.getPositionsManager().removeItem(positionId, item.getId());
             }
         }
     }

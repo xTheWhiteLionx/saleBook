@@ -12,7 +12,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import logic.products.position.Position;
 import logic.products.position.State;
-import utils.LocalDateUtil;
+import utils.LocalDateUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -150,7 +150,7 @@ public class DetailPositionPane implements Initializable {
         this.clear();
         this.idLbl.setText(String.valueOf(position.getId()));
         this.categoryLbl.setText(position.getCategory());
-        this.orderDateLbl.setText(LocalDateUtil.format(position.getOrderDate()));
+        this.orderDateLbl.setText(LocalDateUtils.format(position.getOrderDate()));
         LabelUtils.setMoney(this.purchasingPriceLbl, position.getPurchasingPrice());
         LabelUtils.setMoney(this.costLbl, position.getCost());
         Long holdingPeriod = position.calcHoldingPeriod();
@@ -207,11 +207,11 @@ public class DetailPositionPane implements Initializable {
                     });
                 }
             case SOLD:
-                this.sellingDateLbl.setText(LocalDateUtil.format(position.getSellingDate()));
+                this.sellingDateLbl.setText(LocalDateUtils.format(position.getSellingDate()));
                 LabelUtils.setMoney(this.sellingPriceLbl, position.getSellingPrice());
             case REPAIRED:
             case RECEIVED:
-                this.arrivalDateLbl.setText(LocalDateUtil.format(position.getReceivedDate()));
+                this.arrivalDateLbl.setText(LocalDateUtils.format(position.getReceivedDate()));
         }
     }
 

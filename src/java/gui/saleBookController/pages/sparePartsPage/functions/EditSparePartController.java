@@ -15,7 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import logic.Condition;
-import logic.SparePart;
+import logic.sparePart.SparePart;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -140,7 +140,7 @@ public class EditSparePartController extends FunctionDialog<Boolean> implements 
         this.nameTxtFld.setText(sparePart.getName());
         this.conditionChcBx.setValue(sparePart.getCondition());
         this.unitTxtFld.setText(sparePart.getUnit());
-        this.quantityTxtFld.setText(String.valueOf(sparePart.getQuantity()));
+//        this.quantityTxtFld.setText(String.valueOf(sparePart.getQuantity()));
         ChoiceBoxUtils.addItems(this.categoryChcBx, categories);
         this.categoryChcBx.setValue(sparePart.getCategory());
     }
@@ -183,7 +183,7 @@ public class EditSparePartController extends FunctionDialog<Boolean> implements 
         this.sparePart.setName(this.nameTxtFld.getText());
         this.sparePart.setCondition(this.conditionChcBx.getValue());
         this.sparePart.setUnit(this.unitTxtFld.getText());
-        this.sparePart.setQuantity(Integer.parseInt(this.quantityTxtFld.getText()));
+//        this.sparePart.setQuantity(Integer.parseInt(this.quantityTxtFld.getText()));
         this.sparePart.setCategory(this.categoryChcBx.getValue());
         this.result = true;
         this.handleCancel();

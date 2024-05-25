@@ -13,6 +13,12 @@ import java.util.Collection;
 public class ChoiceBoxUtils {
 
     /**
+     * Suppresses default constructor, ensuring non-instantiability.
+     */
+    private ChoiceBoxUtils() {
+    }
+
+    /**
      * Creates a new choiceBox filled with the elements of the specified enum class
      *
      * @param enumClass class of the enum
@@ -20,7 +26,7 @@ public class ChoiceBoxUtils {
      * @param <T>       type of the elements
      */
     public static @NotNull <T extends Enum<T>> ChoiceBox<T> createChoiceBox(
-            @NotNull Class<T> enumClass) {
+            @NotNull Class<? extends T> enumClass) {
         ChoiceBox<T> result = new ChoiceBox<>();
         addItems(result, enumClass);
         return result;
@@ -35,7 +41,7 @@ public class ChoiceBoxUtils {
      * @param <T>       type of the elements
      */
     public static <T extends Enum<T>> void addItems(@NotNull ChoiceBox<T> choiceBox,
-                                                    @NotNull Class<T> enumClass) {
+                                                    @NotNull Class<? extends T> enumClass) {
         T[] values = enumClass.getEnumConstants();
         choiceBox.getItems().addAll(values);
         if (values.length >= 1) {
@@ -52,7 +58,8 @@ public class ChoiceBoxUtils {
      * @param values    collection of values which should be added
      * @param <T>       type of the elements
      */
-    public static <T> void addItems(@NotNull ChoiceBox<T> choiceBox, @NotNull Collection<T> values) {
+    public static <T> void addItems(@NotNull ChoiceBox<T> choiceBox,
+                                    @NotNull Collection<? extends T> values) {
         if (!values.isEmpty()) {
             choiceBox.getItems().addAll(values);
             choiceBox.setValue(values.iterator().next());

@@ -12,6 +12,12 @@ import org.jetbrains.annotations.NotNull;
 public class RibbonTabUtils {
 
     /**
+     * Suppresses default constructor, ensuring non-instantiability.
+     */
+    private RibbonTabUtils() {
+    }
+
+    /**
      * Creates a RibbonTab with the specified title and ribbonGroups
      *
      * @param title the title of the ribbonTab

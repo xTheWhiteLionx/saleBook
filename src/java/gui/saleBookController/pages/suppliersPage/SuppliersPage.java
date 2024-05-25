@@ -168,7 +168,7 @@ public class SuppliersPage implements Initializable, Page {
             try {
                 EditSupplierController editSupplierController =
                         EditSupplierController.createEditSupplierController(this.selectedSupplier,
-                                this.saleBook.getSupplierNames());
+                                this.saleBook.getSuppliersManager().getSupplierNames());
                 editSupplierController.getResult().ifPresent(dirty -> {
                     if (dirty) {
                         this.supplierTblVw.refresh();
@@ -196,8 +196,8 @@ public class SuppliersPage implements Initializable, Page {
     public void handleAddSupplier() {
         try {
             NewSupplierController newSupplierController =
-                    createNewSupplierController(this.saleBook.getSupplierNames());
-            newSupplierController.getResult().ifPresent(supplier -> this.saleBook.addSupplier(supplier));
+                    createNewSupplierController(this.saleBook.getSuppliersManager().getSupplierNames());
+            newSupplierController.getResult().ifPresent(supplier -> this.saleBook.getSuppliersManager().addSupplier(supplier));
         } catch (IOException e) {
             displayError("failed to load newSupplierController", e);
         }
@@ -209,7 +209,7 @@ public class SuppliersPage implements Initializable, Page {
     @FXML
     public void handleDeleteSupplier() {
         if (acceptedDeleteAlert()) {
-            this.saleBook.removeSupplier(this.selectedSupplier.getName());
+            this.saleBook.getSuppliersManager().removeSupplier(this.selectedSupplier.getName());
         }
     }
 

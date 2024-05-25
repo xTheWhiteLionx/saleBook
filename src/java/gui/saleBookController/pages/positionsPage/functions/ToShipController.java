@@ -232,7 +232,8 @@ public class ToShipController implements Initializable {
      */
     @FXML
     private void handleApply() {
-        this.saleBook.shipped(this.posId, this.shippingCompaniesChcBx.getValue(), this.trackingNumberTxtFld.getText(),
+        this.saleBook.getPositionsManager().shipped(this.posId, this.shippingCompaniesChcBx.getValue(),
+                this.trackingNumberTxtFld.getText(),
                 BigDecimalUtils.parse(this.costTxtFld.getText()));
 
         String dirName = "positions/" + this.posId;

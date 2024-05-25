@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
  * @param <K> the type used for keys of the ObservableMap
  * @param <V> the type used for values of the ObservableMap
  */
-public class ObservableListMapBinder<K, V> implements MapChangeListener<K, V> {
+public class ObservableListValuesBinder<K, V> implements MapChangeListener<K, V> {
 
     /**
      * ObservableList bound to the values of the ObservableMap
@@ -25,7 +25,7 @@ public class ObservableListMapBinder<K, V> implements MapChangeListener<K, V> {
      *
      * @param map from which the values should be bound
      */
-    public ObservableListMapBinder(@NotNull ObservableMap<K, V> map) {
+    public ObservableListValuesBinder(@NotNull ObservableMap<K, V> map) {
         // initialise the list
         this.observableList = FXCollections.observableArrayList(map.values());
 

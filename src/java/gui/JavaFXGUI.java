@@ -15,7 +15,7 @@ import javafx.scene.control.TreeItem;
 import javafx.util.Duration;
 import logic.Asset;
 import logic.GUIConnector;
-import logic.SparePart;
+import logic.sparePart.SparePart;
 import logic.order.Order;
 import logic.Supplier;
 import logic.products.item.Item;
@@ -45,7 +45,7 @@ public class JavaFXGUI implements GUIConnector {
     /**
      *
      */
-    public static final DecimalFormat df = new DecimalFormat("#.##");
+    private static final DecimalFormat df = new DecimalFormat("#.##");
     /**
      *
      */
@@ -272,6 +272,11 @@ public class JavaFXGUI implements GUIConnector {
     }
 
     @Override
+    public void refreshOrders() {
+        this.ordersPage.updateTableViewOrderAndDetail();
+    }
+
+    @Override
     public void updateStatus(@NotNull String message) {
         this.status.setVisible(true);
         this.status.setText(message);
@@ -282,4 +287,5 @@ public class JavaFXGUI implements GUIConnector {
         });
         pt.play();
     }
+
 }

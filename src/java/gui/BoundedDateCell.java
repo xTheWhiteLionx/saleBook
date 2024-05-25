@@ -1,7 +1,7 @@
 package gui;
 
 import javafx.scene.control.DateCell;
-import utils.LocalDateUtil;
+import utils.LocalDateUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDate;
@@ -36,7 +36,7 @@ public class BoundedDateCell extends DateCell {
      */
     public BoundedDateCell(@Nullable LocalDate minDate, @Nullable LocalDate maxDate) {
         if (minDate != null && maxDate != null) {
-            if (!LocalDateUtil.areAcceptableDates(minDate, maxDate)){
+            if (!LocalDateUtils.areAcceptableDates(minDate, maxDate)){
                 throw new IllegalArgumentException("the minDate is after the maxDate");
             }
         }

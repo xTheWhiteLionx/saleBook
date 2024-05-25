@@ -1,6 +1,8 @@
-package logic;
+package logic.sparePart;
 
+import logic.Condition;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -28,10 +30,11 @@ public class SparePart implements Comparable<SparePart> {
      * The quantity unit of this spare part
      */
     private String unit;
+
     /**
-     * The quantity of this spare parts in the stock
+     *
      */
-    private int quantity;
+    private Integer minimumStock;
 
     /**
      * Constructor for a spare part
@@ -39,12 +42,13 @@ public class SparePart implements Comparable<SparePart> {
      * @param name      the name of the spare part
      * @param condition the condition of the spare part
      * @param unit      the unit of the quantity
-     * @param quantity  the quantity of the spare parts in the stock
+     * @param category
+     * @param minimumStock
      * @throws IllegalArgumentException if the name, the unit or the category is empty or the
      *                                  quantity is less or equals 0
      */
     public SparePart(@NotNull String name, @NotNull Condition condition, @NotNull String unit,
-                     @NotNull String category, int quantity) {
+                     @NotNull String category,@Nullable Integer minimumStock) {
         if (name.isEmpty()) {
             throw new IllegalArgumentException("name is empty");
         }
@@ -54,16 +58,23 @@ public class SparePart implements Comparable<SparePart> {
         if (category.isEmpty()) {
             throw new IllegalArgumentException("category ist empty");
         }
-        if (quantity < 0) {
-            throw new IllegalArgumentException("quantity must be greater equals 0 but is "
-                    + quantity);
-        }
 
         this.name = name;
         this.condition = condition;
         this.category = category;
         this.unit = unit;
-        this.quantity = quantity;
+        this.minimumStock = minimumStock;
+    }
+
+    /**
+     * @param sparePart
+     */
+    public SparePart(SparePart sparePart) {
+        this.name = sparePart.name;
+        this.condition = sparePart.condition;
+        this.category = sparePart.category;
+        this.unit = sparePart.unit;
+        this.minimumStock = sparePart.minimumStock;
     }
 
     /**
@@ -152,62 +163,19 @@ public class SparePart implements Comparable<SparePart> {
     }
 
     /**
-     * Returns the quantity of this spare part
      *
-     * @return the quantity of this spare part
+     * @return
      */
-    public int getQuantity() {
-        return this.quantity;
+    public @Nullable Integer getMinimumStock() {
+        return this.minimumStock;
     }
 
     /**
-     * Sets the quantity of this spare part to the specified newQuantity
      *
-     * @param newQuantity the new quantity
-     * @throws IllegalArgumentException if the specified newQuantity is less or equals 0
+     * @param minimumStock
      */
-    public void setQuantity(int newQuantity) {
-        if (newQuantity < 0) {
-            throw new IllegalArgumentException("quantity must be greater equals 0 but is "
-                    + newQuantity);
-        }
-        this.quantity = newQuantity;
-    }
-
-    /**
-     * Adds the specified quantity to the quantity of this spare part.
-     * To subtract the quantity, use the {@link #use(int)} methode.
-     *
-     * @param quantity the quantity which should be added to the quantity of this spare part
-     * @throws IllegalArgumentException if the specified quantity is less or equals 0
-     */
-    public void addQuantity(int quantity) {
-        if (quantity < 0) {
-            throw new IllegalArgumentException("quantity must be greater equals 0 but is "
-                    + quantity);
-        }
-        this.quantity += quantity;
-    }
-
-    /**
-     * Uses the specified count of the quantity of this spare part
-     *
-     * @param count the count which should be used of the quantity
-     * @throws IllegalArgumentException if the specified count is less or equals 0 or the count
-     *                                  is higher than the quantity of this sparePart
-     */
-    public void use(int count) {
-        if (count < 0) {
-            throw new IllegalArgumentException("count must be greater equals 0 but is "
-                    + count);
-        }
-        if (count > this.quantity) {
-            throw new IllegalArgumentException(String.format("Not enough parts of type %s " +
-                    "(requested %d, but we only have %d.)", this.name, count, this.quantity));
-        }
-        if (count > 0) {
-            this.quantity -= count;
-        }
+    public void setMinimumStock(@Nullable Integer minimumStock) {
+        this.minimumStock = minimumStock;
     }
 
     @Override
@@ -215,6 +183,9 @@ public class SparePart implements Comparable<SparePart> {
         int result = this.name.compareTo(that.name);
         if (result == 0) {
             result = this.condition.compareTo(that.condition);
+        }
+        if (result == 0) {
+            result = this.category.compareTo(that.category);
         }
         return result;
     }
@@ -227,14 +198,15 @@ public class SparePart implements Comparable<SparePart> {
         if (!(o instanceof SparePart sparePart)) {
             return false;
         }
-        return this.quantity == sparePart.quantity && Objects.equals(this.name, sparePart.name) &&
-                this.condition == sparePart.condition && Objects.equals(this.category, sparePart.category) &&
-                Objects.equals(this.unit, sparePart.unit);
+        return Objects.equals(this.name, sparePart.name)
+                && this.condition == sparePart.condition
+                && Objects.equals(this.category, sparePart.category)
+                && Objects.equals(this.unit, sparePart.unit);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.name, this.condition, this.category, this.unit, this.quantity);
+        return Objects.hash(this.name, this.condition, this.category, this.unit);
     }
 
     @Override
@@ -244,7 +216,6 @@ public class SparePart implements Comparable<SparePart> {
                 ", condition=" + this.condition +
                 ", category='" + this.category + '\'' +
                 ", unit='" + this.unit + '\'' +
-                ", quantity=" + this.quantity +
                 '}';
     }
 }

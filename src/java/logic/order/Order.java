@@ -1,56 +1,114 @@
 package logic.order;
 
-import logic.SparePart;
+import logic.products.position.Position;
+import logic.sparePart.SparePart;
 import logic.Supplier;
+import org.jetbrains.annotations.UnmodifiableView;
 import utils.BigDecimalUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import utils.CollectionsUtils;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
  * This class represents an order.
- * An order has a supplier, a cost and a mapping
+ * An order has an orderState, an orderDate, a supplier, a cost and a mapping
  * from spare parts to their order quantity.
  *
  * @author xThe_white_Lionx
  */
-public class Order implements Comparable<Order>{
+public class Order implements Comparable<Order> {
 
     /**
-     * The id of the order
+     * Enum of status which an {@link Order} or an {@link SparePart} of the order could reach.
+     */
+    public enum OrderState {
+        /**
+         * An order is ordered if not all parts are received
+         */
+        ORDERED,
+        /**
+         * An order is received if all parts are received
+         */
+        RECEIVED,
+        /**
+         * A cancelled order.
+         * A spare part is cancelled if his order is cancelled
+         */
+        CANCELLED;
+    }
+
+    /**
+     * The id of this order
      */
     private final int id;
+
     /**
-     * The supplier of the order
+     * The current orderState of this order
+     */
+    private OrderState orderState = OrderState.ORDERED;
+
+    /**
+     * Order date of this order
+     */
+    private final LocalDate orderDate;
+
+    /**
+     * The supplier of this order
      */
     private final Supplier supplier;
+
     /**
-     * The cost of the order
+     * The cost of this order
      */
     private BigDecimal value;
 
     /**
-     * The spare parts of the order mapped to their quantity
+     * The spare parts of this order mapped to their quantity
      */
     private final Map<SparePart, Integer> sparePartToOrderQuantity;
 
     /**
+     * The spare parts that are not received yet
+     */
+    private final Set<SparePart> pendingSpareParts;
+
+    /**
      * Constructor to create an order
      *
-     * @param id the id of the order
-     * @param supplier the supplier of the order
+     * @param id                       the id of the order
+     * @param orderDate                the date of order
+     * @param supplier                 the supplier of the order
      * @param sparePartToOrderQuantity mapping from the spare part to the ordered quantity
-     * @param value the value of the order
+     * @param value                    the value of the order
+     * @throws IllegalArgumentException if the sparePartToOrderQuantity is empty
      */
-    public Order(int id, @NotNull Supplier supplier,
-                 @NotNull Map<SparePart, Integer> sparePartToOrderQuantity,
-                 @NotNull BigDecimal value) {
+    public Order(int id, @NotNull LocalDate orderDate, @NotNull Supplier supplier,
+                 @NotNull Map<SparePart, Integer> sparePartToOrderQuantity, @NotNull BigDecimal value) {
+        if (sparePartToOrderQuantity.isEmpty()) {
+            throw new IllegalArgumentException("sparePartToOrderQuantity is empty");
+        }
+
+        boolean areValid = CollectionsUtils.areValid(sparePartToOrderQuantity.values(),
+                (quantity) -> quantity != null && quantity > 0);
+        if (!areValid) {
+            System.out.println("sparePartToOrderQuantity = " + sparePartToOrderQuantity);
+            throw new IllegalArgumentException("each quantity must be greater 0");
+        }
+
         this.id = id;
+        this.orderDate = orderDate;
         this.supplier = supplier;
         this.value = value;
-        this.sparePartToOrderQuantity = sparePartToOrderQuantity;
+        this.sparePartToOrderQuantity = new TreeMap<>();
+        this.pendingSpareParts = new HashSet<>();
+        sparePartToOrderQuantity.forEach((sparePart, quantity) -> {
+            this.sparePartToOrderQuantity.put(sparePart, quantity);
+            this.pendingSpareParts.add(sparePart);
+        });
     }
 
     /**
@@ -63,6 +121,33 @@ public class Order implements Comparable<Order>{
     }
 
     /**
+     * Returns the {@link OrderState} of this order
+     *
+     * @return the order state of this order
+     */
+    public @NotNull OrderState getState() {
+        return this.orderState;
+    }
+
+    /**
+     * Returns the {@link OrderState} of the specified spare part in this order or null,
+     * if the spare part is not part of this order
+     *
+     * @param sparePart the spare part which order state should be checked
+     * @return the order state of the specified spare part in this order or null
+     */
+    public @Nullable OrderState getState(@NotNull SparePart sparePart) {
+        if (!this.sparePartToOrderQuantity.containsKey(sparePart)) {
+            return null;
+        }
+
+        if (this.orderState == OrderState.ORDERED){
+            return this.pendingSpareParts.contains(sparePart) ? OrderState.ORDERED : OrderState.RECEIVED;
+        }
+        return this.orderState;
+    }
+
+    /**
      * Returns the supplier of this order
      *
      * @return supplier of this order
@@ -72,20 +157,12 @@ public class Order implements Comparable<Order>{
     }
 
     /**
-     * Returns the mapping from the spare parts to their order quantity
-     *
-     * @return mapping from the spare parts to their order quantity
-     */
-    public @NotNull Map<SparePart, Integer> getSparePartToOrderQuantity() {
-        return new HashMap<>(this.sparePartToOrderQuantity);
-    }
-
-    /**
      * Returns a copy of the ordered spare parts
      *
      * @return a copy of the ordered spare parts
      */
-    public @NotNull Set<SparePart> getSpareParts(){
+    @UnmodifiableView
+    public @NotNull Set<SparePart> getSpareParts() {
         return Collections.unmodifiableSet(this.sparePartToOrderQuantity.keySet());
     }
 
@@ -96,7 +173,7 @@ public class Order implements Comparable<Order>{
      * @param sparePart to which the order quantity is asked
      * @return the order quantity of the specified sparePart
      */
-    public @Nullable Integer getOrderQuantity(@NotNull SparePart sparePart){
+    public @Nullable Integer getOrderQuantity(@NotNull SparePart sparePart) {
         return this.sparePartToOrderQuantity.get(sparePart);
     }
 
@@ -123,24 +200,98 @@ public class Order implements Comparable<Order>{
     }
 
     /**
-     * Returns the order quantity to which the specified {@link SparePart} is mapped,
-     * or {@code null} if this order contains no mapping for the orderedSparePart.
+     * Checks if this order can be received
      *
-     * @param orderedSparePart the spareParts that should be removed
-     * @return the ordered amount of the specified orderSparePart of this order
-     * @throws IllegalArgumentException if the specified orderedSparePart is null
+     * @return {@code true} if this order can be received, otherwise {@code false}
      */
-    public @Nullable Integer removeSparePart(@NotNull SparePart orderedSparePart){
-        return this.sparePartToOrderQuantity.remove(orderedSparePart);
+    public boolean isReceivable() {
+        return this.orderState == OrderState.ORDERED;
+    }
+
+    /**
+     * Checks if the specified spare part can be received
+     *
+     * @param sparePart
+     * @return {@code true} if specified spare part can be received, otherwise {@code false}
+     */
+    public boolean isReceivable(@NotNull SparePart sparePart) {
+        return this.isReceivable() && this.pendingSpareParts.contains(sparePart);
+    }
+
+    /**
+     * @param orderedSparePart the spare part which was received
+     * @return the quantity of the order of the sparePart or null if the sparePart does not belong to this order
+     * @throws IllegalStateException    if this order is already received or cancelled
+     * @throws IllegalArgumentException if the specified sparePart were already received
+     */
+    public @Nullable Integer sparePartReceived(@NotNull SparePart orderedSparePart) {
+        if (this.orderState == OrderState.RECEIVED) {
+            throw new IllegalStateException("Order has already been received");
+        }
+        if (this.orderState == OrderState.CANCELLED) {
+            throw new IllegalStateException("Order has already been cancelled");
+        }
+        if (!this.pendingSpareParts.remove(orderedSparePart)) {
+            throw new IllegalArgumentException("spare part already received");
+        }
+        if (this.pendingSpareParts.isEmpty()) {
+            this.orderState = OrderState.RECEIVED;
+        }
+
+        return this.sparePartToOrderQuantity.get(orderedSparePart);
+    }
+
+    /**
+     * @return
+     * @throws IllegalStateException
+     */
+    public @NotNull Map<SparePart, Integer> received() {
+        if (this.orderState == OrderState.RECEIVED) {
+            throw new IllegalStateException("Order has already been received");
+        }
+        if (this.orderState == OrderState.CANCELLED) {
+            throw new IllegalStateException("Order has already been cancelled");
+        }
+
+        Map<SparePart, Integer> result = new HashMap<>();
+        for (SparePart pendingSparePart : this.pendingSpareParts) {
+            result.put(pendingSparePart, this.sparePartToOrderQuantity.get(pendingSparePart));
+        }
+        this.pendingSpareParts.clear();
+        this.orderState = OrderState.RECEIVED;
+        return result;
+    }
+
+    /**
+     * @return
+     */
+    public boolean isCancellable() {
+        return this.orderState == OrderState.ORDERED
+                && this.pendingSpareParts.size() == this.sparePartToOrderQuantity.size();
+    }
+
+    /**
+     *
+     *
+     * @throws IllegalStateException if the order is not cancellable
+     */
+    //TODO 24.05.2024 JavaDoc
+    public void cancel() {
+        if (!this.isCancellable()) {
+            throw new IllegalStateException("Order is not cancellable");
+        }
+
+        this.orderState = OrderState.CANCELLED;
+        this.pendingSpareParts.clear();
     }
 
     @Override
     public int compareTo(@NotNull Order o) {
         int result = this.id - o.id;
-        if (result == 0){
-           result = this.supplier.compareTo(o.supplier);
+        if (result == 0) {
+            result = this.supplier.compareTo(o.supplier);
         }
-        if (result == 0){
+        if (result == 0) {
             result = this.value.compareTo(o.value);
         }
 
@@ -155,23 +306,29 @@ public class Order implements Comparable<Order>{
         if (!(o instanceof Order order)) {
             return false;
         }
-        return this.id == order.id && Objects.equals(this.supplier, order.supplier)
-                && Objects.equals(this.sparePartToOrderQuantity, order.sparePartToOrderQuantity)
-                && Objects.equals(this.value, order.value);
+        return this.id == order.id
+                && this.orderState == order.orderState
+                && Objects.equals(this.orderDate, order.orderDate)
+                && Objects.equals(this.supplier, order.supplier)
+                && (this.value == null ? order.value == null : this.value.compareTo(order.value) == 0)
+                && Objects.equals(this.sparePartToOrderQuantity, order.sparePartToOrderQuantity);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.id, this.supplier, this.sparePartToOrderQuantity, this.value);
+        return Objects.hash(this.id, this.orderDate, this.orderDate, this.supplier, this.value,
+                this.sparePartToOrderQuantity);
     }
 
     @Override
     public String toString() {
-        return "Order{" +
-                "id=" + this.id +
+        return "Order{" + "id=" + this.id +
+                ", state=" + this.orderState +
+                ", orderDate=" + this.orderDate +
                 ", supplier=" + this.supplier +
+                ", value=" + this.value +
                 ", sparePartToOrderQuantity=" + this.sparePartToOrderQuantity +
-                ", cost=" + this.value +
+                ", pendingSpareParts=" + this.pendingSpareParts +
                 '}';
     }
 }

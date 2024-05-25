@@ -2,16 +2,19 @@ package logic.manager;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
+import logic.GUIConnector;
 import logic.order.Order;
 import gui.FXutils.FXCollectionsUtils;
+import logic.saleBook.SaleBook;
+import logic.sparePart.SparePart;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Objects;
 import java.util.TreeMap;
 
 /**
+ * This class
  *
  * @author xthe_white_lionx
  */
@@ -23,14 +26,29 @@ public class OrdersManager {
     private final ObservableMap<Integer, Order> idToOrderObsMap;
 
     /**
+     * The saleBook of this AssetsManager
+     */
+    private final SaleBook saleBook;
+
+    /**
+     * The connection to the gui
+     */
+    private final GUIConnector gui;
+
+    /**
      * The id for the next order
      */
     private int nextOrderId;
 
     /**
      * Constructor
+     *
+     * @param saleBook
+     * @param gui
      */
-    public OrdersManager() {
+    public OrdersManager(@NotNull SaleBook saleBook, @NotNull GUIConnector gui) {
+        this.saleBook = saleBook;
+        this.gui = gui;
         this.idToOrderObsMap = FXCollections.observableMap(new TreeMap<>());
         this.nextOrderId = 1;
     }
@@ -38,26 +56,21 @@ public class OrdersManager {
     /**
      * Constructor
      *
-     * @param orders the orders that should be managed
+     * @param saleBook
+     * @param orders      the orders that should be managed
      * @param nextOrderId the id for the next order
-     * @throws IllegalArgumentException if the nextOrderId is negative
+     * @param gui
+     * @throws IllegalArgumentException if the nextOrderId is negative or 0
      */
-    public OrdersManager(Order[] orders, int nextOrderId){
-        if (nextOrderId < 0) {
-            throw new IllegalArgumentException("nextOrderId must be greater equals 0 but is %d".formatted(nextOrderId));
+    public OrdersManager(@NotNull SaleBook saleBook, Order[] orders, int nextOrderId, @NotNull GUIConnector gui){
+        if (nextOrderId < 1) {
+            throw new IllegalArgumentException("nextOrderId must be greater equals 1 but is %d".formatted(nextOrderId));
         }
 
+        this.saleBook = saleBook;
+        this.gui = gui;
         this.idToOrderObsMap = FXCollectionsUtils.toObservableMap(orders, Order::getId);
         this.nextOrderId = nextOrderId;
-    }
-
-    /**
-     *
-     * @param orderId
-     * @return
-     */
-    public @Nullable Order getOrder(int orderId){
-        return this.idToOrderObsMap.get(orderId);
     }
 
     /**
@@ -90,11 +103,13 @@ public class OrdersManager {
      * Adds the specified order
      *
      * @param order the order which should be added
+     * @return {@code true} if the order was successfully added, otherwise {@code false}
      */
     public boolean addOrder(@NotNull Order order) {
         Order oldOrder = this.idToOrderObsMap.putIfAbsent(order.getId(), order);
         if (oldOrder == null) {
             this.nextOrderId++;
+            this.gui.updateStatus(String.format("order %d added", order.getId()));
             return true;
         } else {
             return false;
@@ -102,12 +117,63 @@ public class OrdersManager {
     }
 
     /**
-     * Consumes the order with the specified orderId
+     * Consumes the order with the specified orderId and stores the spare parts of the order
      *
      * @param orderId the id of the searched order
+     * @throws IllegalArgumentException if there is no order with the specified orderId
+     * @throws IllegalStateException if
      */
-    public @Nullable Order removeOrder(int orderId) {
-        return this.idToOrderObsMap.remove(orderId);
+    //TODO 24.05.2024 JavaDoc
+    public void orderReceived(int orderId) {
+        Order order = this.idToOrderObsMap.get(orderId);
+        if (order == null) {
+            throw new IllegalArgumentException("no order for id " + orderId);
+        }
+        if (!order.isReceivable()) {
+            throw new IllegalStateException("order is already received");
+        }
+        this.saleBook.getSparePartsManager().addSpareParts(order.received());
+        this.saleBook.addFixedCost(order.getValue());
+        this.updateDisplayOrder(order);
+        this.gui.updateStatus(String.format("order %d received", orderId));
+    }
+
+    /**
+     * Consumes a spare part of the order with the specified orderId
+     *
+     * @param orderId          the id of the order from which the spare part should be consumed
+     * @param orderedSparePart the spare part which was received
+     * @throws IllegalArgumentException if there is no order with the specified orderId
+     */
+    public void sparePartReceived(int orderId, @NotNull SparePart orderedSparePart) {
+        Order order = this.idToOrderObsMap.get(orderId);
+        if (order == null) {
+            throw new IllegalArgumentException("no order for id " + orderId);
+        }
+        Integer orderQuantity = order.sparePartReceived(orderedSparePart);
+        if (orderQuantity != null && orderQuantity > 0) {
+            this.saleBook.getSparePartsManager().addSparePart(orderedSparePart, orderQuantity);
+
+            this.updateDisplayOrder(order);
+            this.gui.updateStatus(String.format("spare part %s of order %d received",
+                    orderedSparePart.getName(), orderId));
+        }
+    }
+
+    /**
+     * Cancels the order with the specified orderId
+     *
+     * @param orderId the id of the order which should be canceled
+     * @throws IllegalArgumentException if there is no order with the specified orderId
+     */
+    public void cancelOrder(int orderId) {
+        Order order = this.idToOrderObsMap.get(orderId);
+        if (order == null) {
+            throw new IllegalArgumentException("no order for id " + orderId);
+        }
+        order.cancel();
+        this.updateDisplayOrder(order);
+        this.gui.updateStatus(String.format("order %d cancelled", orderId));
     }
 
     @Override
@@ -118,18 +184,27 @@ public class OrdersManager {
         if (!(o instanceof OrdersManager that)) {
             return false;
         }
-        return Objects.equals(this.idToOrderObsMap, that.idToOrderObsMap);
+        return this.nextOrderId == that.nextOrderId &&
+                Objects.equals(this.idToOrderObsMap, that.idToOrderObsMap);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(this.idToOrderObsMap);
+        return Objects.hash(this.idToOrderObsMap, this.nextOrderId);
     }
 
     @Override
     public String toString() {
-        return "OrdersManager{" +
-                "idToOrderObsMap=" + this.idToOrderObsMap +
+        return "OrdersManager{" + "idToOrderObsMap=" + this.idToOrderObsMap +
+                ", nextOrderId=" + this.nextOrderId +
                 '}';
+    }
+
+    /**
+     * @param order
+     */
+    private void updateDisplayOrder(Order order) {
+        this.gui.displayOrderedSpareParts(order.getSpareParts());
+        this.gui.refreshOrders();
     }
 }

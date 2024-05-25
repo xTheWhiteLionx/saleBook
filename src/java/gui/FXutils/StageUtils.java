@@ -20,6 +20,12 @@ public class StageUtils {
     public static final Image ICON = new Image("gui/textures/icons8-hauptbuchhaltung-96.png");
 
     /**
+     * Suppresses default constructor, ensuring non-instantiability.
+     */
+    private StageUtils() {
+    }
+
+    /**
      * Styles the specified stage and his scene matching to the current theme.
      * Adds the app icon to the stage.
      *

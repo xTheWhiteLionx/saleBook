@@ -6,8 +6,13 @@ package gui;
  *
  * @author xthe_white_lionx
  */
-public class JarMain {
+public final class JarMain {
 
+    /**
+     * Suppresses default constructor, ensuring non-instantiability.
+     */
+    private JarMain() {
+    }
 
     /**
      * Starts the {@link ApplicationMain#main(String[])} methode with the specified args

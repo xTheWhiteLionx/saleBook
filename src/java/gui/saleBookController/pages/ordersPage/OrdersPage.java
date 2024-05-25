@@ -8,6 +8,8 @@ import gui.ImageButton;
 import gui.saleBookController.pages.Page;
 import gui.saleBookController.pages.ordersPage.functions.NewOrderController;
 import gui.FXutils.StageUtils;
+import javafx.event.ActionEvent;
+import logic.manager.OrdersManager;
 import utils.StringUtils;
 import gui.FXutils.TableViewUtils;
 import javafx.collections.FXCollections;
@@ -21,7 +23,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import logic.SparePart;
+import logic.sparePart.SparePart;
 import logic.order.Order;
 import logic.saleBook.SaleBook;
 import org.controlsfx.control.textfield.CustomTextField;
@@ -40,6 +42,8 @@ import static gui.FXutils.RibbonGroupUtils.createRibbonGroup;
 
 /**
  * This class displays the orders of the saleBook and has some controls to interact with.
+ *
+ * @author xthe_white_lionx
  */
 public class OrdersPage implements Initializable, Page {
     /**
@@ -83,33 +87,42 @@ public class OrdersPage implements Initializable, Page {
     public TableView<SparePart> sparePartTblVw;
 
     /**
+     * Button to set the selected order to receive
+     */
+    @FXML
+    private Button receivedOrderBtn;
+    /**
+     * Button to delete the selected order
+     */
+    @FXML
+    private Button cancelOrderBtn;
+    /**
+     * Button to set the current spare part to state received
+     */
+    @FXML
+    private Button receivedSparePartBtn;
+    /**
      * FilteredList of the spareParts of the selected order
      */
+    @FXML
     private FilteredList<SparePart> sparePartsFilteredList;
     /**
      * RibbonTab with controls
      */
+    @FXML
     private RibbonTab orderRibbonTab;
     /**
      * The current saleBook
      */
     private SaleBook saleBook;
     /**
+     * The orderManager of the saleBook
+     */
+    private OrdersManager ordersManager;
+    /**
      * The selected order
      */
-    private Order currOrder;
-    /**
-     * Button to set the selected order to receive
-     */
-    private Button receivedOrderBtn;
-    /**
-     * Button to delete the selected order
-     */
-    private Button cancelOrderBtn;
-    /**
-     * Button to set the current spare part to state received
-     */
-    private Button sparePartReceivedBtn;
+    private Order selectedOrder;
 
     /**
      * Creates and returns a new OrderPage
@@ -136,20 +149,16 @@ public class OrdersPage implements Initializable, Page {
         this.initializeRibbonTab();
 
         TableViewUtils.addColumn(this.orderTblVw, "id", Order::getId);
+        TableViewUtils.addColumn(this.orderTblVw, "state", order ->
+                order.getState().name());
         TableViewUtils.addColumn(this.orderTblVw, "supplier", order ->
                 order.getSupplier().getName());
         TableViewUtils.addColumn(this.orderTblVw, "cost", order ->
                 formatMoney(order.getValue()));
-        this.orderTblVw.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         this.orderTblVw.getSelectionModel().selectedItemProperty().addListener(
                 (observableValue, oldValue, newValue) -> {
-                    boolean isNull = newValue == null;
-                    if (!isNull) {
-                        this.currOrder = newValue;
-                        this.setSpareParts(this.currOrder.getSpareParts());
-                    }
-                    this.receivedOrderBtn.setDisable(isNull);
-                    this.cancelOrderBtn.setDisable(isNull);
+                    this.selectedOrder = newValue;
+                    this.updateDetail();
                 });
         this.orderSearchbarTxtFld.textProperty().addListener((observableValue, oldText, newText) -> {
             if (newText.isEmpty()){
@@ -166,13 +175,14 @@ public class OrdersPage implements Initializable, Page {
         });
 
         TableViewUtils.addColumn(this.sparePartTblVw, "name", SparePart::getName);
+        TableViewUtils.addColumn(this.sparePartTblVw, "state", sparePart -> this.selectedOrder.getState(sparePart).name());
         TableViewUtils.addColumn(this.sparePartTblVw, "order quantity",
-                sparePart -> this.currOrder.getOrderQuantity(sparePart) + " " + sparePart.getUnit());
+                sparePart -> this.selectedOrder.getOrderQuantity(sparePart) + " " + sparePart.getUnit());
         TableViewUtils.addColumn(this.sparePartTblVw, "for", SparePart::getCategory);
         this.sparePartTblVw.getSelectionModel().selectedItemProperty().addListener(
                 (observableValue, oldValue, newValue) -> {
-                    boolean isNull = newValue == null;
-                    this.sparePartReceivedBtn.setDisable(isNull);
+                    this.receivedSparePartBtn.setDisable(newValue == null
+                            || !this.selectedOrder.isReceivable(newValue));
                 });
 
         this.sparePartSearchbarTxtFld.textProperty().addListener((observableValue, oldText, newText) -> {
@@ -195,6 +205,7 @@ public class OrdersPage implements Initializable, Page {
     @Override
     public void setSaleBook(@NotNull SaleBook saleBook) {
         this.saleBook = saleBook;
+        this.ordersManager = saleBook.getOrdersManager();
     }
 
     /**
@@ -222,27 +233,23 @@ public class OrdersPage implements Initializable, Page {
      */
     private void initializeRibbonTab() {
         this.orderRibbonTab = new RibbonTab("Orders");
-        Button newOrderBtn = new ImageButton("new", ADD_ORDER_IMAGE,
-                actionEvent -> this.handleAddOrder());
+        Button newOrderBtn = new ImageButton("new", ADD_ORDER_IMAGE, this::handleAddOrder);
 
         this.receivedOrderBtn = new ImageButton("received", ORDER_COMPLETED_IMAGE,
-                actionEvent -> this.saleBook.orderReceived(this.currOrder.getId()));
+                actionEvent -> this.ordersManager.orderReceived(this.selectedOrder.getId()));
         this.receivedOrderBtn.setDisable(true);
         this.cancelOrderBtn = new ImageButton("cancel", ORDER_CANCEL_IMAGE,
                 actionEvent -> this.handleCancelOrder());
         this.cancelOrderBtn.setDisable(true);
-        RibbonGroup organisationRibbonGroup = createRibbonGroup("organisation", newOrderBtn,
+        RibbonGroup orderRibbonGroup = createRibbonGroup("order", newOrderBtn,
                 this.receivedOrderBtn, this.cancelOrderBtn);
 
-        this.sparePartReceivedBtn = new ImageButton("received", RECEIVED_IMAGE,
-                actionEvent -> this.handleSparePartReceived());
-        this.sparePartReceivedBtn.setDisable(true);
-        this.sparePartReceivedBtn = new ImageButton("received", RECEIVED_IMAGE,
-                actionEvent -> this.handleSparePartReceived());
-        this.sparePartReceivedBtn.setDisable(true);
-        RibbonGroup sparePartsRibbonGroup = createRibbonGroup("spareParts", this.sparePartReceivedBtn);
+        this.receivedSparePartBtn = new ImageButton("received", RECEIVED_IMAGE,
+                this::handleSparePartReceived);
+        this.receivedSparePartBtn.setDisable(true);
+        RibbonGroup sparePartRibbonGroup = createRibbonGroup("sparePart", this.receivedSparePartBtn);
 
-        this.orderRibbonTab.getRibbonGroups().addAll(organisationRibbonGroup, sparePartsRibbonGroup);
+        this.orderRibbonTab.getRibbonGroups().addAll(orderRibbonGroup, sparePartRibbonGroup);
     }
 
     /**
@@ -250,7 +257,7 @@ public class OrdersPage implements Initializable, Page {
      */
     private void handleCancelOrder() {
         if (acceptedDeleteAlert()){
-            this.saleBook.cancelOrder(this.currOrder.getId());
+            this.ordersManager.cancelOrder(this.selectedOrder.getId());
         }
     }
 
@@ -270,7 +277,7 @@ public class OrdersPage implements Initializable, Page {
      *
      * @param spareParts spare parts which should be displayed
      */
-    public void setSpareParts(@NotNull Set<SparePart> spareParts){
+    public void setSpareParts(@NotNull Set<SparePart> spareParts) {
         List<SparePart> sparePartList = new ArrayList<>();
         Set<String> sparePartsName = new TreeSet<>();
         for (SparePart sparePart : spareParts) {
@@ -306,9 +313,11 @@ public class OrdersPage implements Initializable, Page {
 
     /**
      * Handles the "new" order button.
+     *
+     * @param actionEvent unused
      */
-    private void handleAddOrder() {
-        if (this.saleBook.getSuppliers().isEmpty()) {
+    private void handleAddOrder(ActionEvent actionEvent) {
+        if (this.saleBook.getSuppliersManager().getSuppliers().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
             StageUtils.styleStage(stage);
@@ -317,7 +326,7 @@ public class OrdersPage implements Initializable, Page {
         } else {
             try {
                 NewOrderController newOrderController = createNewOrderController(this.saleBook);
-                newOrderController.getResult().ifPresent(order -> this.saleBook.addOrder(order));
+                newOrderController.getResult().ifPresent(order -> this.ordersManager.addOrder(order));
             } catch (IOException e) {
                 DialogWindow.displayError("fail to load new order controller", e);
             }
@@ -326,9 +335,36 @@ public class OrdersPage implements Initializable, Page {
 
     /**
      * Handles if a sparePart of the selected order is
+     *
+     * @param actionEvent unused
      */
-    private void handleSparePartReceived() {
-        this.saleBook.sparePartReceived(this.currOrder.getId(),
+    public void handleSparePartReceived(ActionEvent actionEvent) {
+        this.ordersManager.sparePartReceived(this.selectedOrder.getId(),
                 this.sparePartTblVw.getSelectionModel().getSelectedItem());
+    }
+
+    /**
+     *
+     */
+    public void updateTableViewOrderAndDetail() {
+        this.orderTblVw.refresh();
+        this.sparePartTblVw.refresh();
+        this.updateDetail();
+    }
+
+    /**
+     * Updates the detail view of the selected spare part
+     */
+    private void updateDetail() {
+        boolean isNull = this.selectedOrder == null;
+        if (!isNull) {
+            this.setSpareParts(this.selectedOrder.getSpareParts());
+        }
+        this.receivedOrderBtn.setDisable(this.selectedOrder == null
+                || !this.selectedOrder.isReceivable());
+        SparePart selectedSparePart = this.sparePartTblVw.getSelectionModel().getSelectedItem();
+        this.receivedSparePartBtn.setDisable(selectedSparePart == null
+                || !this.selectedOrder.isReceivable(selectedSparePart));
+        this.cancelOrderBtn.setDisable(isNull || !this.selectedOrder.isCancellable());
     }
 }

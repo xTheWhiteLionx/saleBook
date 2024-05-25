@@ -101,9 +101,9 @@ public class NewAssetController extends FunctionDialog<Asset> implements Initial
      */
     @FXML
     public void handleApply() {
-        Supplier supplier = this.saleBook.getSupplierByName(this.supplierChcBx.getValue());
+        Supplier supplier = this.saleBook.getSuppliersManager().getSupplier(this.supplierChcBx.getValue());
         if (supplier != null) {
-            this.result = new Asset(this.saleBook.getNextAssetId(), this.nameTxtFld.getText(),
+            this.result = new Asset(this.saleBook.getAssetsManager().getNextAssetId(), this.nameTxtFld.getText(),
                     supplier, this.purchasingDatePicker.getValue(),
                     this.arrivalDatePicker.getValue(),
                     BigDecimalUtils.parse(this.valueTxtFld.getText()));
@@ -128,6 +128,6 @@ public class NewAssetController extends FunctionDialog<Asset> implements Initial
      */
     private void setSaleBook(@NotNull SaleBook saleBook) {
         this.saleBook = saleBook;
-        ChoiceBoxUtils.addItems(this.supplierChcBx, saleBook.getSupplierNames());
+        ChoiceBoxUtils.addItems(this.supplierChcBx, saleBook.getSuppliersManager().getSupplierNames());
     }
 }

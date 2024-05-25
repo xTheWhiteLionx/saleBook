@@ -12,6 +12,12 @@ import java.io.File;
 public class FileUtils {
 
     /**
+     * Suppresses default constructor, ensuring non-instantiability.
+     */
+    private FileUtils() {
+    }
+
+    /**
      * Returns the extension of the specified file
      *
      * @param file the file which extension should be checked

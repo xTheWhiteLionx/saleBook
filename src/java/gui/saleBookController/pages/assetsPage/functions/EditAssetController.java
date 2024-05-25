@@ -140,7 +140,7 @@ public class EditAssetController extends FunctionDialog<Boolean> implements Init
     public void handleApply() {
         this.asset.setName(this.nameTxtFld.getText());
         String chosenSupplierName = this.supplierChcBx.getValue();
-        this.asset.setSupplier(this.saleBook.getSupplierByName(chosenSupplierName));
+        this.asset.setSupplier(this.saleBook.getSuppliersManager().getSupplier(chosenSupplierName));
         this.asset.setPurchasingDate(this.purchasingDatePicker.getValue());
         this.asset.setArrivalDate(this.arrivalDatePicker.getValue());
         this.asset.setValue(BigDecimalUtils.parse(this.valueTxtFld.getText()));
@@ -166,7 +166,7 @@ public class EditAssetController extends FunctionDialog<Boolean> implements Init
     private void setAsset(@NotNull Asset asset, SaleBook saleBook) {
         this.asset = asset;
         this.saleBook = saleBook;
-        ChoiceBoxUtils.addItems(this.supplierChcBx, saleBook.getSupplierNames());
+        ChoiceBoxUtils.addItems(this.supplierChcBx, saleBook.getSuppliersManager().getSupplierNames());
 
         this.idLbl.setText(String.valueOf(asset.getId()));
         this.nameTxtFld.setText(asset.getName());

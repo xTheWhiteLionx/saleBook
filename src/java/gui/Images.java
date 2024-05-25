@@ -119,13 +119,28 @@ public final class Images {
             "icons8-allgemeines-warnschild-32.png");
 
     /**
+     * Image with "error" icon
+     */
+    public static final Image ERROR_IMAGE = new Image("gui/textures/"+
+            "icons8-error-32.png");
+
+    /**
      * Image with "new asset" icon
      */
     public static final Image NEW_ASSET_IMAGE = new Image("gui/textures/" +
             "icons8-vermögenswert-new-32.png");
 
+    /**
+     * Image with "add picture" icon
+     */
     public static final Image ADD_PICTURE = new Image("gui/textures/ribbonBandIcons/" +
             "icons8-add-picture-32.png");
+
+    /**
+     * Suppresses default constructor, ensuring non-instantiability.
+     */
+    private Images() {
+    }
 
     /**
      * Creates an imageView with the specified image in the height and width of the specified size

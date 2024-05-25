@@ -9,6 +9,8 @@ import gui.saleBookController.pages.sparePartsPage.functions.NewSparePartControl
 import gui.saleBookController.pages.sparePartsPage.functions.EditSparePartController;
 import gui.FXutils.RibbonTabUtils;
 import gui.FXutils.SpinnerUtils;
+import javafx.scene.image.Image;
+import logic.manager.SparePartsManager;
 import utils.StringUtils;
 import gui.FXutils.TableViewUtils;
 import javafx.collections.ObservableList;
@@ -20,7 +22,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import logic.SparePart;
+import logic.sparePart.SparePart;
 import logic.saleBook.SaleBook;
 import org.jetbrains.annotations.NotNull;
 
@@ -187,7 +189,6 @@ public class SparePartsPage implements Initializable, Page {
         this.quantitySpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
         this.quantitySpinner.valueProperty().addListener((observableValue, oldValue, newValue) -> {
             if (this.selectedSparePart != null) {
-                this.selectedSparePart.setQuantity(newValue);
                 this.sparePartTblVw.refresh();
             }
         });
@@ -229,11 +230,12 @@ public class SparePartsPage implements Initializable, Page {
     @FXML
     public void handleNewSparePart() {
         try {
+            SparePartsManager sparePartsManager = this.saleBook.getSparePartsManager();
             NewSparePartController newSparePartController =
-                    createSparePartController(this.saleBook.getSparePartNames(),
-                            this.saleBook.getSparePartUnits(), this.saleBook.getCategories());
-            newSparePartController.getResult().ifPresent(sparePart ->
-                    this.saleBook.addSparePart(sparePart));
+                    createSparePartController(sparePartsManager.getSparePartNames(),
+                            sparePartsManager.getSparePartUnits(), this.saleBook.getCategories());
+            //TODO 23.05.2024 add quantity
+            newSparePartController.getResult().ifPresent(sparePartsManager::addSparePart);
         } catch (IOException e) {
             displayError("failed to load newSparePartController", e);
         }
@@ -245,7 +247,7 @@ public class SparePartsPage implements Initializable, Page {
     @FXML
     public void handleDeleteSparePart() {
         if (acceptedDeleteAlert()) {
-            this.saleBook.removeSparePart(this.selectedSparePart);
+            this.saleBook.getSparePartsManager().removeSparePart(this.selectedSparePart);
         }
     }
 
@@ -283,8 +285,8 @@ public class SparePartsPage implements Initializable, Page {
         if (this.selectedSparePart != null) {
             this.nameLbl.setText(this.selectedSparePart.getName());
             this.conditionLbl.setText(this.selectedSparePart.getCondition().name());
-            this.quantitySpinner.setValueFactory(
-                    SpinnerUtils.createValueFactory(this.selectedSparePart.getQuantity()));
+//            this.quantitySpinner.setValueFactory(
+//                    SpinnerUtils.createValueFactory(this.selectedSparePart.getQuantity()));
             this.unitLbl.setText(this.selectedSparePart.getUnit());
             this.categoryLbl.setText(this.selectedSparePart.getCategory());
         } else {
@@ -296,24 +298,44 @@ public class SparePartsPage implements Initializable, Page {
      * Initializes sparePartTblVw
      */
     private void initializeTblVw() {
-        TableViewUtils.addColumn(this.sparePartTblVw, "", (sparePart -> {
-            if (sparePart.getQuantity() == 0) {
-                ImageView imageView = createImageView(WARNING_IMAGE, 20);
-                imageView.setPickOnBounds(true);
-                Tooltip tooltip = new Tooltip("out of stock");
-                VBox vBox = new VBox(imageView);
-                Tooltip.install(vBox, tooltip);
-                return vBox;
+        TableViewUtils.addColumn(this.sparePartTblVw, "", (sparePart) -> {
+            Integer minimumStock = sparePart.getMinimumStock();
+            if (minimumStock != null) {
+                Integer quantity = this.saleBook.getSparePartsManager().getQuantity(sparePart);
+                if (quantity != null && quantity < minimumStock) {
+                    Image image = WARNING_IMAGE;
+                    String toolTipText = "below minimum stock";
+                    if (quantity == 0) {
+                        image = ERROR_IMAGE;
+                        toolTipText = "out of stock";
+                    }
+                    ImageView imageView = createImageView(image,20);
+                    imageView.setPickOnBounds(true);
+                    Tooltip tooltip = new Tooltip(toolTipText);
+                    VBox vBox = new VBox(imageView);
+                    Tooltip.install(vBox, tooltip);
+                    return vBox;
+                }
             } else {
                 return null;
             }
-        }));
+            return null;
+        });
+        TableViewUtils.addColumn(this.sparePartTblVw, "category", SparePart::getCategory);
         TableViewUtils.addColumn(this.sparePartTblVw, "name", SparePart::getName);
         TableViewUtils.addColumn(this.sparePartTblVw, "condition",
                 sparePart -> sparePart.getCondition().name());
         TableViewUtils.addColumn(this.sparePartTblVw, "in stock",
-                sparePart -> sparePart.getQuantity() + " " + sparePart.getUnit());
-        TableViewUtils.addColumn(this.sparePartTblVw, "for", SparePart::getCategory);
+                sparePart -> this.saleBook.getSparePartsManager().getQuantity(sparePart) + " " + sparePart.getUnit());
+        TableViewUtils.addColumn(this.sparePartTblVw, "min stock",
+                sparePart -> {
+                    Integer minimumStock = sparePart.getMinimumStock();
+                    if (minimumStock != null) {
+                        return  minimumStock + " " + sparePart.getUnit();
+                    } else {
+                        return "";
+                    }
+                });
 
         this.sparePartTblVw.prefHeightProperty().bind(this.wrapVBox.heightProperty());
 

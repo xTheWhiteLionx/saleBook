@@ -5,10 +5,11 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TableCell;
 import javafx.scene.input.KeyCode;
-import logic.SparePart;
+import logic.sparePart.SparePart;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * A special TableCell from SparePart to Integer
@@ -54,7 +55,7 @@ public class SpinnerTableCell extends TableCell<SparePart, Integer> {
     /**
      * Function to get the current order quantity of a spare part
      */
-    private final BiFunction<SparePart, Integer, Integer> getValueOf;
+    private final Function<SparePart, Integer> getValueOf;
 
     /**
      * Constructor for an SpinnerTableCell
@@ -64,7 +65,7 @@ public class SpinnerTableCell extends TableCell<SparePart, Integer> {
      * @param getValueOf Function to get the current order quantity of a spare part
      */
     public SpinnerTableCell(MaxValueType maxValueType, BiConsumer<SparePart, Integer> updateMap,
-                            BiFunction<SparePart, Integer, Integer> getValueOf) {
+                            Function<SparePart, Integer> getValueOf) {
         this.maxValueType = maxValueType;
         this.updateMap = updateMap;
         this.getValueOf = getValueOf;
@@ -107,7 +108,11 @@ public class SpinnerTableCell extends TableCell<SparePart, Integer> {
                 this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             } else {
                 SparePart sparePart = this.getTableView().getItems().get(this.getIndex());
-                this.setText(String.valueOf(this.getValueOf.apply(sparePart, 0)));
+                Integer value = this.getValueOf.apply(sparePart);
+                if (value == null) {
+                    value = 0;
+                }
+                this.setText(String.valueOf(value));
                 this.setContentDisplay(ContentDisplay.TEXT_ONLY);
             }
         }
@@ -140,7 +145,7 @@ public class SpinnerTableCell extends TableCell<SparePart, Integer> {
     private int getMaxValue() {
         switch (this.maxValueType) {
             case MAX_STOCK -> {
-                return this.getTableView().getItems().get(this.getIndex()).getQuantity();
+                return this.getValueOf.apply(this.getTableView().getItems().get(this.getIndex()));
             }
             case UNLIMITED -> {
                 return Integer.MAX_VALUE;

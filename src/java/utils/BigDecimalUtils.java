@@ -13,6 +13,12 @@ import java.math.RoundingMode;
 public class BigDecimalUtils {
 
     /**
+     * Suppresses default constructor, ensuring non-instantiability.
+     */
+    private BigDecimalUtils() {
+    }
+
+    /**
      * Checks if the specified number is positive.
      * A Number is positive if it is &ge 0
      *
