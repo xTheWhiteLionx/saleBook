@@ -13,6 +13,13 @@ import java.util.function.Function;
  * @author xthe_white_lionx
  */
 public class TableViewUtils {
+
+    /**
+     * Suppresses default constructor, ensuring non-instantiability.
+     */
+    private TableViewUtils() {
+    }
+
     /**
      * Adds a new tableColumn with the specified columnTitle to the specified tableView. The table
      * elements will be displayed depending on the specified valueExtractor

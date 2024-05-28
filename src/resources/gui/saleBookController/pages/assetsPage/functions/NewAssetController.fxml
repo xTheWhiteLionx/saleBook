@@ -83,12 +83,14 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <DatePicker fx:id="purchasingDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <DatePicker fx:id="purchasingDatePicker" promptText="TT.MM.JJJJ"
+                              GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </DatePicker>
-                  <DatePicker fx:id="arrivalDatePicker" layoutX="116.0" layoutY="73.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <DatePicker fx:id="arrivalDatePicker" promptText="TT.MM.JJJJ" layoutX="116.0"
+                              layoutY="73.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>

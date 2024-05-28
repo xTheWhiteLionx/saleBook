@@ -1,13 +1,12 @@
 package logic.order;
 
-import logic.products.position.Position;
 import logic.sparePart.SparePart;
 import logic.Supplier;
 import org.jetbrains.annotations.UnmodifiableView;
 import utils.BigDecimalUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import utils.CollectionsUtils;
+import utils.IterableUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -92,7 +91,7 @@ public class Order implements Comparable<Order> {
             throw new IllegalArgumentException("sparePartToOrderQuantity is empty");
         }
 
-        boolean areValid = CollectionsUtils.areValid(sparePartToOrderQuantity.values(),
+        boolean areValid = IterableUtils.areValid(sparePartToOrderQuantity.values(),
                 (quantity) -> quantity != null && quantity > 0);
         if (!areValid) {
             System.out.println("sparePartToOrderQuantity = " + sparePartToOrderQuantity);

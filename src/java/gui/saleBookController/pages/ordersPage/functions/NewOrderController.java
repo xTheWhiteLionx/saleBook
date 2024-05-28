@@ -184,7 +184,8 @@ public class NewOrderController extends FunctionDialog<Order> implements Initial
             SparePartsManager sparePartsManager = this.saleBook.getSparePartsManager();
             NewSparePartController sparePartController =
                     NewSparePartController.createSparePartController(sparePartsManager.getSparePartNames(),
-                    sparePartsManager.getSparePartUnits(), this.saleBook.getPositionsManager().getCategories());
+                            sparePartsManager.getSparePartUnits(),
+                            this.saleBook.getCategories());
             sparePartController.getResult().ifPresent(sparePart -> {
                 //TODO 22.05.2024 check if sparePart already exists
                 this.sparePartsTblVw.getItems().add(sparePart);

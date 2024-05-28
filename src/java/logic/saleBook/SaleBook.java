@@ -11,6 +11,7 @@ import logic.manager.SparePartsManager;
 import logic.manager.SuppliersManager;
 import logic.products.position.Position;
 import logic.products.position.PositionData;
+import org.jetbrains.annotations.UnmodifiableView;
 import utils.BigDecimalUtils;
 import gui.FXutils.FXCollectionsUtils;
 import org.jetbrains.annotations.NotNull;
@@ -40,6 +41,9 @@ public class SaleBook extends AbstractSaleBook {
 
     private final AssetsManager assetsManager;
 
+    /**
+     * The categories of this saleBook
+     */
     private Set<String> categories;
 
     /**
@@ -68,7 +72,7 @@ public class SaleBook extends AbstractSaleBook {
         this.positionsManager = new PositionsManager(this, gui);
         this.suppliersManager = new SuppliersManager(this, gui);
         this.ordersManager = new OrdersManager(this, gui);
-        this.assetsManager = new AssetsManager(this, gui);
+        this.assetsManager = new AssetsManager(gui);
         this.categories = new TreeSet<>();
         this.gui = gui;
 
@@ -85,7 +89,9 @@ public class SaleBook extends AbstractSaleBook {
         super(saleBookData.repairServiceSales, saleBookData.extraordinaryIncome,
                 saleBookData.paid, saleBookData.fixedCosts);
 
-        this.sparePartsManager = new SparePartsManager(this, saleBookData.getSparePartData(), gui);
+        this.categories = new TreeSet<>();
+        this.sparePartsManager = new SparePartsManager(this,
+                saleBookData.getSparePartData(), gui);
         ItemColor.setItemColors(saleBookData.getItemColors());
         Position[] positions = this.createPositions(saleBookData.getPositionData());
         this.positionsManager = new PositionsManager(this, positions,
@@ -93,8 +99,8 @@ public class SaleBook extends AbstractSaleBook {
         this.suppliersManager = new SuppliersManager(this, saleBookData.getSuppliers(), gui);
         this.ordersManager = new OrdersManager(this, saleBookData.getOrders(),
                 saleBookData.getNextOrderId(), gui);
-        this.assetsManager = new AssetsManager(saleBookData.getAssets(), saleBookData.getNextAssetId(), this,
-                gui);
+        this.assetsManager = new AssetsManager(saleBookData.getAssets(),
+                saleBookData.getNextAssetId(), gui);
         this.gui = gui;
         this.displaySaleBook();
     }
@@ -149,8 +155,19 @@ public class SaleBook extends AbstractSaleBook {
      *
      * @return positions categories
      */
+    @UnmodifiableView
     public @NotNull Set<String> getCategories() {
-        return this.positionsManager.getCategories();
+        return Collections.unmodifiableSet(this.categories);
+    }
+
+    /**
+     *
+     * @param category
+     */
+    public void addCategory(String category) {
+        if (this.categories.add(category)) {
+            this.gui.displayCategories(this.categories);
+        }
     }
 
     /**
@@ -284,6 +301,23 @@ public class SaleBook extends AbstractSaleBook {
     }
 
     /**
+     *
+     * @param category
+     * @return
+     */
+    public boolean removeCategory(String category) {
+        //TODO 27.05.2024 check for category use in positionManager
+        if (this.categories.contains(category)
+                && this.sparePartsManager.getSparePartsOfCategory(category).isEmpty()) {
+            if (this.categories.remove(category)) {
+                this.gui.displayCategories(this.categories);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * @param repairServiceSales
      * @param extraordinaryIncome
      * @param paid
@@ -363,6 +397,7 @@ public class SaleBook extends AbstractSaleBook {
             Position position = new Position(positionData[i], ItemColor.getItemColorMap());
             result[i] = position;
             this.variableCosts = this.variableCosts.add(position.getTotalCost());
+            this.categories.add(position.getCategory());
             if (position.isSold()) {
                 this.salesVolume = this.salesVolume.add(position.getSellingPrice());
             }
@@ -413,7 +448,7 @@ public class SaleBook extends AbstractSaleBook {
         this.gui.displaySupplierNames(this.suppliersManager.getSupplierNames());
         this.gui.displayOrders(FXCollectionsUtils.toObservableValuesList(this.ordersManager.getIdToOrderObsMap()));
         this.gui.displayAssets(FXCollectionsUtils.toObservableValuesList(this.assetsManager.getIdToAssetObsMap()));
-        this.gui.displayCategories(this.positionsManager.getCategories());
+        this.gui.displayCategories(this.categories);
         this.gui.displayRepairServiceSale(this.repairServiceSales);
         this.gui.displayExtraordinaryIncome(this.extraordinaryIncome);
         this.gui.displayPaid(this.paid);
@@ -422,4 +457,5 @@ public class SaleBook extends AbstractSaleBook {
         this.updateProfitAndLossAccountBalance();
         this.updateTotalPerformance();
     }
+
 }

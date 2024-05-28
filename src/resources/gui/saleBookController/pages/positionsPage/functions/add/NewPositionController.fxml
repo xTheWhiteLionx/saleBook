@@ -81,7 +81,8 @@
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </GridPane.margin>
         </Label>
-        <DatePicker fx:id="orderDatePicker" prefHeight="25.0" prefWidth="237.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <DatePicker fx:id="orderDatePicker" promptText="TT.MM.JJJJ" prefHeight="25.0"
+                    prefWidth="237.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
             <GridPane.margin>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </GridPane.margin>
@@ -102,7 +103,8 @@
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </GridPane.margin>
         </Label>
-        <DatePicker fx:id="sellingDatePicker" layoutX="169.0" layoutY="-1.0" prefHeight="25.0" prefWidth="229.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+        <DatePicker fx:id="sellingDatePicker" promptText="TT.MM.JJJJ" layoutX="169.0"
+                    layoutY="-1.0" prefHeight="25.0" prefWidth="229.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
             <GridPane.margin>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </GridPane.margin>
@@ -158,7 +160,8 @@
                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </GridPane.margin>
          </Label>
-         <DatePicker fx:id="arrivalDatePicker" layoutX="124.0" layoutY="356.0" prefHeight="25.0" prefWidth="229.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+         <DatePicker fx:id="arrivalDatePicker" promptText="TT.MM.JJJJ" layoutX="124.0"
+                     layoutY="356.0" prefHeight="25.0" prefWidth="229.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
             <GridPane.margin>
                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </GridPane.margin>

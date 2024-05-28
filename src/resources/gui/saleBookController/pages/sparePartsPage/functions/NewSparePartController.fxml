@@ -24,14 +24,13 @@
                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="98.1429443359375" minWidth="22.1429443359375" prefWidth="76.4285888671875" />
              </columnConstraints>
              <rowConstraints>
+            <RowConstraints maxHeight="254.0" minHeight="10.0" prefHeight="37.8571275983538" vgrow="SOMETIMES" />
                  <RowConstraints maxHeight="139.0" minHeight="0.0" prefHeight="34.99999128069196" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="139.0" minHeight="10.0" prefHeight="34.99999128069196" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="139.0" minHeight="10.0" prefHeight="34.99999128069196" vgrow="SOMETIMES" />
-                 <RowConstraints maxHeight="254.0" minHeight="10.0" prefHeight="37.8571275983538" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="254.0" minHeight="10.0" prefHeight="37.8571275983538" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="254.0" minHeight="10.0" prefHeight="37.8571275983538" vgrow="SOMETIMES" />
              </rowConstraints>
-             <Label layoutX="37.0" layoutY="67.0" text="name">
+             <Label layoutX="37.0" layoutY="67.0" text="name" GridPane.rowIndex="1">
                  <font>
                      <Font name="System Bold" size="12.0" />
                  </font>
@@ -39,15 +38,7 @@
                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                  </GridPane.margin>
              </Label>
-             <Label layoutX="32.0" layoutY="180.0" text="quantity" GridPane.rowIndex="3">
-                 <font>
-                     <Font name="System Bold" size="12.0" />
-                 </font>
-                 <GridPane.margin>
-                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                 </GridPane.margin>
-             </Label>
-         <Label layoutX="15.0" layoutY="64.0" text="unit" GridPane.rowIndex="2">
+         <Label layoutX="15.0" layoutY="64.0" text="unit" GridPane.rowIndex="3">
             <font>
                <Font name="System Bold" size="12.0" />
             </font>
@@ -55,18 +46,18 @@
                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </GridPane.margin>
          </Label>
-         <TextField fx:id="unitTxtFld" layoutX="128.0" layoutY="20.0" text="pieces" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <TextField fx:id="unitTxtFld" layoutX="128.0" layoutY="20.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
             <GridPane.margin>
                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </GridPane.margin>
          </TextField>
-         <TextField fx:id="nameTxtFld" GridPane.columnIndex="1">
+         <TextField fx:id="nameTxtFld" GridPane.columnIndex="1" GridPane.rowIndex="1">
             <GridPane.margin>
                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </GridPane.margin>
          </TextField>
-         <Label fx:id="quantityUnitLbl" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-         <Label layoutX="15.0" layoutY="89.0" text="condition" GridPane.rowIndex="1">
+         <Label fx:id="minStockUnitLbl" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+         <Label layoutX="15.0" layoutY="89.0" text="condition" GridPane.rowIndex="2">
             <font>
                <Font name="System Bold" size="12.0" />
             </font>
@@ -74,17 +65,12 @@
                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </GridPane.margin>
          </Label>
-         <ChoiceBox fx:id="conditionChcBx" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <ChoiceBox fx:id="conditionChcBx" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
             <GridPane.margin>
                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </GridPane.margin>
          </ChoiceBox>
-         <TextField fx:id="quantityTxtFld" text="1" GridPane.columnIndex="1" GridPane.rowIndex="3">
-            <GridPane.margin>
-               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-            </GridPane.margin>
-         </TextField>
-         <Label layoutX="15.0" layoutY="127.0" text="for category" GridPane.rowIndex="4">
+         <Label layoutX="15.0" layoutY="127.0" text="for category">
             <font>
                <Font name="System Bold" size="12.0" />
             </font>
@@ -92,12 +78,12 @@
                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </GridPane.margin>
          </Label>
-         <ChoiceBox fx:id="categoryChcBx" layoutX="128.0" layoutY="51.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+         <ChoiceBox fx:id="categoryChcBx" layoutX="128.0" layoutY="51.0" prefWidth="150.0" GridPane.columnIndex="1">
             <GridPane.margin>
                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </GridPane.margin>
          </ChoiceBox>
-         <Label layoutX="15.0" layoutY="165.0" text="minimum stock" GridPane.rowIndex="5">
+         <Label layoutX="15.0" layoutY="165.0" text="minimum stock" GridPane.rowIndex="4">
             <font>
                <Font name="System Bold" size="12.0" />
             </font>
@@ -105,7 +91,7 @@
                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </GridPane.margin>
          </Label>
-         <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="5">
+         <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="4">
             <children>
                <CheckBox fx:id="minimumStockChckBx" mnemonicParsing="false" selected="true">
                   <HBox.margin>

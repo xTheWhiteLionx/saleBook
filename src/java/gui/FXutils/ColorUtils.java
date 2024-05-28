@@ -22,6 +22,7 @@ public class ColorUtils {
      *
      * @param color the color of which the hexadecimal representation should be calculated
      * @return the hexadecimal representation of the specified color
+     * @param <C> Type of the specified color
      */
     public static <C extends Color> String toHexString(C color) {
         int r = ((int) Math.round(color.getRed()     * 255)) << 24;

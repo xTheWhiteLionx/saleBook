@@ -107,10 +107,10 @@ public class SparePartsManager {
 
     /**
      * @param category
-     * @return
+     * @return the sparePart of the category or an empty set
      */
     public @Nullable Set<SparePart> getSparePartsOfCategory(String category) {
-        return new HashSet<>(this.categoryToSpareParts.get(category));
+        return this.categoryToSpareParts.get(category);
     }
 
     /**
@@ -289,7 +289,6 @@ public class SparePartsManager {
             Set<SparePart> spareParts = this.categoryToSpareParts.computeIfAbsent(newSparePart.getCategory(), k -> new HashSet<>());
             spareParts.add(newSparePart);
         }
-
         return true;
     }
 }

@@ -49,6 +49,7 @@ public class StageUtils {
      * Look at {@link #styleStage(Stage)}
      *
      * @param scene the scene which should be styled
+     * @return the newly created styled stage
      */
     public static @NotNull Stage createStyledStage(@NotNull Scene scene) {
         Stage stage = new Stage();

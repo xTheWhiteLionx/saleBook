@@ -6,13 +6,17 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
- *
+ * @author xthe_white_lionx
  */
 //TODO 08.01.2024 JavaDoc
 public enum ShippingCompany {
-    /** The DHL shippingCompany */
+    /**
+     * The DHL shippingCompany
+     */
     DHL("https://www.dhl.de/de/privatkunden/pakete-empfangen/verfolgen.html?lang=de&idc="),
-    /** The HERMES shippingCompany */
+    /**
+     * The HERMES shippingCompany
+     */
     HERMES("https://www.myhermes.de/empfangen/sendungsverfolgung/sendungsinformation#");
 
     /**
@@ -40,6 +44,8 @@ public enum ShippingCompany {
      *                       this shippingCompany
      * @return the tracking link for the specified trackingNumber
      * @throws IllegalArgumentException if the trackingNumber is empty
+     * @throws URISyntaxException       indicates that the trackingNumber could not be parsed as a
+     *                                  URI reference.
      */
     public @NotNull URI createTrackingLink(@NotNull String trackingNumber) throws URISyntaxException {
         if (trackingNumber.isEmpty()) {

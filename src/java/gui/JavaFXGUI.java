@@ -167,8 +167,7 @@ public class JavaFXGUI implements GUIConnector {
         for (Position position : positions) {
             TreeItem<Product> positionTreeItem = new TreeItem<>(position);
             ObservableList<TreeItem<Product>> children = positionTreeItem.getChildren();
-            List<Item> items = position.getItems();
-            for (Item item : items) {
+            for (Item item : position) {
                 children.add(new TreeItem<>(item));
             }
             this.root.getChildren().add(positionTreeItem);
@@ -274,6 +273,11 @@ public class JavaFXGUI implements GUIConnector {
     @Override
     public void refreshOrders() {
         this.ordersPage.updateTableViewOrderAndDetail();
+    }
+
+    @Override
+    public void displaySumAssetsValue(BigDecimal sumValue) {
+        this.assetsPage.setSumAssetsValue(sumValue);
     }
 
     @Override

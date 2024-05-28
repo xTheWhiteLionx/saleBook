@@ -4,12 +4,14 @@ import com.pixelduke.control.ribbon.RibbonGroup;
 import com.pixelduke.control.ribbon.RibbonTab;
 import gui.ApplicationMain;
 import gui.DialogWindow;
+import gui.FXutils.LabelUtils;
 import gui.ImageButton;
 import gui.JavaFXGUI;
 import gui.saleBookController.pages.Page;
 import gui.saleBookController.pages.assetsPage.functions.EditAssetController;
 import gui.saleBookController.pages.assetsPage.functions.NewAssetController;
 import gui.FXutils.StageUtils;
+import javafx.scene.control.Label;
 import utils.StringUtils;
 import gui.FXutils.TableViewUtils;
 import javafx.collections.ObservableList;
@@ -29,6 +31,7 @@ import org.controlsfx.control.textfield.CustomTextField;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
@@ -47,6 +50,12 @@ public class AssetsPage implements Initializable, Page {
      */
     @FXML
     private Pane pane;
+
+    /**
+     *
+     */
+    @FXML
+    public Label sumValueLbl;
 
     /**
      * TableView to display the assets
@@ -255,6 +264,14 @@ public class AssetsPage implements Initializable, Page {
     }
 
     /**
+     *
+     * @param sumValue
+     */
+    public void setSumAssetsValue(BigDecimal sumValue) {
+        LabelUtils.setMoneyAndColor(this.sumValueLbl, sumValue);
+    }
+
+    /**
      * Cleans the sparePart search bar and displays the unfiltered list of spareParts
      */
     @FXML
@@ -283,4 +300,5 @@ public class AssetsPage implements Initializable, Page {
             }
         }
     }
+
 }

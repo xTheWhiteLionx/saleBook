@@ -3,6 +3,7 @@ package utils;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
@@ -28,8 +29,8 @@ public class LocalDateUtils {
      * @param endDate the end date
      * @return true if the end date is after the start date or if they are equals, otherwise false
      */
-    public static boolean areAcceptableDates(@NotNull LocalDate startDate,
-                                             @NotNull LocalDate endDate) {
+    public static boolean areAcceptableDates(@NotNull ChronoLocalDate startDate,
+                                             @NotNull ChronoLocalDate endDate) {
         return startDate.compareTo(endDate) <= 0;
     }
 
@@ -41,7 +42,7 @@ public class LocalDateUtils {
      * @param date the date to be returned as a string
      * @return formatted string
      */
-    public static @NotNull String format(@NotNull LocalDate date) {
+    public static @NotNull String format(@NotNull ChronoLocalDate date) {
         return date.format(DATE_FORMATTER);
     }
 }

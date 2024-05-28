@@ -5,8 +5,6 @@ import gui.FXutils.SpinnerUtils;
 import gui.saleBookController.pages.FunctionDialog;
 import gui.FXutils.ChoiceBoxUtils;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -18,7 +16,6 @@ import logic.Condition;
 import logic.sparePart.SparePart;
 import org.controlsfx.control.textfield.TextFields;
 import org.jetbrains.annotations.NotNull;
-import utils.StringUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,7 +24,6 @@ import java.util.Set;
 
 import static gui.DialogWindow.displayError;
 import static gui.FXutils.StageUtils.createStyledStage;
-import static gui.FXutils.TextFieldUtils.isPositive;
 
 /**
  * NewSparePartController is a controller to create a new sparePart
@@ -55,21 +51,11 @@ public class NewSparePartController extends FunctionDialog<SparePart> implements
     @FXML
     public TextField unitTxtFld;
 
-    /**
-     * TextField to set the quantity
-     */
-    @FXML
-    private TextField quantityTxtFld;
 
     /**
-     * Label to display the quantity unit
+     * CheckBox of the minimum stock of the
      */
     @FXML
-    public Label quantityUnitLbl;
-
-    /**
-     *
-     */
     public CheckBox minimumStockChckBx;
 
     /**
@@ -77,6 +63,12 @@ public class NewSparePartController extends FunctionDialog<SparePart> implements
      */
     @FXML
     public Spinner<Integer> minimumStockSpinner;
+
+    /**
+     * Label to display the quantity unit
+     */
+    @FXML
+    public Label minStockUnitLbl;
 
     /**
      * ChoiceBox to choose the category
@@ -106,9 +98,9 @@ public class NewSparePartController extends FunctionDialog<SparePart> implements
      * @return the new created NewSparePartController
      * @throws IOException if the fxml file could not be loaded
      */
-    public static @NotNull NewSparePartController createSparePartController(@NotNull Set<String> nameOfSpareParts,
-                                                                   @NotNull Set<String> units,
-                                                                            @NotNull Set<String> categories) throws IOException {
+    public static @NotNull NewSparePartController createSparePartController(
+            @NotNull Set<String> nameOfSpareParts, @NotNull Set<String> units,
+            @NotNull Set<String> categories) throws IOException {
         FXMLLoader loader = new FXMLLoader(ApplicationMain.class.getResource(
                 "saleBookController/pages/sparePartsPage/functions/" +
                         "NewSparePartController.fxml"));
@@ -147,7 +139,6 @@ public class NewSparePartController extends FunctionDialog<SparePart> implements
             {
                 this.bind(NewSparePartController.this.nameTxtFld.textProperty(),
                         NewSparePartController.this.unitTxtFld.textProperty(),
-                        NewSparePartController.this.quantityTxtFld.textProperty(),
                         NewSparePartController.this.minimumStockChckBx.selectedProperty(),
                         NewSparePartController.this.minimumStockSpinner.valueProperty());
             }
@@ -155,10 +146,7 @@ public class NewSparePartController extends FunctionDialog<SparePart> implements
             @Override
             protected boolean computeValue() {
                 return !NewSparePartController.this.unitTxtFld.getText().isEmpty()
-                        && !NewSparePartController.this.nameTxtFld.getText().isEmpty()
-                        && isPositive(NewSparePartController.this.quantityTxtFld)
-                        && (NewSparePartController.this.minimumStockChckBx.isSelected()
-                        ^ NewSparePartController.this.minimumStockSpinner.getValue() == null);
+                        && !NewSparePartController.this.nameTxtFld.getText().isEmpty();
             }
         };
         this.btnApply.disableProperty().bind(inputsValid.not());
@@ -173,15 +161,17 @@ public class NewSparePartController extends FunctionDialog<SparePart> implements
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ChoiceBoxUtils.addItems(this.conditionChcBx, Condition.class);
-        this.minimumStockSpinner.setValueFactory(SpinnerUtils.createValueFactory(0));
+        this.minimumStockSpinner.setValueFactory(SpinnerUtils.createValueFactory(1));
         this.minimumStockChckBx.selectedProperty().addListener((observableValue, oldValue, newValue) -> {
             if (!newValue) {
-                this.minimumStockSpinner.getValueFactory().setValue(0);
+                this.minimumStockSpinner.setValueFactory(SpinnerUtils.createValueFactory(0));
+            } else {
+                this.minimumStockSpinner.setValueFactory(SpinnerUtils.createValueFactory(1));
             }
             this.minimumStockSpinner.setDisable(!newValue);
         });
         this.unitTxtFld.textProperty().addListener((observableValue, oldText, newText) -> {
-            this.quantityUnitLbl.setText(newText);
+            this.minStockUnitLbl.setText(newText);
         });
         this.initializeBooleanBinding();
     }

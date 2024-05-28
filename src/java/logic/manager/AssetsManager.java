@@ -5,11 +5,13 @@ import javafx.collections.ObservableMap;
 import logic.Asset;
 import gui.FXutils.FXCollectionsUtils;
 import logic.GUIConnector;
-import logic.saleBook.SaleBook;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import utils.IterableUtils;
 
+import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -26,11 +28,6 @@ public class AssetsManager {
     private final ObservableMap<Integer, Asset> idToAssetObsMap;
 
     /**
-     * The saleBook of this AssetsManager
-     */
-    private final SaleBook saleBook;
-
-    /**
      * The connection to the gui
      */
     private final GUIConnector gui;
@@ -41,16 +38,20 @@ public class AssetsManager {
     private int nextAssetId;
 
     /**
+     *
+     */
+    private BigDecimal sumValue;
+
+    /**
      * Constructor
      *
-     * @param saleBook the saleBook
      * @param gui      connection to the gui
      */
-    public AssetsManager(@NotNull SaleBook saleBook, @NotNull GUIConnector gui) {
-        this.saleBook = saleBook;
+    public AssetsManager(@NotNull GUIConnector gui) {
         this.gui = gui;
         this.idToAssetObsMap = FXCollections.observableMap(new TreeMap<>());
         this.nextAssetId = 1;
+        this.setSumValue(BigDecimal.ZERO);
     }
 
     /**
@@ -58,20 +59,21 @@ public class AssetsManager {
      *
      * @param assets      the assets that should be
      * @param nextAssetId the id for the next asset
-     * @param saleBook    the saleBook
      * @param gui         connection to the gui
      * @throws IllegalArgumentException if the nextAssetId is negative
      */
-    public AssetsManager(@NotNull Asset[] assets, int nextAssetId, @NotNull SaleBook saleBook, @NotNull GUIConnector gui) {
+    public AssetsManager(@NotNull Asset[] assets, int nextAssetId, @NotNull GUIConnector gui) {
         if (nextAssetId <= 0) {
             throw new IllegalArgumentException(("nextAssetId must be greater equals 0 " +
                     "but is %d").formatted(nextAssetId));
         }
 
-        this.saleBook = saleBook;
         this.gui = gui;
         this.idToAssetObsMap = FXCollectionsUtils.toObservableMap(assets, Asset::getId);
         this.nextAssetId = nextAssetId;
+        BigDecimal sum = IterableUtils.reduce(this.idToAssetObsMap.values(), BigDecimal.ZERO,
+                (asset, accu) -> accu.add(asset.getValue()));
+        this.setSumValue(sum);
     }
 
     /**
@@ -110,6 +112,7 @@ public class AssetsManager {
     public boolean addAsset(@NotNull Asset asset) {
         Asset oldAsset = this.idToAssetObsMap.putIfAbsent(asset.getId(), asset);
         if (oldAsset == null) {
+            this.setSumValue(this.sumValue.add(asset.getValue()));
             this.gui.updateStatus(String.format("asset %d added", asset.getId()));
             this.nextAssetId++;
             return true;
@@ -126,9 +129,24 @@ public class AssetsManager {
     public @Nullable Asset removeAsset(int assetId) {
         Asset removedAsset = this.idToAssetObsMap.remove(assetId);
         if (removedAsset != null) {
+            this.setSumValue(this.sumValue.subtract(removedAsset.getValue()));
             this.gui.updateStatus(String.format("asset %d deleted", assetId));
         }
         return removedAsset;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AssetsManager that)) return false;
+        return this.nextAssetId == that.nextAssetId
+                && Objects.equals(this.idToAssetObsMap, that.idToAssetObsMap)
+                && (this.sumValue == null ? that.sumValue == null : this.sumValue.compareTo(that.sumValue) == 0);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.idToAssetObsMap, this.nextAssetId, this.sumValue);
     }
 
     @Override
@@ -136,6 +154,16 @@ public class AssetsManager {
         return "AssetsManager{" +
                 "idToAssetObsMap=" + this.idToAssetObsMap +
                 ", nextAssetId=" + this.nextAssetId +
+                ", sumValue=" + this.sumValue +
                 '}';
+    }
+
+    /**
+     *
+     * @param sumValue
+     */
+    private void setSumValue(BigDecimal sumValue) {
+        this.sumValue = sumValue;
+        this.gui.displaySumAssetsValue(sumValue);
     }
 }

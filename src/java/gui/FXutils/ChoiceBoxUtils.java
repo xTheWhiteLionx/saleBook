@@ -22,7 +22,7 @@ public class ChoiceBoxUtils {
      * Creates a new choiceBox filled with the elements of the specified enum class
      *
      * @param enumClass class of the enum
-     * @return
+     * @return the newly created choiceBox
      * @param <T>       type of the elements
      */
     public static @NotNull <T extends Enum<T>> ChoiceBox<T> createChoiceBox(
@@ -51,8 +51,8 @@ public class ChoiceBoxUtils {
 
     /**
      * Adds all the elements of the specified values to the specified choiceBox and puts the
-     * first value of the collection to the first element of the choiceBox. First value of
-     * collection means the first returned value of his iterator.
+     * first value of the collection to the first element of the choiceBox.
+     * The First value of the collection means the first returned value of his iterator.
      *
      * @param choiceBox the choiceBox witch should be filled
      * @param values    collection of values which should be added

@@ -127,5 +127,9 @@
 }
 
 #copyBtn {
-    -fx-graphic: url("../../textures/icons8-kopieren-16-white.png")
+    -fx-graphic: url("../../textures/icons8-kopieren-16-white.png");
+}
+
+.text {
+    -fx-fill: white;
 }

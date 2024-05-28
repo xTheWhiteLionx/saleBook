@@ -178,4 +178,6 @@ public interface GUIConnector {
     void updateStatus(@NotNull String message);
 
     void refreshOrders();
+
+    void displaySumAssetsValue(BigDecimal sumValue);
 }

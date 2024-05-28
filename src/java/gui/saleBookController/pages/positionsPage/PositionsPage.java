@@ -541,7 +541,7 @@ public class PositionsPage implements Initializable, Page {
         TreeTableViewUtils.addColumn(this.trTblVw, "type", Product::getSimpleName);
         TreeTableViewUtils.addColumn(this.trTblVw, "items", Product -> {
             if (Product instanceof Position position){
-                return position.getItems().size();
+                return position.itemCount();
             }
             return "";
         });
@@ -623,7 +623,7 @@ public class PositionsPage implements Initializable, Page {
             State state = position.getState();
             this.btnSellingPriceCalculator.setDisable(false);
             this.dividePositionBtn.setDisable(!((state == State.RECEIVED || state == State.REPAIRED) &&
-                    position.getItems().size() > 1));
+                    position.itemCount() > 1));
             this.combinePositionWithBtn.setDisable(!((state == State.RECEIVED || state == State.REPAIRED)));
             this.setReceivedBtn.setDisable(state != State.ORDERED);
             this.addCostBtn.setDisable(state.compareTo(State.RECEIVED) < 0);

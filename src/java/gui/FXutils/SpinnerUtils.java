@@ -21,10 +21,10 @@ public class SpinnerUtils {
      * {@link Integer#MAX_VALUE} as maximum value and the specified initial value
      *
      * @param initValue the initial value of the spinnerValueFactory
-     * @return the new created SpinnerValueFactory
+     * @return the newly created SpinnerValueFactory
      */
     public static @NotNull SpinnerValueFactory<Integer> createValueFactory(int initValue) {
-        return new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE,
+        return new SpinnerValueFactory.IntegerSpinnerValueFactory(initValue, Integer.MAX_VALUE,
                 initValue);
     }
 }

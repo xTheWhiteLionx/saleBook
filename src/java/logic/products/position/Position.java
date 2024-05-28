@@ -28,7 +28,7 @@ import static utils.LocalDateUtils.areAcceptableDates;
  *
  * @author xthe_white_lionx
  */
-public class Position extends AbstractPosition implements Product, Comparable<Position> {
+public class Position extends AbstractPosition implements Product, Iterable<Item>, Comparable<Position> {
 
     /**
      * Items of this position
@@ -42,6 +42,7 @@ public class Position extends AbstractPosition implements Product, Comparable<Po
      * @param category        the category of this position and his items
      * @param orderDate       the date on which the position was ordered
      * @param purchasingPrice the purchasing price of this position assumed by his items
+     * @param cost
      */
     public Position(int id, @NotNull String category, @NotNull LocalDate orderDate,
                     @NotNull BigDecimal purchasingPrice, @NotNull BigDecimal cost) {
@@ -73,7 +74,7 @@ public class Position extends AbstractPosition implements Product, Comparable<Po
                     @NotNull List<Item> items) {
         super(id, category, orderDate, purchasingPrice, state, cost, receivedDate, sellingDate,
                 sellingPrice, shippingCompany, trackingNumber);
-        this.items = FXCollections.observableList(items);
+        this.items = FXCollections.observableList(new ArrayList<>(items));
     }
 
     /**
@@ -509,8 +510,9 @@ public class Position extends AbstractPosition implements Product, Comparable<Po
      * @return array of positions, where each position has an item of this position or null,
      * if this position has not enough items to share
      * @throws IllegalArgumentException if to few position ids were given
+     * @throws IllegalStateException if this position has to few items for division
      */
-    public @Nullable Position[] divide(int @NotNull [] positionIds) {
+    public @NotNull Position[] divide(int @NotNull [] positionIds) {
         int itemNumber = this.items.size();
         if (positionIds.length < itemNumber - 1) {
             throw new IllegalArgumentException(String.format("to few ids. %d ids given but %d " +
@@ -518,52 +520,51 @@ public class Position extends AbstractPosition implements Product, Comparable<Po
                     positionIds.length, itemNumber - 1));
         }
 
-        Position[] positions = new Position[itemNumber - 1];
-
-        if (itemNumber >= 2) {
-            this.purchasingPrice = this.purchasingPrice
-                    .divide(BigDecimal.valueOf(itemNumber), RoundingMode.HALF_UP);
-            this.cost = this.cost
-                    .divide(BigDecimal.valueOf(itemNumber), RoundingMode.HALF_UP);
-            if (this.sellingPrice != null) {
-                this.sellingPrice = this.sellingPrice.divide(BigDecimal.valueOf(itemNumber),
-                        RoundingMode.HALF_UP);
-            }
-
-            for (int i = 0; i < positionIds.length; i++) {
-                Position newPosition = new Position(positionIds[i], this.category,
-                        this.orderDate, this.purchasingPrice, this.cost);
-
-                if (this.state != State.ORDERED) {
-                    switch (this.state) {
-                        case DELIVERED:
-                        case SHIPPED:
-                            newPosition.send(this.shippingCompany,
-                                    this.trackingNumber, BigDecimal.ZERO);
-                        case SOLD:
-                            newPosition.sale(this.sellingDate, this.sellingPrice);
-                        case REPAIRED:
-                        case RECEIVED:
-                            newPosition.receivedDate = this.receivedDate;
-                    }
-                    newPosition.state = this.state;
-                }
-
-                Item item = this.items.remove(1);
-                this.nextItemId--;
-                item.setId(newPosition.nextItemId);
-                newPosition.addItem(item);
-                positions[i] = newPosition;
-            }
-            return positions;
+        if (itemNumber < 2) {
+            throw new IllegalStateException("position has to few items for divide");
         }
-        return null;
+
+        Position[] positions = new Position[itemNumber - 1];
+        this.purchasingPrice = this.purchasingPrice
+                .divide(BigDecimal.valueOf(itemNumber), RoundingMode.HALF_UP);
+        this.cost = this.cost
+                .divide(BigDecimal.valueOf(itemNumber), RoundingMode.HALF_UP);
+        if (this.sellingPrice != null) {
+            this.sellingPrice = this.sellingPrice.divide(BigDecimal.valueOf(itemNumber),
+                    RoundingMode.HALF_UP);
+        }
+
+        for (int i = 0; i < positionIds.length; i++) {
+            Position newPosition = new Position(positionIds[i], this.category,
+                    this.orderDate, this.purchasingPrice, this.cost);
+
+            if (this.state != State.ORDERED) {
+                switch (this.state) {
+                    case DELIVERED:
+                    case SHIPPED:
+                        newPosition.send(this.shippingCompany,
+                                this.trackingNumber, BigDecimal.ZERO);
+                    case SOLD:
+                        newPosition.sale(this.sellingDate, this.sellingPrice);
+                    case REPAIRED:
+                    case RECEIVED:
+                        newPosition.receivedDate = this.receivedDate;
+                }
+                newPosition.state = this.state;
+            }
+
+            Item item = this.items.remove(1);
+            this.nextItemId--;
+            item.setId(newPosition.nextItemId);
+            newPosition.addItem(item);
+            positions[i] = newPosition;
+        }
+        return positions;
     }
 
-//    @Override
-//    public String getSimpleName() {
-//        return this.getClass().getSimpleName();
-//    }
+    public int itemCount() {
+        return this.items.size();
+    }
 
     /**
      * Compares this position to the specified other position.
@@ -623,4 +624,13 @@ public class Position extends AbstractPosition implements Product, Comparable<Po
                 '}';
     }
 
+    /**
+     * Returns an iterator over the items in this position in proper sequence.
+     *
+     * @return an iterator over the items in this position in proper sequence
+     */
+    @Override
+    public @NotNull Iterator<Item> iterator() {
+        return this.items.iterator();
+    }
 }

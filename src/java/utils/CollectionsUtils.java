@@ -1,13 +1,8 @@
 package utils;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 /**
  * This class inherits some Utilities for {@link Collection}.
@@ -38,8 +33,8 @@ public class CollectionsUtils {
      * @param <R>    Type of the elements of the result array
      * @return an array containing all of the elements in of the mapped values of the collection
      */
-    public static <T, R> R[] toArray(Collection<T> values, Function<? super T, ?
-            extends R> mapper, R[] array) {
+    public static <T, R> R[] toArray(Collection<T> values, Function<? super T,
+            ? extends R> mapper, R[] array) {
         int size = values.size();
         R[] result = array.length < size ? Arrays.copyOf(array, size) : array;
         int i = 0;
@@ -47,40 +42,5 @@ public class CollectionsUtils {
             result[i++] = mapper.apply(value);
         }
         return result;
-    }
-
-    /**
-     * @param values
-     * @param predicate
-     * @param <T>
-     * @return
-     */
-    public static <T> boolean areValid(Collection<T> values, Predicate<? super T> predicate) {
-        boolean areValid = true;
-        Iterator<T> iterator = values.iterator();
-        while (areValid && iterator.hasNext()) {
-            T value = iterator.next();
-            if (!predicate.test(value)) {
-                areValid = false;
-            }
-        }
-        return areValid;
-    }
-
-    /**
-     *
-     * @param collection
-     * @param accu
-     * @param combiner
-     * @return
-     * @param <E>
-     * @param <R>
-     */
-    public static <E, R> @NotNull R reduce(Iterable<E> collection, R accu,
-                                   BiFunction<? super E, ? super R, ? extends R> combiner) {
-        for (E element : collection) {
-            accu = combiner.apply(element, accu);
-        }
-        return accu;
     }
 }

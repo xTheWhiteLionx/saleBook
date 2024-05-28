@@ -11,6 +11,13 @@ import java.util.function.Function;
  * Some Utility's for TreeTableView's.
  */
 public class TreeTableViewUtils {
+
+    /**
+     * Suppresses default constructor, ensuring non-instantiability.
+     */
+    private TreeTableViewUtils() {
+    }
+
     /**
      * Adds a new treeTableColumn with the specified columnTitle to the specified treeTableView. The
      * table elements will be displayed depending on the specified valueExtractor

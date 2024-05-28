@@ -77,10 +77,6 @@ public class MasterController extends FunctionDialog<Position> implements Initia
         Scene scene = new Scene(loader.load());
         Stage stage = createStyledStage(scene);
         stage.setTitle("new position");
-        double width = 1000D;
-        stage.setMinWidth(width);
-        stage.setWidth(width);
-        stage.setMinHeight(850D);
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
         MasterController masterController = loader.getController();

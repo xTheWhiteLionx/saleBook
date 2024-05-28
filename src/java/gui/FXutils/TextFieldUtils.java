@@ -18,6 +18,12 @@ public class TextFieldUtils {
     public static final String NUMBER_PATTERN = "^[-+]?\\d+([,.]\\d\\d)?$";
 
     /**
+     * Suppresses default constructor, ensuring non-instantiability.
+     */
+    private TextFieldUtils() {
+    }
+
+    /**
      * Examines if the text of the specified textField is a positive number.
      * A number is positive if it is &ge 0
      *

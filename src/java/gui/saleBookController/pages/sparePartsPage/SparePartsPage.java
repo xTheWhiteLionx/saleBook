@@ -233,8 +233,8 @@ public class SparePartsPage implements Initializable, Page {
             SparePartsManager sparePartsManager = this.saleBook.getSparePartsManager();
             NewSparePartController newSparePartController =
                     createSparePartController(sparePartsManager.getSparePartNames(),
-                            sparePartsManager.getSparePartUnits(), this.saleBook.getCategories());
-            //TODO 23.05.2024 add quantity
+                            sparePartsManager.getSparePartUnits(),
+                            this.saleBook.getCategories());
             newSparePartController.getResult().ifPresent(sparePartsManager::addSparePart);
         } catch (IOException e) {
             displayError("failed to load newSparePartController", e);

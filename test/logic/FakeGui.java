@@ -204,4 +204,9 @@ public class FakeGui implements GUIConnector {
     public void refreshOrders() {
 
     }
+
+    @Override
+    public void displaySumAssetsValue(BigDecimal sumValue) {
+
+    }
 }

@@ -20,8 +20,6 @@ import java.time.LocalDate;
 import java.util.*;
 
 /**
- *
- *
  * @author xthe_white_lionx
  */
 public class PositionsManager {
@@ -29,11 +27,6 @@ public class PositionsManager {
      * ObservableMap of positions mapped to their matching id
      */
     private final ObservableMap<Integer, Position> idToPositionObsMap;
-
-    /**
-     * ObservableSet of the categories of this positionsManager
-     */
-    private final Set<String> categories;
 
     /**
      * the id for the next creation of a position
@@ -60,33 +53,29 @@ public class PositionsManager {
         this.saleBook = saleBook;
         this.gui = gui;
         this.idToPositionObsMap = FXCollections.observableMap(new TreeMap<>());
-        this.categories = new TreeSet<>();
         this.nextPosId = 1;
     }
 
     /**
      * Constructor
      *
-     * @param saleBook the saleBook
+     * @param saleBook  the saleBook
      * @param positions the positions which should be managed
      * @param nextPosId the id for the next position
-     * @param gui connection to the gui
+     * @param gui       connection to the gui
      */
-    public PositionsManager(@NotNull SaleBook saleBook, @NotNull Position[] positions, int nextPosId, @NotNull GUIConnector gui) {
+    public PositionsManager(@NotNull SaleBook saleBook, @NotNull Position[] positions,
+                            int nextPosId, @NotNull GUIConnector gui) {
         this.saleBook = saleBook;
-        this.idToPositionObsMap = FXCollectionsUtils.toObservableMap(positions, AbstractPosition::getId);
         this.gui = gui;
-
-        this.categories = new TreeSet<>();
-        for (Position position : positions) {
-            this.categories.add(position.getCategory());
-        }
+        this.idToPositionObsMap = FXCollectionsUtils.toObservableMap(positions, AbstractPosition::getId);
         this.nextPosId = nextPosId;
     }
 
     /**
      * @return
      */
+    //TODO 27.05.2024 needed?
     public ObservableMap<Integer, Position> getIdToPositionObsMap() {
         return this.idToPositionObsMap;
     }
@@ -97,16 +86,7 @@ public class PositionsManager {
      * @return the positions of this positionsManager
      */
     public @NotNull Collection<Position> getPositions() {
-        return this.idToPositionObsMap.values();
-    }
-
-    /**
-     * Returns the categories of the positions
-     *
-     * @return positions categories
-     */
-    public @NotNull Set<String> getCategories() {
-        return this.categories;
+        return new HashSet<>(this.idToPositionObsMap.values());
     }
 
     /**
@@ -132,8 +112,7 @@ public class PositionsManager {
         }
         Position oldValue = this.idToPositionObsMap.putIfAbsent(position.getId(), position);
         if (oldValue == null) {
-            this.categories.add(position.getCategory());
-            this.gui.displayCategories(this.categories);
+            this.saleBook.addCategory(position.getCategory());
             this.saleBook.addVariableCosts(position.getTotalCost());
             this.nextPosId++;
             if (position.isSold()) {
@@ -170,7 +149,7 @@ public class PositionsManager {
      * Removes the position with the specified id and returns it.
      *
      * @param id the id of the searched position
-     * @throws IllegalArgumentException if there is no position with the specified, id
+     * @return the removed position
      */
     public @Nullable Position removePosition(int id) {
         Position position = this.idToPositionObsMap.remove(id);
@@ -178,17 +157,6 @@ public class PositionsManager {
             this.saleBook.subtractVariableCosts(position.getTotalCost());
             if (position.isSold()) {
                 this.saleBook.subtractSale(position.getSellingPrice());
-            }
-            String deletedModel = position.getCategory();
-            boolean containsModel = false;
-            for (Position pos : this.idToPositionObsMap.values()) {
-                if (pos.getCategory().equals(deletedModel)) {
-                    containsModel = true;
-                    break;
-                }
-            }
-            if (!containsModel) {
-                this.categories.remove(deletedModel);
             }
             this.gui.updateStatus(String.format("position %d successfully deleted", id));
         }
@@ -200,6 +168,7 @@ public class PositionsManager {
      *
      * @param positionId the id of the position which inherits the item
      * @param itemId     the id of the item which should be removed
+     * @return the removed item
      * @throws IllegalArgumentException if there is no position with the specified positionId or
      *                                  if the target position doesn't contain the item with the specified itemId
      */
@@ -208,7 +177,7 @@ public class PositionsManager {
         if (position == null) {
             throw new IllegalArgumentException("no position for id " + positionId);
         }
-        if (position.getItems().size() <= 1) {
+        if (position.itemCount() <= 1) {
             throw new IllegalArgumentException("a position must have at least 1 item");
         }
 
@@ -262,7 +231,8 @@ public class PositionsManager {
      * of the spareParts depending on the specified sparePartsToCount map.
      * The sparePartToCount map represents the number of used spareParts.
      *
-     * @param positionId the id of the position which should be repaired
+     * @param positionId        the id of the position which should be repaired
+     * @param sparePartsToCount the used spare parts mapped to their amount
      * @throws IllegalArgumentException if there is no position with the specified positionId or
      *                                  sparePartsToCount is null
      */
@@ -323,30 +293,36 @@ public class PositionsManager {
      * position will be created.
      *
      * @param positionId the id of the position which should be divided
+     * @return the new created positions
      * @throws IllegalArgumentException if there is no position with the specified positionId
      */
     public @Nullable Position[] dividePosition(int positionId) {
-        Position position = this.idToPositionObsMap.get(positionId);
-        if (position == null) {
+        Position oldPosition = this.idToPositionObsMap.get(positionId);
+        if (oldPosition == null) {
             throw new IllegalArgumentException("no position for id " + positionId);
         }
 
-        int[] positionIds = new int[position.getItems().size() - 1];
+        int[] positionIds = new int[oldPosition.itemCount() - 1];
         for (int i = 0, positionIdsLength = positionIds.length; i < positionIdsLength; i++) {
             positionIds[i] = this.nextPosId++;
         }
 
-        Position[] positions = position.divide(positionIds);
-        if (positions != null && positions.length > 0) {
+        Position[] positions = oldPosition.divide(positionIds);
+        if (positions.length > 0) {
             StringBuilder builder = new StringBuilder("position %d divided in ");
             builder.append(positionId);
+
             for (int i = 0, positionsLength = positions.length; i < positionsLength; i++) {
                 builder.append(" ");
-                builder.append(positions[i].getId());
+                Position position = positions[i];
+                int id = position.getId();
+                this.idToPositionObsMap.put(id, position);
+                builder.append(id);
                 if (i < positionsLength - 1) {
                     builder.append(",");
                 }
             }
+            this.gui.refreshPosition();
             this.gui.updateStatus(builder.toString());
         }
 
@@ -395,16 +371,16 @@ public class PositionsManager {
         if (!(o instanceof PositionsManager that)) {
             return false;
         }
-        return this.nextPosId == that.nextPosId && Objects.equals(this.idToPositionObsMap, that.idToPositionObsMap) && Objects.equals(this.categories, that.categories);
+        return this.nextPosId == that.nextPosId && Objects.equals(this.idToPositionObsMap, that.idToPositionObsMap);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.idToPositionObsMap, this.categories, this.nextPosId);
+        return Objects.hash(this.idToPositionObsMap, this.nextPosId);
     }
 
     @Override
     public String toString() {
-        return "PositionsManager{" + "idToPositionObsMap=" + this.idToPositionObsMap + ", categoriesObsSet=" + this.categories + ", nextPosId=" + this.nextPosId + '}';
+        return "PositionsManager{" + "idToPositionObsMap=" + this.idToPositionObsMap + ", nextPosId=" + this.nextPosId + '}';
     }
 }

@@ -27,17 +27,6 @@ public class FXCollectionsUtils {
     }
 
     /**
-     * Creates an observable List bound to the specified observableSet
-     *
-     * @param observableSet set of the values that should be bound
-     * @return a new observable List with the specific values of the observableSet
-     * @param <T> Type of the values
-     */
-    public static <T> ObservableList<T> toObservableList(ObservableSet<T> observableSet) {
-        return new ObservableListSetBinder<>(observableSet).getObservableList();
-    }
-
-    /**
      * Creates an observable List bound to the specified observableMap
      *
      * @param observableMap Map of the values that should be bound
