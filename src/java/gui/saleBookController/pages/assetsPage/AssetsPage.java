@@ -52,7 +52,7 @@ public class AssetsPage implements Initializable, Page {
     private Pane pane;
 
     /**
-     *
+     * Label to display the sum value of all assets
      */
     @FXML
     public Label sumValueLbl;
