@@ -5,6 +5,7 @@ import gui.BindedBoundedDateCell;
 import gui.saleBookController.pages.FunctionDialog;
 import gui.FXutils.ChoiceBoxUtils;
 import gui.FXutils.LabelUtils;
+import utils.DoubleUtils;
 import utils.StringUtils;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
@@ -143,7 +144,7 @@ public class EditAssetController extends FunctionDialog<Boolean> implements Init
         this.asset.setSupplier(this.saleBook.getSuppliersManager().getSupplier(chosenSupplierName));
         this.asset.setPurchasingDate(this.purchasingDatePicker.getValue());
         this.asset.setArrivalDate(this.arrivalDatePicker.getValue());
-        this.asset.setValue(BigDecimalUtils.parse(this.valueTxtFld.getText()));
+        this.asset.setValue(DoubleUtils.parse(this.valueTxtFld.getText()));
         this.result = true;
         this.handleCancel();
     }

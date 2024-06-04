@@ -1,12 +1,17 @@
 package logic.manager;
 
 import gui.FXutils.LabelUtils;
+import gui.ObservableListMapBinder;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import logic.Dataable;
 import logic.GUIConnector;
+import logic.order.Order;
 import logic.products.item.Item;
 import logic.products.position.Position;
 import logic.products.position.AbstractPosition;
+import logic.products.position.PositionData;
 import logic.products.position.ShippingCompany;
 import logic.products.position.State;
 import gui.FXutils.FXCollectionsUtils;
@@ -14,6 +19,7 @@ import logic.saleBook.SaleBook;
 import logic.sparePart.SparePart;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import utils.CollectionsUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -22,7 +28,7 @@ import java.util.*;
 /**
  * @author xthe_white_lionx
  */
-public class PositionsManager {
+public class PositionsManager extends AbstractManager implements Dataable<PositionData[]> {
     /**
      * ObservableMap of positions mapped to their matching id
      */
@@ -34,24 +40,13 @@ public class PositionsManager {
     private int nextPosId;
 
     /**
-     * Connection to the gui
-     */
-    private final GUIConnector gui;
-
-    /**
-     * The saleBook
-     */
-    private final SaleBook saleBook;
-
-    /**
      * Constructor
      *
      * @param saleBook the saleBook
      * @param gui      connection to the gui
      */
     public PositionsManager(@NotNull SaleBook saleBook, @NotNull GUIConnector gui) {
-        this.saleBook = saleBook;
-        this.gui = gui;
+        super(saleBook, gui);
         this.idToPositionObsMap = FXCollections.observableMap(new TreeMap<>());
         this.nextPosId = 1;
     }
@@ -66,8 +61,7 @@ public class PositionsManager {
      */
     public PositionsManager(@NotNull SaleBook saleBook, @NotNull Position[] positions,
                             int nextPosId, @NotNull GUIConnector gui) {
-        this.saleBook = saleBook;
-        this.gui = gui;
+        super(saleBook, gui);
         this.idToPositionObsMap = FXCollectionsUtils.toObservableMap(positions, AbstractPosition::getId);
         this.nextPosId = nextPosId;
     }
@@ -86,7 +80,7 @@ public class PositionsManager {
      * @return the positions of this positionsManager
      */
     public @NotNull Collection<Position> getPositions() {
-        return new HashSet<>(this.idToPositionObsMap.values());
+        return new TreeSet<>(this.idToPositionObsMap.values());
     }
 
     /**
@@ -146,9 +140,9 @@ public class PositionsManager {
     }
 
     /**
-     * Removes the position with the specified id and returns it.
+     * Returns the removed position with the specified id
      *
-     * @param id the id of the searched position
+     * @param id the id of position which should be removed
      * @return the removed position
      */
     public @Nullable Position removePosition(int id) {
@@ -183,7 +177,6 @@ public class PositionsManager {
 
         Item removedItem = position.removeItemById(itemId);
         if (removedItem != null) {
-            this.gui.displayPositions(this.getPositions());
             this.gui.updateStatus(String.format("item %d of position %d successfully deleted", itemId, positionId));
         }
 
@@ -357,10 +350,15 @@ public class PositionsManager {
             combindPosition = combindPosition.combine(this.nextPosId, currPosition);
         }
         this.idToPositionObsMap.put(this.nextPosId, combindPosition);
-        this.gui.refreshPosition();
         this.gui.updateStatus("combined to the new position " + this.nextPosId);
         this.nextPosId++;
         return combindPosition;
+    }
+
+    @Override
+    public PositionData[] toData() {
+        return CollectionsUtils.toArray(this.idToPositionObsMap.values(), PositionData::new,
+                new PositionData[0]);
     }
 
     @Override

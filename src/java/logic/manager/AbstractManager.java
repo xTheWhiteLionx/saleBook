@@ -1,0 +1,35 @@
+package logic.manager;
+
+import logic.Dataable;
+import logic.GUIConnector;
+import logic.saleBook.SaleBook;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * @author xThe_white_Lionx
+ * @Date 30.05.2024
+ */
+//TODO 30.05.2024 JavaDoc
+public abstract class AbstractManager {
+
+    /**
+     * Connection to the saleBook
+     */
+    protected final SaleBook saleBook;
+
+    /**
+     * Connection to the gui
+     */
+    protected final GUIConnector gui;
+
+    /**
+     * Constructor
+     *
+     * @param saleBook connection to the saleBook
+     * @param gui connection to the gui
+     */
+    protected AbstractManager(@NotNull SaleBook saleBook, @NotNull GUIConnector gui) {
+        this.saleBook = saleBook;
+        this.gui = gui;
+    }
+}

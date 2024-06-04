@@ -11,6 +11,7 @@ import gui.saleBookController.pages.Page;
 import gui.saleBookController.pages.assetsPage.functions.EditAssetController;
 import gui.saleBookController.pages.assetsPage.functions.NewAssetController;
 import gui.FXutils.StageUtils;
+import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import utils.StringUtils;
 import gui.FXutils.TableViewUtils;
@@ -43,6 +44,8 @@ import static gui.FXutils.RibbonGroupUtils.createRibbonGroup;
 
 /**
  * This class displays the assets of the saleBook and has some controls to interact with.
+ *
+ * @author xThe_white_Lionx
  */
 public class AssetsPage implements Initializable, Page {
     /**
@@ -63,10 +66,6 @@ public class AssetsPage implements Initializable, Page {
     @FXML
     private TableView<Asset> assetTblVw;
 
-    /**
-     * FilteredList of the assets
-     */
-    private FilteredList<Asset> assetsFilteredList;
 
     /**
      * Searchbar TextField to search a specific assets by id
@@ -81,10 +80,29 @@ public class AssetsPage implements Initializable, Page {
     private Button cleanAssetSearchBarBtn;
 
     /**
+     * FilteredList of the assets
+     */
+    private FilteredList<Asset> assetsFilteredList;
+
+    /**
      * RibbonTab with controls
      */
     private RibbonTab assetRibbonTab;
 
+    /**
+     * Button to set the selected asset to receive
+     */
+    private ImageButton receivedAssetBtn;
+
+    /**
+     * Button to edit the selected asset
+     */
+    private ImageButton editBtn;
+
+    /**
+     * Button to delete the selected asset
+     */
+    private ImageButton deleteAssetBtn;
     /**
      * The current saleBook
      */
@@ -93,26 +111,12 @@ public class AssetsPage implements Initializable, Page {
      * The selected asset
      */
     private Asset currAsset;
-    /**
-     * Button to set the selected asset to receive
-     */
-    //TODO 18.04.2024 has no function
-    private Button receivedAssetBtn;
-
-    /**
-     * Button to edit the selected asset
-     */
-    private Button editBtn;
-
-    /**
-     * Button to delete the selected asset
-     */
-    private Button deleteAssetBtn;
 
     /**
      * Creates and returns a new AssetPage
      *
      * @return a new AssetPage
+     * @throws IOException
      */
     public static @NotNull AssetsPage createAssetsPage() throws IOException {
         FXMLLoader loader = new FXMLLoader(
@@ -147,6 +151,22 @@ public class AssetsPage implements Initializable, Page {
         });
         TableViewUtils.addColumn(this.assetTblVw, "value", asset ->
                 JavaFXGUI.formatMoney(asset.getValue()));
+        this.assetSearchbarTxtFld.textProperty().addListener((observableValue, oldText, newText) -> {
+            if (newText.isEmpty()) {
+                this.assetsFilteredList.setPredicate(asset -> true);
+                this.cleanAssetSearchBarBtn.setVisible(false);
+            } else {
+                if (!newText.matches("[,.]")){
+                    //filters the assets by id or name
+                    this.assetsFilteredList.setPredicate(asset ->
+                            StringUtils.containsIgnoreCase(String.valueOf(asset.getId()), newText)
+                                    || StringUtils.containsIgnoreCase(asset.getName(), newText));
+                } else {
+                    this.assetsFilteredList.setPredicate(asset -> false);
+                }
+                this.cleanAssetSearchBarBtn.setVisible(true);
+            }
+        });
         this.assetTblVw.getSelectionModel().selectedItemProperty().addListener(
                 (observableValue, oldAsset, newAsset) -> {
                     boolean isNull = newAsset == null;
@@ -154,24 +174,9 @@ public class AssetsPage implements Initializable, Page {
                         this.currAsset = newAsset;
                     }
                     this.editBtn.setDisable(isNull);
-                    this.receivedAssetBtn.setDisable(isNull);
+                    this.receivedAssetBtn.setDisable(isNull || newAsset.isReceived());
                     this.deleteAssetBtn.setDisable(isNull);
                 });
-        this.assetSearchbarTxtFld.textProperty().addListener((observableValue, oldText, newText) -> {
-            if (newText.isEmpty()){
-                this.assetsFilteredList.setPredicate(asset -> true);
-                this.cleanAssetSearchBarBtn.setVisible(false);
-            } else {
-                if (!newText.matches("[,.]")){
-                    this.assetsFilteredList.setPredicate(asset ->
-                            StringUtils.containsIgnoreCase(String.valueOf(asset.getId()), newText) ||
-                            StringUtils.containsIgnoreCase(asset.getName(), newText));
-                } else {
-                    this.assetsFilteredList.setPredicate(asset -> false);
-                }
-                this.cleanAssetSearchBarBtn.setVisible(true);
-            }
-        });
     }
 
     /**
@@ -209,17 +214,14 @@ public class AssetsPage implements Initializable, Page {
      */
     private void initializeRibbonTab() {
         this.assetRibbonTab = new RibbonTab("Assets");
-        Button newAssetBtn = new ImageButton("new", NEW_ASSET_IMAGE,
-                actionEvent -> this.handleAddAsset());
-        this.editBtn = new ImageButton("edit", EDIT_IMAGE,
-                actionEvent -> this.handleEditAsset());
-        this.editBtn.setDisable(true);
+        Button newAssetBtn = new ImageButton("new", NEW_ASSET_IMAGE, this::handleAddAsset);
+        this.editBtn = new ImageButton("edit", EDIT_IMAGE, this::handleEditAsset);
+        this.editBtn.disable();
         this.receivedAssetBtn = new ImageButton("received", RECEIVED_IMAGE,
-                actionEvent -> {});
-        this.receivedAssetBtn.setDisable(true);
-        this.deleteAssetBtn = new ImageButton("delete", DELETE_IMAGE,
-                actionEvent -> this.handleDeleteAsset());
-        this.deleteAssetBtn.setDisable(true);
+                this::receiveAsset);
+        this.receivedAssetBtn.disable();
+        this.deleteAssetBtn = new ImageButton("delete", DELETE_IMAGE, this::handleDeleteAsset);
+        this.deleteAssetBtn.disable();
         RibbonGroup organisationRibbonGroup = createRibbonGroup("organisation", newAssetBtn,
                 this.editBtn, this.receivedAssetBtn, this.deleteAssetBtn);
 
@@ -228,8 +230,19 @@ public class AssetsPage implements Initializable, Page {
 
     /**
      *
+     * @param event
      */
-    private void handleEditAsset() {
+    private void receiveAsset(ActionEvent event) {
+        this.currAsset.setArrivalDate(LocalDate.now());
+    }
+
+    /**
+     *
+     *
+     * @param event unused
+     */
+    //TODO 28.05.2024 JavaDoc
+    private void handleEditAsset(ActionEvent event) {
         try {
             EditAssetController editAssetController =
                     EditAssetController.createEditAssetController(this.currAsset, this.saleBook);
@@ -241,16 +254,6 @@ public class AssetsPage implements Initializable, Page {
             });
         } catch (IOException e) {
             DialogWindow.displayError("fail to load edit asset controller", e);
-        }
-
-    }
-
-    /**
-     * Handles the cancelOrder button
-     */
-    private void handleDeleteAsset() {
-        if (acceptedDeleteAlert()){
-            this.saleBook.getAssetsManager().removeAsset(this.currAsset.getId());
         }
     }
 
@@ -264,8 +267,9 @@ public class AssetsPage implements Initializable, Page {
     }
 
     /**
+     * Sets the text of the sumValueLbl to the specified sumValue
      *
-     * @param sumValue
+     * @param sumValue the new sumValue
      */
     public void setSumAssetsValue(BigDecimal sumValue) {
         LabelUtils.setMoneyAndColor(this.sumValueLbl, sumValue);
@@ -282,9 +286,20 @@ public class AssetsPage implements Initializable, Page {
     }
 
     /**
+     * Handles the cancelOrder button
+     *
+     * @param event unused
+     */
+    private void handleDeleteAsset(ActionEvent event) {
+        if (acceptedDeleteAlert()){
+            this.saleBook.getAssetsManager().removeAsset(this.currAsset.getId());
+        }
+    }
+
+    /**
      * Handles the "new" order button.
      */
-    private void handleAddAsset() {
+    private void handleAddAsset(ActionEvent event) {
         if (this.saleBook.getSuppliersManager().getSuppliers().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();

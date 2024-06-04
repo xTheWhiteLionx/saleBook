@@ -1,6 +1,8 @@
 package logic.manager;
 
+import gui.ObservableListMapBinder;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import logic.GUIConnector;
 import logic.order.Order;
@@ -18,22 +20,12 @@ import java.util.TreeMap;
  *
  * @author xthe_white_lionx
  */
-public class OrdersManager {
+public class OrdersManager extends AbstractManager implements ObservableListable<Order>{
 
     /**
      * ObservableMap of orders mapped to their matching id
      */
     private final ObservableMap<Integer, Order> idToOrderObsMap;
-
-    /**
-     * The saleBook of this AssetsManager
-     */
-    private final SaleBook saleBook;
-
-    /**
-     * The connection to the gui
-     */
-    private final GUIConnector gui;
 
     /**
      * The id for the next order
@@ -47,8 +39,7 @@ public class OrdersManager {
      * @param gui
      */
     public OrdersManager(@NotNull SaleBook saleBook, @NotNull GUIConnector gui) {
-        this.saleBook = saleBook;
-        this.gui = gui;
+        super(saleBook, gui);
         this.idToOrderObsMap = FXCollections.observableMap(new TreeMap<>());
         this.nextOrderId = 1;
     }
@@ -62,23 +53,15 @@ public class OrdersManager {
      * @param gui
      * @throws IllegalArgumentException if the nextOrderId is negative or 0
      */
-    public OrdersManager(@NotNull SaleBook saleBook, Order[] orders, int nextOrderId, @NotNull GUIConnector gui){
+    public OrdersManager(@NotNull SaleBook saleBook, Order[] orders, int nextOrderId,
+                         @NotNull GUIConnector gui){
+        super(saleBook,gui);
         if (nextOrderId < 1) {
             throw new IllegalArgumentException("nextOrderId must be greater equals 1 but is %d".formatted(nextOrderId));
         }
 
-        this.saleBook = saleBook;
-        this.gui = gui;
         this.idToOrderObsMap = FXCollectionsUtils.toObservableMap(orders, Order::getId);
         this.nextOrderId = nextOrderId;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public @NotNull ObservableMap<Integer, Order> getIdToOrderObsMap() {
-        return this.idToOrderObsMap;
     }
 
     /**
@@ -154,9 +137,16 @@ public class OrdersManager {
         if (orderQuantity != null && orderQuantity > 0) {
             this.saleBook.getSparePartsManager().addSparePart(orderedSparePart, orderQuantity);
 
-            this.updateDisplayOrder(order);
-            this.gui.updateStatus(String.format("spare part %s of order %d received",
-                    orderedSparePart.getName(), orderId));
+            String updateMessage;
+            if (order.getState() == Order.OrderState.RECEIVED) {
+                this.updateDisplayOrder(order);
+                updateMessage = String.format("order %d received", orderId);
+            } else {
+                this.gui.displayOrderedSpareParts(order.getSpareParts());
+                updateMessage = String.format("%s of order %d received",
+                        orderedSparePart.getName(), orderId);
+            }
+            this.gui.updateStatus(updateMessage);
         }
     }
 
@@ -174,6 +164,11 @@ public class OrdersManager {
         order.cancel();
         this.updateDisplayOrder(order);
         this.gui.updateStatus(String.format("order %d cancelled", orderId));
+    }
+
+    @Override
+    public ObservableList<Order> getObservableList() {
+        return new ObservableListMapBinder<>(this.idToOrderObsMap).getObservableValuesList();
     }
 
     @Override

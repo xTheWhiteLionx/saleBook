@@ -3,6 +3,7 @@ package gui.saleBookController.pages.positionsPage;
 import gui.ApplicationMain;
 import gui.DialogWindow;
 import gui.FXutils.LabelUtils;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,10 +13,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import logic.products.position.Position;
 import logic.products.position.State;
+import utils.FileUtils;
 import utils.LocalDateUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
@@ -118,6 +121,9 @@ public class DetailPositionPane implements Initializable {
     @FXML
     private Label percentPerformanceLbl;
 
+    //TODO 03.06.2024 JavaDoc
+    private int id;
+
     /**
      * Creates and loads a new DetailPositionPane
      *
@@ -148,7 +154,8 @@ public class DetailPositionPane implements Initializable {
      */
     public void setPosition(@NotNull Position position) {
         this.clear();
-        this.idLbl.setText(String.valueOf(position.getId()));
+        this.id = position.getId();
+        this.idLbl.setText(String.valueOf(this.id));
         this.categoryLbl.setText(position.getCategory());
         this.orderDateLbl.setText(LocalDateUtils.format(position.getOrderDate()));
         LabelUtils.setMoney(this.purchasingPriceLbl, position.getPurchasingPrice());
@@ -222,6 +229,23 @@ public class DetailPositionPane implements Initializable {
      */
     public Pane getBasePane() {
         return this.vbox;
+    }
+
+    @FXML
+    private void openPictureDirectory(ActionEvent actionEvent) {
+        File parentDir = new File("positions/" + this.id);
+        if (!parentDir.exists()) {
+            parentDir.mkdir();
+        }
+        File picturesDir = new File(parentDir, "pictures");
+        if (!picturesDir.exists()) {
+            picturesDir.mkdir();
+        }
+        try {
+            Desktop.getDesktop().open(picturesDir);
+        } catch (IOException e) {
+            DialogWindow.displayError(e);
+        }
     }
 
     /**

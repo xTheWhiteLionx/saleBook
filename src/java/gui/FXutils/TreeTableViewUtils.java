@@ -9,6 +9,8 @@ import java.util.function.Function;
 
 /**
  * Some Utility's for TreeTableView's.
+ *
+ * @author xthe_white_lionx
  */
 public class TreeTableViewUtils {
 
@@ -30,7 +32,7 @@ public class TreeTableViewUtils {
      */
     public static <S, T> void addColumn(@NotNull TreeTableView<S> treeTableView,
                                         @NotNull String columnTitle,
-                                        @NotNull Function<S, T> valueExtractor) {
+                                        @NotNull Function<? super S, T> valueExtractor) {
         TreeTableColumn<S, T> treeTableColumn = new TreeTableColumn<>(columnTitle);
         treeTableColumn.setCellValueFactory(f -> new SimpleObjectProperty<>(valueExtractor.apply(
                 f.getValue().getValue())));

@@ -23,7 +23,7 @@ public class OrderTest {
         SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
         sparePartToOrderQuantity.put(sparePart, 1000);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
 
         sparePartToOrderQuantity.put(sparePart, -30);
 
@@ -36,7 +36,7 @@ public class OrderTest {
         SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
         sparePartToOrderQuantity.put(sparePart, 1000);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
 
         Assert.assertEquals(Order.OrderState.ORDERED, order.getState());
     }
@@ -47,7 +47,7 @@ public class OrderTest {
         SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
         sparePartToOrderQuantity.put(sparePart, 1000);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
         order.received();
 
         Assert.assertEquals(Order.OrderState.RECEIVED, order.getState());
@@ -60,7 +60,7 @@ public class OrderTest {
         SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
         sparePartToOrderQuantity.put(sparePart, 1000);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
 
         Assert.assertEquals(Order.OrderState.ORDERED, order.getState(sparePart));
     }
@@ -71,7 +71,7 @@ public class OrderTest {
         SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
         sparePartToOrderQuantity.put(sparePart, 1000);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
         order.sparePartReceived(sparePart);
 
         Assert.assertEquals(Order.OrderState.RECEIVED, order.getState(sparePart));
@@ -83,7 +83,7 @@ public class OrderTest {
         SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
         sparePartToOrderQuantity.put(sparePart, 1000);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
 
         Assert.assertEquals(Integer.valueOf(1000), order.getOrderQuantity(sparePart));
     }
@@ -94,7 +94,7 @@ public class OrderTest {
         SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
         sparePartToOrderQuantity.put(sparePart, 1000);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
 
         Assert.assertTrue(order.isReceivable());
     }
@@ -105,7 +105,7 @@ public class OrderTest {
         SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
         sparePartToOrderQuantity.put(sparePart, 1000);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
         order.received();
 
         Assert.assertFalse(order.isReceivable());
@@ -117,7 +117,7 @@ public class OrderTest {
         SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
         sparePartToOrderQuantity.put(sparePart, 1000);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
         order.sparePartReceived(sparePart);
 
         Assert.assertFalse(order.isReceivable());
@@ -129,7 +129,7 @@ public class OrderTest {
         SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
         sparePartToOrderQuantity.put(sparePart, 1000);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
         order.cancel();
 
         Assert.assertFalse(order.isReceivable());
@@ -144,7 +144,7 @@ public class OrderTest {
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
 
         Assert.assertEquals(Integer.valueOf(1000), order.sparePartReceived(scrow));
         Assert.assertEquals(Order.OrderState.ORDERED, order.getState());
@@ -156,7 +156,7 @@ public class OrderTest {
         SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
         sparePartToOrderQuantity.put(sparePart, 1000);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
 
         Assert.assertEquals(Integer.valueOf(1000), order.sparePartReceived(sparePart));
         Assert.assertEquals(Order.OrderState.RECEIVED, order.getState());
@@ -171,7 +171,7 @@ public class OrderTest {
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
         order.cancel();
 
         order.sparePartReceived(scrow);
@@ -186,7 +186,7 @@ public class OrderTest {
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
 
         Assert.assertEquals(sparePartToOrderQuantity, order.received());
         Assert.assertEquals(Order.OrderState.RECEIVED, order.getState());
@@ -201,7 +201,7 @@ public class OrderTest {
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
         order.sparePartReceived(scrow);
 
         Assert.assertEquals(Map.of(wrench, 2), order.received());
@@ -217,7 +217,7 @@ public class OrderTest {
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
         order.received();
 
         order.received();
@@ -232,7 +232,7 @@ public class OrderTest {
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
         order.cancel();
 
         order.received();
@@ -247,7 +247,7 @@ public class OrderTest {
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
 
         Assert.assertTrue(order.isCancellable());
     }
@@ -261,7 +261,7 @@ public class OrderTest {
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
         order.cancel();
 
         Assert.assertFalse(order.isCancellable());
@@ -276,7 +276,7 @@ public class OrderTest {
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
         order.received();
 
         Assert.assertFalse(order.isCancellable());
@@ -291,7 +291,7 @@ public class OrderTest {
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
         order.cancel();
 
         Assert.assertEquals(Order.OrderState.CANCELLED, order.getState());
@@ -306,7 +306,7 @@ public class OrderTest {
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
         order.cancel();
 
         order.cancel();
@@ -321,7 +321,7 @@ public class OrderTest {
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
-                BigDecimal.valueOf(200));
+                200D);
         order.received();
 
         order.cancel();

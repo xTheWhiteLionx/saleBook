@@ -63,7 +63,7 @@ public class Order implements Comparable<Order> {
     /**
      * The cost of this order
      */
-    private BigDecimal value;
+    private double value;
 
     /**
      * The spare parts of this order mapped to their quantity
@@ -86,7 +86,7 @@ public class Order implements Comparable<Order> {
      * @throws IllegalArgumentException if the sparePartToOrderQuantity is empty
      */
     public Order(int id, @NotNull LocalDate orderDate, @NotNull Supplier supplier,
-                 @NotNull Map<SparePart, Integer> sparePartToOrderQuantity, @NotNull BigDecimal value) {
+                 @NotNull Map<SparePart, Integer> sparePartToOrderQuantity, double value) {
         if (sparePartToOrderQuantity.isEmpty()) {
             throw new IllegalArgumentException("sparePartToOrderQuantity is empty");
         }
@@ -94,7 +94,6 @@ public class Order implements Comparable<Order> {
         boolean areValid = IterableUtils.areValid(sparePartToOrderQuantity.values(),
                 (quantity) -> quantity != null && quantity > 0);
         if (!areValid) {
-            System.out.println("sparePartToOrderQuantity = " + sparePartToOrderQuantity);
             throw new IllegalArgumentException("each quantity must be greater 0");
         }
 
@@ -181,7 +180,7 @@ public class Order implements Comparable<Order> {
      *
      * @return the cost of this order
      */
-    public @NotNull BigDecimal getValue() {
+    public double getValue() {
         return this.value;
     }
 
@@ -191,8 +190,8 @@ public class Order implements Comparable<Order> {
      * @param value the new cost of this order
      * @throws IllegalArgumentException if the specified cost is less then 0
      */
-    public void setValue(@NotNull BigDecimal value) {
-        if (!BigDecimalUtils.isPositive(value)) {
+    public void setValue(double value) {
+        if (value < 0) {
             throw new IllegalArgumentException("cost must be greater equals 0 but is " + value);
         }
         this.value = value;
@@ -291,7 +290,7 @@ public class Order implements Comparable<Order> {
             result = this.supplier.compareTo(o.supplier);
         }
         if (result == 0) {
-            result = this.value.compareTo(o.value);
+            result = Double.compare(this.value, o.value);
         }
 
         return result;
@@ -302,15 +301,15 @@ public class Order implements Comparable<Order> {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Order order)) {
+        if (!(o instanceof Order other)) {
             return false;
         }
-        return this.id == order.id
-                && this.orderState == order.orderState
-                && Objects.equals(this.orderDate, order.orderDate)
-                && Objects.equals(this.supplier, order.supplier)
-                && (this.value == null ? order.value == null : this.value.compareTo(order.value) == 0)
-                && Objects.equals(this.sparePartToOrderQuantity, order.sparePartToOrderQuantity);
+        return this.id == other.id
+                && this.orderState == other.orderState
+                && Objects.equals(this.orderDate, other.orderDate)
+                && Objects.equals(this.supplier, other.supplier)
+                && this.value == other.value
+                && Objects.equals(this.sparePartToOrderQuantity, other.sparePartToOrderQuantity);
     }
 
     @Override

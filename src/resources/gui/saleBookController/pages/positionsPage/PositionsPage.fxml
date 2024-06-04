@@ -16,9 +16,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.textfield.CustomTextField?>
 
-<BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/11.0.2"
-            xmlns:fx="http://javafx.com/fxml/1"
-             fx:controller="gui.saleBookController.pages.positionsPage.PositionsPage">
+<BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.saleBookController.pages.positionsPage.PositionsPage">
     <center>
       <SplitPane dividerPositions="0.3">
          <items>
@@ -33,7 +31,7 @@
                            <Font name="System Bold" size="24.0" />
                        </font>
                    </Label>
-                   <ToolBar>
+                   <ToolBar prefHeight="35.0" prefWidth="174.0">
                        <CustomTextField fx:id="idSearchbarTxtFld" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="154.0" promptText="search" styleClass="searchField">
                            <left>
                                <Label styleClass="searchBoxLabel">
@@ -49,8 +47,13 @@
                             </Button>
                            </right>
                        </CustomTextField>
+                  <Button mnemonicParsing="false" onAction="#handleCollapse" text="collapse all" />
+                  <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleExpand" text="expand all" />
                    </ToolBar>
-               <TreeTableView fx:id="trTblVw" prefHeight="200.0" prefWidth="200.0" showRoot="false" />
+               <TreeTableView fx:id="trTblVw" showRoot="false" tableMenuButtonVisible="true">
+                  <columnResizePolicy>
+                     <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                  </columnResizePolicy></TreeTableView>
                    <cursor>
                        <Cursor fx:constant="DEFAULT" />
                    </cursor>

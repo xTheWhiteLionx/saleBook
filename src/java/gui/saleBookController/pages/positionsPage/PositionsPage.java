@@ -6,9 +6,9 @@ import gui.ApplicationMain;
 import gui.CustomSplitMenuButton;
 import gui.CustomSplitMenuButton.SplitMode;
 import gui.FXutils.StageUtils;
+import gui.FilteredTreeItem;
 import gui.ImageButton;
 import gui.Images;
-import gui.ObservableTreeItemMapBinder;
 import gui.saleBookController.pages.FunctionDialog;
 import gui.saleBookController.pages.Page;
 import gui.saleBookController.pages.positionsPage.functions.*;
@@ -16,6 +16,12 @@ import gui.saleBookController.pages.positionsPage.functions.add.NewCostControlle
 import gui.saleBookController.pages.positionsPage.functions.add.NewItemController;
 import gui.saleBookController.pages.positionsPage.functions.add.MasterController;
 import gui.FXutils.RibbonTabUtils;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.DataFormat;
 import javafx.stage.Stage;
 import logic.products.item.ItemColor;
 import utils.StringUtils;
@@ -44,7 +50,12 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Function;
@@ -123,7 +134,7 @@ public class PositionsPage implements Initializable, Page {
     /**
      * Root of the TreeTableView
      */
-    private ObservableTreeItemMapBinder<Integer> root;
+    private FilteredTreeItem<Integer> root;
 
     /**
      * SplitMenuButton for the selling price calculator
@@ -134,6 +145,11 @@ public class PositionsPage implements Initializable, Page {
      * MenuItem of the SplitMenuButton {@link #btnSellingPriceCalculator}
      */
     private MenuItem btnPerformanceCalculator;
+
+    /**
+     * SplitMenuButton for the generate sale text
+     */
+    private CustomSplitMenuButton generateSaleTextBtn;
 
     /**
      * The current {@link SaleBook}
@@ -164,6 +180,7 @@ public class PositionsPage implements Initializable, Page {
      * Button to divide the current position
      */
     private Button dividePositionBtn;
+
 
     /**
      * Button to set the current position to the state received
@@ -224,6 +241,7 @@ public class PositionsPage implements Initializable, Page {
      * Creates a new positionPage
      *
      * @return a new positionPage
+     * @throws IOException
      */
     public static @NotNull PositionsPage createPositionsPage() throws IOException {
         FXMLLoader loader = new FXMLLoader(
@@ -244,15 +262,6 @@ public class PositionsPage implements Initializable, Page {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.initializeRibbonTab();
         this.initializeTblVw();
-    }
-
-    /**
-     * Returns the TreeTableView of this PositionPage
-     *
-     * @return the TreeTableView of this PositionPage
-     */
-    public @NotNull TreeTableView<Product> getTrTblVw() {
-        return this.trTblVw;
     }
 
     /**
@@ -292,7 +301,6 @@ public class PositionsPage implements Initializable, Page {
     @Override
     public void setSaleBook(@NotNull SaleBook saleBook) {
         this.saleBook = saleBook;
-        this.filterPositionsController.setCategories(saleBook.getCategories());
     }
 
     /**
@@ -300,7 +308,7 @@ public class PositionsPage implements Initializable, Page {
      *
      * @param root the specified root which should be set
      */
-    public void setRoot(@NotNull ObservableTreeItemMapBinder<Integer> root) {
+    public void setRoot(@NotNull FilteredTreeItem<Integer> root) {
         this.root = root;
         this.trTblVw.setRoot(this.root);
 
@@ -324,8 +332,9 @@ public class PositionsPage implements Initializable, Page {
     /**
      * Updates the controls and details
      */
-    public void updateControlsAndDetail() {
-        this.updateControlsAndDetail(this.trTblVw.getSelectionModel().getSelectedItem().getValue());
+    public void updateTreeTableViewAndDetails() {
+        this.trTblVw.refresh();
+        this.updateControlsAndDetails(this.trTblVw.getSelectionModel().getSelectedItem().getValue());
     }
 
     /**
@@ -375,6 +384,16 @@ public class PositionsPage implements Initializable, Page {
         this.addPictures = new ImageButton("add pictures", ADD_PICTURE,
                 actionEvent -> this.handleAddPictures());
         this.addPictures.setDisable(true);
+
+        MenuItem generateLongSaleText = new MenuItem("generate long saletext",
+                createImageView(TO_CLIPBOARD, SMALL));
+        generateLongSaleText.setOnAction(this::generateLongSaleText);
+        this.generateSaleTextBtn = new CustomSplitMenuButton("generate saletext",
+                SplitMode.SPLIT_BOTTOM, generateLongSaleText);
+        this.generateSaleTextBtn.setGraphic(new ImageView(TO_CLIPBOARD));
+        this.generateSaleTextBtn.setOnAction(this::generateSaleText);
+        this.generateSaleTextBtn.setDisable(true);
+
         this.saleBtn = new ImageButton("sale", SALE_IMAGE,
                 actionEvent1 -> this.handleSale());
         this.saleBtn.setDisable(true);
@@ -390,7 +409,7 @@ public class PositionsPage implements Initializable, Page {
         this.toShipBtn.setDisable(true);
 
         this.btnPerformanceCalculator = new MenuItem("performance calculator",
-                createImageView(CALCULATOR_IMAGE, 16));
+                createImageView(CALCULATOR_IMAGE, SMALL));
         this.btnPerformanceCalculator.setOnAction(actionEvent ->
                 {
                     try {
@@ -413,9 +432,10 @@ public class PositionsPage implements Initializable, Page {
         });
         this.btnSellingPriceCalculator.setDisable(true);
 
-        RibbonGroup ribbonGroupPositionFunctions = createRibbonGroup("position", this.addItemBtn,
-                this.dividePositionBtn, this.combinePositionWithBtn, this.setReceivedBtn,
-                this.addCostBtn, this.setRepairedBtn, this.addPictures, this.saleBtn, this.toShipBtn,
+        RibbonGroup ribbonGroupPositionFunctions = createRibbonGroup("position",
+                this.addItemBtn, this.dividePositionBtn, this.combinePositionWithBtn,
+                this.setReceivedBtn, this.addCostBtn, this.setRepairedBtn, this.addPictures,
+                this.generateSaleTextBtn, this.saleBtn, this.toShipBtn,
                 this.btnSellingPriceCalculator);
 
         Button filterBtn = new ImageButton("filter", FILTER_IMAGE, actionEvent ->
@@ -431,6 +451,60 @@ public class PositionsPage implements Initializable, Page {
 
         this.positionsTab = RibbonTabUtils.createRibbonTab("Positions", ribbonGroupNew,
                 ribbonGroupPositionFunctions, ribbonGroupOrganisation);
+    }
+
+    private void generateSaleText(ActionEvent actionEvent) {
+        File file = new File("categories/sales_texts/Joy-Con_single_sales_text.txt");
+        try {
+            List<String> strings = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+
+            for (int i = 0; i < strings.size(); i++) {
+                String s = strings.get(i).replace("?", String.valueOf(this.currPos.getId()));
+                s = s.replace("<variant>",
+                        this.currPos.getItems().get(0).getVariant().name().toLowerCase());
+                s = s.replace("<colorName>",
+                        this.currPos.getItems().get(0).getItemColor().getName());
+                strings.set(i, s);
+            }
+            System.out.println("strings = " + strings);
+            Clipboard clipboard = Clipboard.getSystemClipboard();
+            StringBuilder end = new StringBuilder();
+            Map<DataFormat, Object> map = new HashMap<>();
+            for (String string : strings) {
+                end.append(string).append(System.lineSeparator());
+            }
+            map.put(DataFormat.PLAIN_TEXT, end.toString());
+            clipboard.setContent(map);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void generateLongSaleText(ActionEvent actionEvent) {
+        File file = new File("categories/sales_texts/Joy-Con_single_sales_text_long.txt");
+        try {
+            List<String> strings = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+
+            for (int i = 0; i < strings.size(); i++) {
+                String s = strings.get(i).replace("?", String.valueOf(this.currPos.getId()));
+                s = s.replace("<variant>",
+                        this.currPos.getItems().get(0).getVariant().name().toLowerCase());
+                s = s.replace("<colorName>",
+                        this.currPos.getItems().get(0).getItemColor().getName());
+                strings.set(i, s);
+            }
+            System.out.println("strings = " + strings);
+            Clipboard clipboard = Clipboard.getSystemClipboard();
+            StringBuilder end = new StringBuilder();
+            Map<DataFormat, Object> map = new HashMap<>();
+            for (String string : strings) {
+                end.append(string).append(System.lineSeparator());
+            }
+            map.put(DataFormat.PLAIN_TEXT, end.toString());
+            clipboard.setContent(map);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -498,7 +572,7 @@ public class PositionsPage implements Initializable, Page {
             if (functionDialog != null) {
                 functionDialog.getResult().ifPresent(dirty -> {
                     if (dirty) {
-                        this.updateControlsAndDetail(product);
+                        this.updateTreeTableViewAndDetails();
                     }
                 });
             }
@@ -565,7 +639,7 @@ public class PositionsPage implements Initializable, Page {
             if (t1 != null) {
                 Product product = t1.getValue();
                 if (product != null) {
-                    this.updateControlsAndDetail(product);
+                    this.updateControlsAndDetails(product);
                 }
             }
         });
@@ -614,7 +688,7 @@ public class PositionsPage implements Initializable, Page {
      *
      * @param product the product on which the update will be done
      */
-    private void updateControlsAndDetail(@NotNull Product product) {
+    private void updateControlsAndDetails(@NotNull Product product) {
         if (product instanceof Position position) {
             this.currPos = position;
             this.detailPositionPane.setPosition(position);
@@ -629,6 +703,7 @@ public class PositionsPage implements Initializable, Page {
             this.addCostBtn.setDisable(state.compareTo(State.RECEIVED) < 0);
             this.setRepairedBtn.setDisable(state != State.RECEIVED);
             this.addItemBtn.setDisable(state.compareTo(State.SOLD) >= 0);
+            this.generateSaleTextBtn.setDisable(false);
             this.btnPerformanceCalculator.setDisable(false);
             this.btnSellingPriceCalculator.setDisable(false);
             this.addPictures.setDisable(false);
@@ -650,6 +725,7 @@ public class PositionsPage implements Initializable, Page {
             this.addCostBtn.setDisable(true);
             this.setRepairedBtn.setDisable(true);
             this.addItemBtn.setDisable(true);
+            this.generateSaleTextBtn.setDisable(true);
             this.btnPerformanceCalculator.setDisable(true);
             this.btnSellingPriceCalculator.setDisable(true);
             this.saleBtn.setDisable(true);
@@ -758,5 +834,13 @@ public class PositionsPage implements Initializable, Page {
                 displayError("failed to load saleController", e);
             }
         }
+    }
+
+    public void handleCollapse(ActionEvent actionEvent) {
+        this.root.collapseAll();
+    }
+
+    public void handleExpand(ActionEvent actionEvent) {
+        this.root.expandAll();
     }
 }

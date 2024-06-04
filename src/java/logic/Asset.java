@@ -16,7 +16,7 @@ import java.util.Objects;
  *
  * @author xThe_white_Lionx
  */
-public class Asset implements Comparable<Asset>{
+public class Asset implements Comparable<Asset> {
 
     /**
      * The id of the asset
@@ -26,27 +26,27 @@ public class Asset implements Comparable<Asset>{
     /**
      * The name of the asset
      */
-    private String name;
+    private @NotNull String name;
 
     /**
      * The supplier of the asset
      */
-    private Supplier supplier;
+    private @NotNull Supplier supplier;
 
     /**
      * The purchasing price of the asset
      */
-    private LocalDate purchasingDate;
+    private @NotNull LocalDate purchasingDate;
 
     /**
      * The arrival date of the asset
      */
-    private LocalDate arrivalDate;
+    private @Nullable LocalDate arrivalDate;
 
     /**
      * The value of the asset
      */
-    private BigDecimal value;
+    private double value;
 
     /**
      * Constructs a new Asset with the specified parameters
@@ -55,37 +55,25 @@ public class Asset implements Comparable<Asset>{
      * @param name name id of the new asset
      * @param supplier supplier of the new asset
      * @param purchasingDate purchasing price of the new asset
-     * @param arrivalDate arrival date of the new asset
      * @param value value of the new asset
      * @throws IllegalArgumentException if the name is empty or the value is negative
      */
     public Asset(int id, @NotNull String name,@NotNull Supplier supplier,
-                 @NotNull LocalDate purchasingDate, @Nullable LocalDate arrivalDate,
-                 @NotNull BigDecimal value) {
+                 @NotNull LocalDate purchasingDate, double value) {
         if (name.isEmpty()) {
             throw new IllegalArgumentException("name is empty");
         }
-        if (!BigDecimalUtils.isPositive(value)) {
+        if (value <= 0) {
             throw new IllegalArgumentException("value is negative");
         }
-        LocalDate today = LocalDate.now();
-        if (purchasingDate.isAfter(today)) {
+        if (purchasingDate.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("purchasingDate is in the future");
-        }
-        if (arrivalDate != null) {
-            if (!LocalDateUtils.areAcceptableDates(purchasingDate, arrivalDate)) {
-                throw new IllegalArgumentException("arrivalDate is before purchasingDate");
-            }
-            if (arrivalDate.isAfter(today)) {
-                throw new IllegalArgumentException("arrivalDate is in the future");
-            }
         }
 
         this.id = id;
         this.name = name;
         this.supplier = supplier;
         this.purchasingDate = purchasingDate;
-        this.arrivalDate = arrivalDate;
         this.value = value;
     }
 
@@ -194,7 +182,7 @@ public class Asset implements Comparable<Asset>{
      *
      * @return the value of this asset
      */
-    public @NotNull BigDecimal getValue() {
+    public double getValue() {
         return this.value;
     }
 
@@ -204,12 +192,21 @@ public class Asset implements Comparable<Asset>{
      * @param value the new value of this asset
      * @throws IllegalArgumentException if the value is negative
      */
-    public void setValue(@NotNull BigDecimal value) {
-        if (!BigDecimalUtils.isPositive(value)) {
+    public void setValue(double value) {
+        if (value <= 0) {
             throw new IllegalArgumentException("value is negative");
         }
 
         this.value = value;
+    }
+
+    /**
+     * Returns true
+     *
+     * @return
+     */
+    public boolean isReceived() {
+        return this.arrivalDate != null;
     }
 
     @Override
@@ -222,7 +219,7 @@ public class Asset implements Comparable<Asset>{
             result = this.supplier.compareTo(o.supplier);
         }
         if (result == 0){
-            result = this.value.compareTo(o.value);
+            result = Double.compare(this.value, o.value);
         }
         return result;
     }
@@ -240,7 +237,7 @@ public class Asset implements Comparable<Asset>{
                 Objects.equals(this.supplier, asset.supplier) &&
                 Objects.equals(this.purchasingDate, asset.purchasingDate) &&
                 Objects.equals(this.arrivalDate, asset.arrivalDate) &&
-                Objects.equals(this.value, asset.value);
+                this.value == asset.value;
     }
 
     @Override

@@ -1,6 +1,8 @@
 package gui;
 
+import gui.FXutils.LabelUtils;
 import gui.saleBookController.pages.FunctionDialog;
+import javafx.fxml.FXML;
 import utils.StringUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -29,16 +31,25 @@ public class TextFieldDialog extends FunctionDialog<BigDecimal> implements Initi
     /**
      * Label to describe the TextField
      */
+    @FXML
     public Label lbl;
 
     /**
      * TextField to get the input from
      */
+    @FXML
     public TextField textField;
+
+    /**
+     * Label to display the currency of the input of the {@link #textField}
+     */
+    @FXML
+    private Label currencyLbl;
 
     /**
      * Button to apply the text of the TextField
      */
+    @FXML
     public Button applyBtn;
 
     /**
@@ -75,10 +86,10 @@ public class TextFieldDialog extends FunctionDialog<BigDecimal> implements Initi
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        LabelUtils.setCurrencies(this.currencyLbl);
         this.applyBtn.setDisable(true);
-        this.textField.textProperty().addListener((observableValue, oldText, newText) -> {
-            this.applyBtn.setDisable(!StringUtils.isValidNumber(newText));
-        });
+        this.textField.textProperty().addListener((observableValue, oldText, newText) ->
+                this.applyBtn.setDisable(!StringUtils.isValidNumber(newText)));
     }
 
     /**

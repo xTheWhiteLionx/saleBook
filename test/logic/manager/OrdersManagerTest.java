@@ -27,7 +27,7 @@ public class OrdersManagerTest {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
         SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
         sparePartToOrderQuantity.put(sparePart, 10);
-        Order order = new Order(1, LocalDate.now(), supplier, sparePartToOrderQuantity, BigDecimal.valueOf(25));
+        Order order = new Order(1, LocalDate.now(), supplier, sparePartToOrderQuantity, 25D);
 
         Assert.assertTrue(saleBook.getOrdersManager().addOrder(order));
         Assert.assertEquals(BigDecimal.valueOf(0), saleBook.getFixedCosts());
@@ -44,7 +44,7 @@ public class OrdersManagerTest {
         SparePart sparePart2 = new SparePart("batterie", Condition.NEW, "piece",
                 "testCategory", null);
         sparePartToOrderQuantity.put(sparePart2, 15);
-        Order order = new Order(1, LocalDate.now(), supplier, sparePartToOrderQuantity, BigDecimal.valueOf(25));
+        Order order = new Order(1, LocalDate.now(), supplier, sparePartToOrderQuantity, 25D);
         saleBook.getOrdersManager().addOrder(order);
 
         saleBook.getOrdersManager().orderReceived(1);
@@ -68,7 +68,7 @@ public class OrdersManagerTest {
         SparePart sparePart2 = new SparePart("batterie", Condition.NEW, "piece",
                 "testCategory", null);
         sparePartToOrderQuantity.put(sparePart2, 15);
-        Order order = new Order(1, LocalDate.now(), supplier, sparePartToOrderQuantity, BigDecimal.valueOf(25));
+        Order order = new Order(1, LocalDate.now(), supplier, sparePartToOrderQuantity, 25D);
         saleBook.getOrdersManager().addOrder(order);
         saleBook.getOrdersManager().sparePartReceived(1, sparePart);
         saleBook.getOrdersManager().orderReceived(1);
@@ -90,7 +90,7 @@ public class OrdersManagerTest {
                 "testCategory", null);
         sparePartToOrderQuantity.put(sparePart, 10);
         Order order = new Order(1, LocalDate.now(), supplier, sparePartToOrderQuantity,
-                BigDecimal.valueOf(25));
+                25D);
         saleBook.getOrdersManager().addOrder(order);
         SparePart expected = new SparePart("Scrow", Condition.NEW, "piece",
                 "testCategory", null);
@@ -113,7 +113,7 @@ public class OrdersManagerTest {
         saleBook.getSparePartsManager().addSparePart(sparePart);
         sparePartToOrderQuantity.put(sparePart, 10);
         Order order = new Order(1, LocalDate.now(), supplier, sparePartToOrderQuantity,
-                BigDecimal.valueOf(25));
+                25D);
         saleBook.getOrdersManager().addOrder(order);
         SparePart expected = new SparePart("Scrow", Condition.NEW, "piece",
                 "testCategory", null);
@@ -134,7 +134,7 @@ public class OrdersManagerTest {
         SparePart sparePart2 = new SparePart("wrench", Condition.NEW, "piece",
                 "testCategory", null);
         Map<SparePart, Integer> sparePartToOrderQuantity = Map.of(sparePart, 10);
-        Order order = new Order(1, LocalDate.now(), supplier, sparePartToOrderQuantity, BigDecimal.valueOf(25));
+        Order order = new Order(1, LocalDate.now(), supplier, sparePartToOrderQuantity, 25D);
         saleBook.getOrdersManager().addOrder(order);
 
         saleBook.getOrdersManager().sparePartReceived(1, sparePart2);
@@ -148,7 +148,7 @@ public class OrdersManagerTest {
         SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece",
                 "testCategory", null);
         sparePartToOrderQuantity.put(sparePart, 10);
-        Order order = new Order(1, LocalDate.now(), supplier, sparePartToOrderQuantity, BigDecimal.valueOf(25));
+        Order order = new Order(1, LocalDate.now(), supplier, sparePartToOrderQuantity, 25D);
         saleBook.getOrdersManager().addOrder(order);
         saleBook.getOrdersManager().cancelOrder(1);
 

@@ -2,6 +2,7 @@ package logic.products.position;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import logic.Dataable;
 import logic.products.item.Item;
 import logic.products.Product;
 import logic.products.item.ItemColor;
@@ -28,7 +29,8 @@ import static utils.LocalDateUtils.areAcceptableDates;
  *
  * @author xthe_white_lionx
  */
-public class Position extends AbstractPosition implements Product, Iterable<Item>, Comparable<Position> {
+public class Position extends AbstractPosition implements Product, Iterable<Item>
+        , Comparable<Position>, Dataable<PositionData> {
 
     /**
      * Items of this position
@@ -566,6 +568,11 @@ public class Position extends AbstractPosition implements Product, Iterable<Item
         return this.items.size();
     }
 
+    @Override
+    public PositionData toData() {
+        return new PositionData(this);
+    }
+
     /**
      * Compares this position to the specified other position.
      * This position is less than the specified other position if the id is less than the other position.
@@ -584,25 +591,18 @@ public class Position extends AbstractPosition implements Product, Iterable<Item
         if (this == o) {
             return true;
         }
-        if (o == null || this.getClass() != o.getClass()) {
+        if (!(o instanceof Position position)) {
             return false;
         }
-        Position position = (Position) o;
-        return Objects.equals(this.category, position.category) && Objects.equals(this.orderDate, position.orderDate) &&
-                Objects.equals(this.purchasingPrice, position.purchasingPrice) &&
-                Objects.equals(this.items, position.items) && this.state == position.state &&
-                Objects.equals(this.cost, position.cost) &&
-                Objects.equals(this.receivedDate, position.receivedDate) &&
-                Objects.equals(this.sellingDate, position.sellingDate) &&
-                Objects.equals(this.sellingPrice, position.sellingPrice) &&
-                this.shippingCompany == position.shippingCompany &&
-                Objects.equals(this.trackingNumber, position.trackingNumber);
+        if (!super.equals(o)) {
+            return false;
+        }
+        return Objects.equals(this.items, position.items);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.category, this.orderDate, this.purchasingPrice, this.items, this.state, this.cost, this.receivedDate, this.sellingDate,
-                this.sellingPrice, this.shippingCompany, this.trackingNumber);
+        return Objects.hash(super.hashCode(), this.items);
     }
 
     @Override

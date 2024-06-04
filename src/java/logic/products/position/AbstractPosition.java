@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * This abstract class presents a comment Position
@@ -232,5 +233,34 @@ public abstract class AbstractPosition {
      */
     public int getNextItemId() {
         return this.nextItemId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof AbstractPosition that)) {
+            return false;
+        }
+        return this.id == that.id && this.nextItemId == that.nextItemId
+                && Objects.equals(this.category, that.category) && this.state == that.state
+                && (this.purchasingPrice == null ? that.purchasingPrice == null :
+                this.purchasingPrice.compareTo(that.purchasingPrice) == 0)
+                && Objects.equals(this.orderDate, that.orderDate)
+                && (this.cost == null ? that.cost == null : this.cost.compareTo(that.cost) == 0)
+                && Objects.equals(this.receivedDate, that.receivedDate)
+                && Objects.equals(this.sellingDate, that.sellingDate)
+                && (this.sellingPrice == null ? that.sellingPrice == null :
+                this.sellingPrice.compareTo(that.sellingPrice) == 0)
+                && this.shippingCompany == that.shippingCompany
+                && Objects.equals(this.trackingNumber, that.trackingNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.id, this.category, this.state, this.purchasingPrice,
+                this.orderDate, this.cost, this.receivedDate, this.sellingDate, this.sellingPrice,
+                this.shippingCompany, this.trackingNumber, this.nextItemId);
     }
 }

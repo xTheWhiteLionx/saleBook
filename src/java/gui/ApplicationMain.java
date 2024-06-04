@@ -19,6 +19,16 @@ import static gui.DialogWindow.displayError;
 public class ApplicationMain extends Application {
 
     /**
+     * Width of the start scene
+     */
+    private static final double WIDTH = 300D;
+
+    /**
+     * Height of the start scene
+     */
+    private static final double HEIGHT = 300D;
+
+    /**
      * Creating the stage and showing it. This is where the initial size and the
      * title of the window are set.
      *
@@ -26,22 +36,18 @@ public class ApplicationMain extends Application {
      */
     @Override
     public void start(@NotNull Stage primaryStage) {
-        double width = 300D;
-        double height = 300D;
-
-        FXMLLoader loader = new FXMLLoader(ApplicationMain.class.getResource("LoginController" +
-                ".fxml"));
-
         try {
-            Scene scene = new Scene(loader.load(), width, height);
+            FXMLLoader loader = new FXMLLoader(ApplicationMain.class.getResource(
+                    "Start.fxml"));
+            Scene scene = new Scene(loader.load(), WIDTH, HEIGHT);
             primaryStage.setScene(scene);
             StageUtils.styleStage(primaryStage);
             primaryStage.setTitle("welcome");
-            primaryStage.setMinWidth(width);
-            primaryStage.setMinHeight(height);
+            primaryStage.setMinWidth(WIDTH);
+            primaryStage.setMinHeight(HEIGHT);
             primaryStage.show();
         } catch (IOException e) {
-            displayError("failed to load loginController",e);
+            displayError("failed to load start.fxml",e);
         }
     }
 

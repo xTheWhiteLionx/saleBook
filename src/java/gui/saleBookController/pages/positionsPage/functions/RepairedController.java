@@ -89,9 +89,7 @@ public class RepairedController extends FunctionDialog<Map<SparePart, Integer>> 
     public void initialize(URL url, ResourceBundle resourceBundle) {
         TableViewUtils.addColumn(this.sparePartsTblVw, "name", SparePart::getName);
         TableViewUtils.addColumn(this.sparePartsTblVw, "condition", SparePart::getCondition);
-        TableViewUtils.addColumn(this.sparePartsTblVw, "in stock", this.sparePartsManager::getQuantity);
-        this.spinnerTableColumn = new SpinnerTableColumn("used", SpinnerTableCell.MaxValueType.MAX_STOCK);
-        this.sparePartsTblVw.getColumns().add(this.spinnerTableColumn);
+
     }
 
     /**
@@ -103,13 +101,15 @@ public class RepairedController extends FunctionDialog<Map<SparePart, Integer>> 
     private void initialize(@NotNull String category,
                             @NotNull SparePartsManager sparePartsManager) {
         this.sparePartsManager = sparePartsManager;
+        TableViewUtils.addColumn(this.sparePartsTblVw, "in stock", this.sparePartsManager::getQuantity);
+        this.spinnerTableColumn = new SpinnerTableColumn("used", SpinnerTableCell.MaxValueType.MAX_STOCK);
+        this.sparePartsTblVw.getColumns().add(this.spinnerTableColumn);
+
         ObservableList<SparePart> items = this.sparePartsTblVw.getItems();
-        Set<SparePart> spareParts = sparePartsManager.getSpareParts();
-        for (SparePart sparePart : spareParts) {
-            if (sparePart.getCategory().equals(category)) {
-                //show only spareParts which are in stock/available and usable
-                Integer quantity = sparePartsManager.getQuantity(sparePart);
-                if (sparePart.getCondition().isUsable() && quantity != null && quantity > 0) {
+        Set<SparePart> spareParts = sparePartsManager.getSparePartsOfCategory(category);
+        if (spareParts != null) {
+            for (SparePart sparePart : spareParts) {
+                if (sparePart.getCondition().isUsable() && sparePartsManager.inStock(sparePart)) {
                     items.add(sparePart);
                 }
             }

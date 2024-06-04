@@ -27,6 +27,12 @@ public class Config {
     private static final String THEME = "Theme";
 
     /**
+     * Suppresses default constructor, ensuring non-instantiability.
+     */
+    private Config() {
+    }
+
+    /**
      * Returns true if auto save is on, otherwise false
      *
      * @return true if auto save is on, otherwise false

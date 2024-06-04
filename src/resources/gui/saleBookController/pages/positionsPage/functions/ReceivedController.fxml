@@ -8,11 +8,11 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.saleBookController.pages.positionsPage.functions.ReceivedController">
+<BorderPane xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.saleBookController.pages.positionsPage.functions.ReceivedController">
    <center>
       <HBox alignment="CENTER">
          <children>
-            <Label alignment="CENTER" text="received date">
+            <Label alignment="CENTER" text="received date" wrapText="true">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
@@ -24,7 +24,7 @@
             </DatePicker>
          </children>
          <BorderPane.margin>
-            <Insets />
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </BorderPane.margin>
       </HBox>
    </center>

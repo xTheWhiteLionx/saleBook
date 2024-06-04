@@ -1,45 +1,37 @@
 package logic.sparePart;
 
-import logic.Condition;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
+/**
+ *
+ *
+ * @author xthe_white_lionx
+ * @date 30.05.2024
+ */
 public class SparePartData extends SparePart {
     /**
      * The quantity of this spare parts in the stock
      */
+
     private int quantity;
 
     /**
-     * Constructor for a spare part
+     * Constructor
      *
-     * @param name      the name of the spare part
-     * @param condition the condition of the spare part
-     * @param unit      the unit of the quantity
-     * @param category
-     * @param minimumStock
+     * @param sparePart
      * @param quantity  the quantity of the spare parts in the stock
      * @throws IllegalArgumentException if the name, the unit or the category is empty or the
      *                                  quantity is less or equals 0
      */
-    public SparePartData(@NotNull String name, @NotNull Condition condition, @NotNull String unit,
-                         @NotNull String category, @Nullable Integer minimumStock, int quantity) {
-        super(name, condition, unit, category, minimumStock);
+    public SparePartData(@NotNull SparePart sparePart, int quantity) {
+        super(sparePart);
         if (quantity < 0) {
             throw new IllegalArgumentException("quantity must be greater equals 0 but is "
                     + quantity);
         }
 
-        this.quantity = quantity;
-    }
-
-    /**
-     *
-     * @param sparePart
-     * @param quantity
-     */
-    public SparePartData(@NotNull SparePart sparePart, int quantity) {
-        super(sparePart);
         this.quantity = quantity;
     }
 
@@ -64,5 +56,30 @@ public class SparePartData extends SparePart {
                     + newQuantity);
         }
         this.quantity = newQuantity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof SparePartData that)) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        return this.quantity == that.quantity;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), this.quantity);
+    }
+
+    @Override
+    public String toString() {
+        return "SparePartData{" + "quantity=" + this.quantity +
+                '}';
     }
 }

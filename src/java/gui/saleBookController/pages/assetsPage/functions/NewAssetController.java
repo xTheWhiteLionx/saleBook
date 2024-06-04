@@ -1,7 +1,6 @@
 package gui.saleBookController.pages.assetsPage.functions;
 
 import gui.ApplicationMain;
-import gui.BindedBoundedDateCell;
 import gui.BoundedDateCell;
 import gui.saleBookController.pages.FunctionDialog;
 import gui.FXutils.ChoiceBoxUtils;
@@ -18,6 +17,7 @@ import logic.Supplier;
 import logic.saleBook.SaleBook;
 import utils.BigDecimalUtils;
 import org.jetbrains.annotations.NotNull;
+import utils.DoubleUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,20 +27,32 @@ import java.util.*;
 import static gui.FXutils.StageUtils.createStyledStage;
 
 /**
- * This class represents a controller to create a new order.
+ *
+ * @author xThe_white_Lionx
+ * @Date 28.05.2024
  */
 public class NewAssetController extends FunctionDialog<Asset> implements Initializable {
+
     @FXML
     private TextField nameTxtFld;
     /**
      * ChoiceBox to choose a supplier for the order
      */
     @FXML
-    private ChoiceBox<String> supplierChcBx;
+    private ChoiceBox<String> supplierNameChcBx;
+    /**
+     * DatePicker to pick the purchasing date of the asset
+     */
     @FXML
     private DatePicker purchasingDatePicker;
+    /**
+     * DatePicker to pick the arrival date of the asset
+     */
     @FXML
     private DatePicker arrivalDatePicker;
+    /**
+     * TextField to set the value of the asset
+     */
     @FXML
     private TextField valueTxtFld;
     /**
@@ -72,8 +84,7 @@ public class NewAssetController extends FunctionDialog<Asset> implements Initial
                 ApplicationMain.class.getResource("saleBookController/pages/assetsPage/" +
                         "functions/NewAssetController.fxml"));
 
-        double size = 250D;
-        Scene scene = new Scene(loader.load(), size, size);
+        Scene scene = new Scene(loader.load());
         Stage stage = createStyledStage(scene);
         stage.setTitle("new asset");
         stage.setResizable(false);
@@ -93,8 +104,10 @@ public class NewAssetController extends FunctionDialog<Asset> implements Initial
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         LabelUtils.setCurrencies(this.valueCurrencyLbl);
-        this.arrivalDatePicker.setDayCellFactory(cf -> new BoundedDateCell(this.purchasingDatePicker.getValue(), LocalDate.now()));
-        //TODO 27.05.2024 bound datepicker
+        LocalDate now = LocalDate.now();
+        this.purchasingDatePicker.setValue(now);
+        this.purchasingDatePicker.setDayCellFactory(cf -> new BoundedDateCell(null, now));
+        this.arrivalDatePicker.setDayCellFactory(cf -> new BoundedDateCell(this.purchasingDatePicker.getValue(), now));
     }
 
     /**
@@ -102,12 +115,15 @@ public class NewAssetController extends FunctionDialog<Asset> implements Initial
      */
     @FXML
     public void handleApply() {
-        Supplier supplier = this.saleBook.getSuppliersManager().getSupplier(this.supplierChcBx.getValue());
+        Supplier supplier = this.saleBook.getSuppliersManager().getSupplier(this.supplierNameChcBx.getValue());
         if (supplier != null) {
-            this.result = new Asset(this.saleBook.getAssetsManager().getNextAssetId(), this.nameTxtFld.getText(),
-                    supplier, this.purchasingDatePicker.getValue(),
-                    this.arrivalDatePicker.getValue(),
-                    BigDecimalUtils.parse(this.valueTxtFld.getText()));
+            this.result = new Asset(this.saleBook.getAssetsManager().getNextAssetId(),
+                    this.nameTxtFld.getText(), supplier, this.purchasingDatePicker.getValue(),
+                    DoubleUtils.parse(this.valueTxtFld.getText()));
+            LocalDate arrivalDate = this.arrivalDatePicker.getValue();
+            if (arrivalDate != null) {
+                this.result.setArrivalDate(arrivalDate);
+            }
             this.handleCancel();
         }
     }
@@ -129,6 +145,6 @@ public class NewAssetController extends FunctionDialog<Asset> implements Initial
      */
     private void setSaleBook(@NotNull SaleBook saleBook) {
         this.saleBook = saleBook;
-        ChoiceBoxUtils.addItems(this.supplierChcBx, saleBook.getSuppliersManager().getSupplierNames());
+        ChoiceBoxUtils.addItems(this.supplierNameChcBx, saleBook.getSuppliersManager().getSupplierNames());
     }
 }

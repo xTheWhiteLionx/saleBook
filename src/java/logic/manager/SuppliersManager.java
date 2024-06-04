@@ -1,10 +1,13 @@
 package logic.manager;
 
+import gui.ObservableListMapBinder;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import logic.GUIConnector;
 import logic.Supplier;
 import gui.FXutils.FXCollectionsUtils;
+import logic.order.Order;
 import logic.saleBook.SaleBook;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,17 +18,7 @@ import java.util.*;
 /**
  *
  */
-public class SuppliersManager {
-
-    /**
-     *
-     */
-    private final SaleBook saleBook;
-
-    /**
-     *
-     */
-    private final GUIConnector gui;
+public class SuppliersManager extends AbstractManager implements ObservableListable<Supplier> {
 
     /**
      * ObservableMap of suppliers mapped their matching name
@@ -37,8 +30,7 @@ public class SuppliersManager {
      * @param gui
      */
     public SuppliersManager(SaleBook saleBook, @NotNull GUIConnector gui) {
-        this.saleBook = saleBook;
-        this.gui = gui;
+        super(saleBook, gui);
         this.nameToSupplierObsMap = FXCollections.observableMap(new TreeMap<>());
     }
 
@@ -49,17 +41,8 @@ public class SuppliersManager {
      */
     public SuppliersManager(SaleBook saleBook, @NotNull Supplier[] suppliers,
                             @NotNull GUIConnector gui) {
-        this.saleBook = saleBook;
-        this.gui = gui;
+        super(saleBook, gui);
         this.nameToSupplierObsMap = FXCollectionsUtils.toObservableMap(suppliers, Supplier::getName);
-    }
-
-    /**
-     *
-     * @return
-     */
-    public @NotNull ObservableMap<String, Supplier> getNameToSupplierObsMap() {
-        return this.nameToSupplierObsMap;
     }
 
     /**
@@ -117,6 +100,11 @@ public class SuppliersManager {
             this.gui.updateStatus(String.format("supplier %s deleted", supplierName));
         }
         return removedSupplier;
+    }
+
+    @Override
+    public ObservableList<Supplier> getObservableList() {
+        return new ObservableListMapBinder<>(this.nameToSupplierObsMap).getObservableValuesList();
     }
 
     @Override

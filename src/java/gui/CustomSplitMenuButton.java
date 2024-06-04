@@ -151,15 +151,6 @@ public class CustomSplitMenuButton extends Group {
         return this.arrowButton;
     }
 
-    // Test suite
-    public CustomSplitMenuButton() {
-        this("");
-    }
-
-    public CustomSplitMenuButton(String text) {
-        this(text, SplitMode.SPLIT_RIGHT);
-    }
-
     public CustomSplitMenuButton(String text, SplitMode mode, MenuItem... items) {
         this.label = new Button(text);
         this.label.getStyleClass().setAll("label");

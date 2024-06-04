@@ -153,8 +153,7 @@ public class SaleBookTest extends TestCase {
 
     public void testAddAsset() {
         Supplier supplier = new Supplier("supplier", URI.create("D"));
-        Asset asset = new Asset(1, "PC", supplier, LocalDate.now(), LocalDate.now(),
-                BigDecimal.valueOf(100));
+        Asset asset = new Asset(1, "PC", supplier, LocalDate.now(), 100D);
         SaleBook saleBook = new SaleBook(new FakeGui());
 
         Assert.assertTrue(saleBook.getAssetsManager().addAsset(asset));
@@ -163,8 +162,7 @@ public class SaleBookTest extends TestCase {
 
     public void testRemoveAsset() {
         Supplier supplier = new Supplier("supplier", URI.create("D"));
-        Asset asset = new Asset(1, "PC", supplier, LocalDate.now(), LocalDate.now(),
-                BigDecimal.valueOf(100));
+        Asset asset = new Asset(1, "PC", supplier, LocalDate.now(), 100D);
         SaleBook saleBook = new SaleBook(new FakeGui());
         saleBook.getAssetsManager().addAsset(asset);
 

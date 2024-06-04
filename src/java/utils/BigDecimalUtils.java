@@ -54,5 +54,4 @@ public class BigDecimalUtils {
         }
         return new BigDecimal(text.trim().replace(",", "."));
     }
-
 }

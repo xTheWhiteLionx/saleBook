@@ -33,4 +33,18 @@ public class ImageButton extends Button {
         this.setWrapText(true);
         this.getStyleClass().add("big");
     }
+
+    /**
+     * Enables the access to this image button
+     */
+    public void enable() {
+        this.setDisable(false);
+    }
+
+    /**
+     * Disables the access to this image button
+     */
+    public void disable() {
+        this.setDisable(true);
+    }
 }

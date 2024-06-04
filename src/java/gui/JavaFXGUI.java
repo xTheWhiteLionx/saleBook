@@ -11,16 +11,12 @@ import gui.FXutils.LabelUtils;
 import javafx.animation.PauseTransition;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
-import javafx.scene.control.TreeItem;
 import javafx.util.Duration;
 import logic.Asset;
 import logic.GUIConnector;
 import logic.sparePart.SparePart;
 import logic.order.Order;
 import logic.Supplier;
-import logic.products.item.Item;
-import logic.products.Product;
-import logic.products.position.Position;
 import org.controlsfx.control.textfield.TextFields;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +24,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 import static gui.FXutils.LabelUtils.setMoneyAndColor;
@@ -39,51 +34,52 @@ import static gui.FXutils.LabelUtils.setMoneyAndColor;
  *
  * @author xthe_white_lionx
  */
-//TODO 08.01.2024 JavaDoc
 public class JavaFXGUI implements GUIConnector {
 
     /**
-     *
+     * Decimal format for formatted displayed value
      */
     private static final DecimalFormat df = new DecimalFormat("#.##");
+
     /**
-     *
+     * Display duration of the update state
      */
     private static final Duration SHOW_DURATION = Duration.seconds(5);
+
     /**
-     * All {@link }s in a Tableview
+     * The Page for the positions
      */
     private final PositionsPage positionsPage;
+
     /**
-     *
+     * The Page for the spare parts
      */
     private final SparePartsPage sparePartsPage;
+
     /**
-     *
+     * The Page for the tent part
      */
     private final TenthPartPage tenthPartPage;
+
     /**
-     *
+     * The Page for the profit and loss accounting
      */
     private final ProfitAndLossAccountPage profitAndLossAccountPage;
+
     /**
-     *
+     * The Page for the suppliers
      */
     private final SuppliersPage suppliersPage;
+
     /**
-     *
+     * The Page for the orders
      */
     private final OrdersPage ordersPage;
 
     /**
-     *
+     * The Page for the assets
      */
     private final AssetsPage assetsPage;
-
-    /**
-     *
-     */
-    private final TreeItem<Product> root;
 
     /**
      * Label to show the total performance
@@ -100,26 +96,25 @@ public class JavaFXGUI implements GUIConnector {
      * The constructor. Gets past all components of the gui that may change
      * due to actions in the logic.
      *
-     * @param sparePartsPage           all platforms in a Tableview
-     * @param totalPerformanceLabel    label to change the total performance
-     *                                 of the displayed investments
-     * @param tenthPartPage
-     * @param profitAndLossAccountPage
-     * @param suppliersPage
-     * @param ordersPage
-     * @param status               label to change the current status
+     * @param positionsPage            the page for the positions and the controls
+     * @param sparePartsPage           the page for the spare parts and the controls
+     * @param tenthPartPage            the page for the tenth part and the controls
+     * @param profitAndLossAccountPage the page for the profit and loss accounting and the controls
+     * @param suppliersPage            the page for the suppliers and the controls
+     * @param ordersPage               the page for the orders and the controls
+     * @param assetsPage               the page for the assets and the controls
+     * @param status                   label to change the current status
      */
     public JavaFXGUI(@NotNull PositionsPage positionsPage, @NotNull SparePartsPage sparePartsPage,
-                     @NotNull Label totalPerformanceLabel, @NotNull TenthPartPage tenthPartPage,
+                     @NotNull TenthPartPage tenthPartPage,
                      @NotNull ProfitAndLossAccountPage profitAndLossAccountPage,
                      @NotNull SuppliersPage suppliersPage,
                      @NotNull OrdersPage ordersPage, @NotNull AssetsPage assetsPage,
                      @NotNull Label status) {
         this.positionsPage = positionsPage;
-        this.root = positionsPage.getTrTblVw().getRoot();
+        this.totalPerformanceLabel = positionsPage.getTotalPerformanceLbl();
         this.tenthPartPage = tenthPartPage;
         this.sparePartsPage = sparePartsPage;
-        this.totalPerformanceLabel = totalPerformanceLabel;
         this.profitAndLossAccountPage = profitAndLossAccountPage;
         this.suppliersPage = suppliersPage;
         this.ordersPage = ordersPage;
@@ -128,27 +123,14 @@ public class JavaFXGUI implements GUIConnector {
     }
 
     /**
-     * Returns a string out of the given double value and
-     * replace commas with dots
+     * Returns a formatted string representation of the specified value. Formatted as {@link #df}
      *
-     * @param value the given double value
-     * @return string out of double value
-     * @throws IllegalArgumentException if
-     */
-    public static @NotNull String format(@NotNull Number value) {
-        df.setRoundingMode(RoundingMode.HALF_UP);
-        return df.format(value);
-    }
-
-    /**
-     * Returns a string out of the given double value and
-     * replace commas with dots
-     *
-     * @param value the given double value
-     * @return string out of double value
+     * @param value the specified number
+     * @return a formatted string representation of the specified value
      */
     public static @NotNull String formatMoney(@NotNull Number value) {
-        return format(value) + " " + LabelUtils.SYMBOL_OF_CURRENCY;
+        df.setRoundingMode(RoundingMode.HALF_UP);
+        return df.format(value) + " " + LabelUtils.SYMBOL_OF_CURRENCY;
     }
 
     @Override
@@ -162,19 +144,6 @@ public class JavaFXGUI implements GUIConnector {
     }
 
     @Override
-    public void displayPositions(@NotNull Collection<Position> positions) {
-        this.root.getChildren().clear();
-        for (Position position : positions) {
-            TreeItem<Product> positionTreeItem = new TreeItem<>(position);
-            ObservableList<TreeItem<Product>> children = positionTreeItem.getChildren();
-            for (Item item : position) {
-                children.add(new TreeItem<>(item));
-            }
-            this.root.getChildren().add(positionTreeItem);
-        }
-    }
-
-    @Override
     public void displayCategories(@NotNull Collection<String> categories) {
         this.positionsPage.setCategories(categories);
     }
@@ -185,7 +154,7 @@ public class JavaFXGUI implements GUIConnector {
     }
 
     @Override
-    public void displaySupplierNames(@NotNull Set<String> supplierNames){
+    public void displaySupplierNames(@NotNull Set<String> supplierNames) {
         TextFields.bindAutoCompletion(this.suppliersPage.nameSearchbar, supplierNames);
     }
 
@@ -257,11 +226,11 @@ public class JavaFXGUI implements GUIConnector {
 
     @Override
     public void refreshPosition() {
-        this.positionsPage.updateControlsAndDetail();
+        this.positionsPage.updateTreeTableViewAndDetails();
     }
 
     @Override
-    public void displayPositions(@NotNull ObservableTreeItemMapBinder<Integer> root) {
+    public void displayPositions(@NotNull FilteredTreeItem<Integer> root) {
         this.positionsPage.setRoot(root);
     }
 

@@ -1,9 +1,8 @@
 package logic;
 
-import gui.ObservableTreeItemMapBinder;
+import gui.FilteredTreeItem;
 import javafx.collections.ObservableList;
 import logic.order.Order;
-import logic.products.position.Position;
 import logic.sparePart.SparePart;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,13 +19,6 @@ import java.util.Set;
 public interface GUIConnector {
 
     /**
-     * Displays the specified positions
-     *
-     * @param positions the positions which should be displayed
-     */
-    void displayPositions(@NotNull Collection<Position> positions);
-
-    /**
      * Displays the specified categories in the filter, to filter the positions.
      *
      * @param categories the categories of the positions
@@ -38,7 +30,7 @@ public interface GUIConnector {
      *
      * @param spareParts the spareParts which should be displayed
      */
-    void displaySpareParts(@NotNull ObservableList<logic.sparePart.SparePart> spareParts);
+    void displaySpareParts(@NotNull ObservableList<SparePart> spareParts);
 
     /**
      * Displays the specified sparePartNames for the autocompletion of the searchbar
@@ -163,12 +155,16 @@ public interface GUIConnector {
      *
      * @param root of the positions which should be displayed
      */
-    void displayPositions(@NotNull ObservableTreeItemMapBinder<Integer> root);
+    void displayPositions(@NotNull FilteredTreeItem<Integer> root);
 
     /**
      * Refreshes the displayed spareParts and the current displayed sparePart if needed
      */
     void refreshSpareParts();
+
+    void refreshOrders();
+
+    void displaySumAssetsValue(BigDecimal sumValue);
 
     /**
      * Updates the current status to the specified message
@@ -176,8 +172,4 @@ public interface GUIConnector {
      * @param message the message which should be displayed
      */
     void updateStatus(@NotNull String message);
-
-    void refreshOrders();
-
-    void displaySumAssetsValue(BigDecimal sumValue);
 }

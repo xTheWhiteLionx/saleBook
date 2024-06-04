@@ -58,13 +58,13 @@ public class LabelUtils {
      * @param label on which the formatted number will be displayed
      * @param value value which will be formatted as an amount of money
      */
-    public static void setMoneyAndColor(@NotNull Label label, @NotNull BigDecimal value) {
+    public static void setMoneyAndColor(@NotNull Label label, @NotNull Number value) {
         label.setText(formatMoney(value));
         Paint color = BLACK;
-        int compare = value.compareTo(BigDecimal.ZERO);
-        if (compare > 0) {
+        double doubleValue = value.doubleValue();
+        if (doubleValue > 0) {
             color = GREEN;
-        } else if (compare < 0) {
+        } else if (doubleValue < 0) {
             color = RED;
         }
         label.setTextFill(color);

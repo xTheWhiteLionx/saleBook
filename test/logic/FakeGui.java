@@ -1,9 +1,8 @@
 package logic;
 
-import gui.ObservableTreeItemMapBinder;
+import gui.FilteredTreeItem;
 import javafx.collections.ObservableList;
 import logic.order.Order;
-import logic.products.position.Position;
 import logic.sparePart.SparePart;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,13 +14,6 @@ import java.util.Set;
  *
  */
 public class FakeGui implements GUIConnector {
-    /**
-     * @param positions the positions which should be displayed
-     */
-    @Override
-    public void displayPositions(@NotNull Collection<Position> positions) {
-
-    }
 
     /**
      * @param categories the categories of the positions
@@ -180,7 +172,7 @@ public class FakeGui implements GUIConnector {
      * @param root of the positions which should be displayed
      */
     @Override
-    public void displayPositions(@NotNull ObservableTreeItemMapBinder<Integer> root) {
+    public void displayPositions(@NotNull FilteredTreeItem<Integer> root) {
 
     }
 

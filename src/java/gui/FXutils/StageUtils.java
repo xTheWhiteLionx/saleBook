@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Some Utility's to style scene's.
+ * Some Utility's to style stage's.
  *
  * @author xthe_white_lionx
  */
@@ -17,7 +17,7 @@ public class StageUtils {
     /**
      * The icon of the application
      */
-    public static final Image ICON = new Image("gui/textures/icons8-hauptbuchhaltung-96.png");
+    private static final Image ICON = new Image("gui/textures/icons8-hauptbuchhaltung-96.png");
 
     /**
      * Suppresses default constructor, ensuring non-instantiability.

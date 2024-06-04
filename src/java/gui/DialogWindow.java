@@ -77,11 +77,11 @@ public class DialogWindow {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
         StageUtils.styleStage(stage);
-        alert.getButtonTypes().add(ButtonType.CANCEL);
+        alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.CANCEL);
         alert.setHeaderText("You have unsaved data");
         alert.setContentText("Unsaved data will get lost. Should the app still be closed?");
         Optional<ButtonType> result = alert.showAndWait();
-        return result.isPresent() && result.get() == ButtonType.OK;
+        return result.isPresent() && result.get() == ButtonType.YES;
     }
 
     /**
@@ -108,20 +108,21 @@ public class DialogWindow {
     }
 
     /**
+     * Creates a new error alert with the specified exception
      *
-     * @param ex
-     * @return
+     * @param exception the exception which causes the error
+     * @return the new error alert
      */
-    private static Alert createErrorAlert(@NotNull Exception ex){
+    private static @NotNull Alert createErrorAlert(@NotNull Exception exception){
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setContentText(ex.getMessage());
+        alert.setContentText(exception.getCause().getMessage());
         DialogPane dialogPane = alert.getDialogPane();
         Stage stage = (Stage) dialogPane.getScene().getWindow();
         StageUtils.styleStage(stage);
 
-        ex.printStackTrace(printWriter);
+        exception.printStackTrace(printWriter);
         printWriter.close();
 
         GridPane gridPane = new GridPane();

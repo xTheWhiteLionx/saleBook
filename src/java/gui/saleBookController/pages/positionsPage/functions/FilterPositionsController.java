@@ -1,7 +1,7 @@
 package gui.saleBookController.pages.positionsPage.functions;
 
 import gui.ApplicationMain;
-import gui.ObservableTreeItemMapBinder;
+import gui.FilteredTreeItem;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -99,7 +99,7 @@ public class FilterPositionsController implements Initializable {
     /**
      * The root and his items which should be filtered
      */
-    private ObservableTreeItemMapBinder<Integer> root;
+    private FilteredTreeItem<Integer> root;
 
     /**
      * Creates and loads a new FilterPositionController
@@ -108,7 +108,7 @@ public class FilterPositionsController implements Initializable {
      * @return the new created FilterPositionController
      * @throws IOException if the fxml file could not be loaded
      */
-    public static FilterPositionsController CreateFilterPositionsController(ObservableTreeItemMapBinder<Integer> root)
+    public static FilterPositionsController CreateFilterPositionsController(FilteredTreeItem<Integer> root)
             throws IOException {
         FXMLLoader loader = new FXMLLoader(
                 ApplicationMain.class.getResource("saleBookController/pages/positionsPage/" +

@@ -10,9 +10,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<VBox fx:id="vbox" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="gui.saleBookController.pages.positionsPage.DetailPositionPane">
+<VBox fx:id="vbox" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.saleBookController.pages.positionsPage.DetailPositionPane">
     <Label text="position details">
         <font>
             <Font name="System Bold" size="18.0" />
@@ -39,6 +39,7 @@
             <RowConstraints vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
         <Label text="order date" GridPane.rowIndex="2">
             <GridPane.margin>
@@ -221,6 +222,16 @@
                 </Label>
             </children>
         </HBox>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="picture directory" GridPane.rowIndex="14">
+         <GridPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </GridPane.margin>
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Text>
+      <Hyperlink onAction="#openPictureDirectory" text="open pictures directory"
+                 GridPane.columnIndex="1" GridPane.rowIndex="14" />
         <opaqueInsets>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
         </opaqueInsets>

@@ -26,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -88,24 +89,37 @@ public class SaleBookData extends AbstractSaleBook {
     private final int nextAssetId;
 
     /**
-     * Constructor for an saleBookData
      *
-     * @param saleBook the saleBook to get the data from
+     * @param repairServiceSales
+     * @param extraordinaryIncome
+     * @param paid
+     * @param fixedCosts
+     * @param sparePartData
+     * @param positionData
+     * @param itemColors
+     * @param suppliers
+     * @param orders
+     * @param assets
+     * @param nextPosId
+     * @param nextOrderId
+     * @param nextAssetId
      */
-    public SaleBookData(@NotNull SaleBook saleBook) {
-        super(saleBook.repairServiceSales, saleBook.extraordinaryIncome,
-                saleBook.paid, saleBook.fixedCosts);
-        this.sparePartData = saleBook.getSparePartsManager().toSparePartData();
-        this.itemColors = ItemColor.getItemColorMap().values().toArray(new ItemColor[0]);
-        this.positionData = CollectionsUtils.toArray(saleBook.getPositionsManager().getPositions(), PositionData::new,
-                new PositionData[0]);
-        this.suppliers = saleBook.getSuppliersManager().getSuppliers().toArray(new Supplier[0]);
-        OrdersManager ordersManager = saleBook.getOrdersManager();
-        this.orders = ordersManager.getOrders().toArray(new Order[0]);
-        this.nextOrderId = ordersManager.getNextOrderId();
-        this.assets = saleBook.getAssetsManager().getAssets().toArray(new Asset[0]);
-        this.nextPosId = saleBook.getPositionsManager().getNextPosId();
-        this.nextAssetId = saleBook.getAssetsManager().getNextAssetId();
+    public SaleBookData(@NotNull BigDecimal repairServiceSales,
+                        @NotNull BigDecimal extraordinaryIncome,
+                        @NotNull BigDecimal paid, @NotNull BigDecimal fixedCosts,
+                        SparePartData[] sparePartData, PositionData[] positionData,
+                        ItemColor[] itemColors, Supplier[] suppliers, Order[] orders,
+                        Asset[] assets, int nextPosId, int nextOrderId, int nextAssetId) {
+        super(repairServiceSales, extraordinaryIncome, paid, fixedCosts);
+        this.sparePartData = sparePartData;
+        this.positionData = positionData;
+        this.itemColors = itemColors;
+        this.suppliers = suppliers;
+        this.orders = orders;
+        this.assets = assets;
+        this.nextPosId = nextPosId;
+        this.nextOrderId = nextOrderId;
+        this.nextAssetId = nextAssetId;
     }
 
     /**
@@ -121,8 +135,7 @@ public class SaleBookData extends AbstractSaleBook {
     public static @Nullable SaleBookData fromJson(@NotNull File file,
                                                   @NotNull ProgressListener progressListener)
             throws FileNotFoundException, IOException {
-        String extension = FileUtils.getExtension(file);
-        if (!extension.equals("json")) {
+        if (!FileUtils.getExtension(file).equals("json")) {
             throw new IllegalArgumentException("the file must be an json file");
         }
 
@@ -262,37 +275,25 @@ public class SaleBookData extends AbstractSaleBook {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SaleBookData that)) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-        return this.nextPosId == that.nextPosId && this.nextOrderId == that.nextOrderId &&
-                this.nextAssetId == that.nextAssetId &&
-                Objects.deepEquals(this.sparePartData, that.sparePartData) &&
-                Objects.deepEquals(this.positionData, that.positionData) &&
-                Objects.deepEquals(this.itemColors, that.itemColors) &&
-                Objects.deepEquals(this.suppliers, that.suppliers) &&
-                Objects.deepEquals(this.orders, that.orders) &&
-                Objects.deepEquals(this.assets, that.assets);
+        if (this == o) return true;
+        if (! (o instanceof SaleBookData that)) return false;
+        if (! super.equals(o)) return false;
+        return this.nextPosId == that.nextPosId && this.nextOrderId == that.nextOrderId
+                && this.nextAssetId == that.nextAssetId
+                && Objects.deepEquals(this.sparePartData, that.sparePartData)
+                && Objects.deepEquals(this.positionData, that.positionData)
+                && Objects.deepEquals(this.itemColors, that.itemColors)
+                && Objects.deepEquals(this.suppliers, that.suppliers)
+                && Objects.deepEquals(this.orders, that.orders)
+                && Objects.deepEquals(this.assets, that.assets);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(),
-                Arrays.hashCode(this.sparePartData),
-                Arrays.hashCode(this.positionData),
-                Arrays.hashCode(this.itemColors),
-                Arrays.hashCode(this.suppliers),
-                Arrays.hashCode(this.orders),
-                Arrays.hashCode(this.assets),
-                this.nextPosId,
-                this.nextOrderId,
-                this.nextAssetId);
+        return Objects.hash(super.hashCode(), Arrays.hashCode(this.sparePartData),
+                Arrays.hashCode(this.positionData), Arrays.hashCode(this.itemColors),
+                Arrays.hashCode(this.suppliers), Arrays.hashCode(this.orders),
+                Arrays.hashCode(this.assets), this.nextPosId, this.nextOrderId, this.nextAssetId);
     }
 
     @Override

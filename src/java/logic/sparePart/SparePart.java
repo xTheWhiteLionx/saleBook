@@ -39,16 +39,16 @@ public class SparePart implements Comparable<SparePart> {
     /**
      * Constructor for a spare part
      *
-     * @param name      the name of the spare part
-     * @param condition the condition of the spare part
-     * @param unit      the unit of the quantity
+     * @param name         the name of the spare part
+     * @param condition    the condition of the spare part
+     * @param unit         the unit of the quantity
      * @param category
      * @param minimumStock
      * @throws IllegalArgumentException if the name, the unit or the category is empty or the
      *                                  quantity is less or equals 0
      */
     public SparePart(@NotNull String name, @NotNull Condition condition, @NotNull String unit,
-                     @NotNull String category,@Nullable Integer minimumStock) {
+                     @NotNull String category, @Nullable Integer minimumStock) {
         if (name.isEmpty()) {
             throw new IllegalArgumentException("name is empty");
         }
@@ -163,7 +163,6 @@ public class SparePart implements Comparable<SparePart> {
     }
 
     /**
-     *
      * @return
      */
     public @Nullable Integer getMinimumStock() {
@@ -171,10 +170,13 @@ public class SparePart implements Comparable<SparePart> {
     }
 
     /**
-     *
      * @param minimumStock
      */
     public void setMinimumStock(@Nullable Integer minimumStock) {
+        if (minimumStock != null && minimumStock < 0){
+            throw new IllegalArgumentException("minimumStock is negative");
+        }
+
         this.minimumStock = minimumStock;
     }
 
@@ -195,7 +197,7 @@ public class SparePart implements Comparable<SparePart> {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof SparePart sparePart)) {
+        if (! (o instanceof SparePart sparePart)) {
             return false;
         }
         return Objects.equals(this.name, sparePart.name)

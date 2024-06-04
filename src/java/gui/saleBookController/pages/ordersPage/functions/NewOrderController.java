@@ -1,6 +1,7 @@
 package gui.saleBookController.pages.ordersPage.functions;
 
 import gui.ApplicationMain;
+import gui.BoundedDateCell;
 import gui.DialogWindow;
 import gui.SpinnerTableCell;
 import gui.SpinnerTableColumn;
@@ -11,6 +12,7 @@ import gui.saleBookController.pages.sparePartsPage.functions.NewSparePartControl
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import logic.manager.SparePartsManager;
+import utils.DoubleUtils;
 import utils.StringUtils;
 import gui.FXutils.TableViewUtils;
 import javafx.collections.ObservableList;
@@ -101,7 +103,7 @@ public class NewOrderController extends FunctionDialog<Order> implements Initial
                 ApplicationMain.class.getResource("saleBookController/pages/ordersPage/" +
                         "functions/NewOrderController.fxml"));
 
-        Scene scene = new Scene(loader.load(), 550, 550);
+        Scene scene = new Scene(loader.load(), 600, 600);
         Stage stage = createStyledStage(scene);
         stage.setTitle("new order");
         stage.setResizable(false);
@@ -127,6 +129,7 @@ public class NewOrderController extends FunctionDialog<Order> implements Initial
         this.sparePartsTblVw.getColumns().add(this.spinnerTableColumn);
 
         this.orderDatePicker.setValue(LocalDate.now());
+        this.orderDatePicker.setDayCellFactory(cf -> new BoundedDateCell(null, LocalDate.now()));
         LabelUtils.setCurrencies(this.orderCostCurrencyLbl);
         this.orderCostTxtFld.textProperty().addListener((observableValue, oldValue, newValue) ->
                 this.applyBtn.setDisable(!StringUtils.isValidNumber(newValue)));
@@ -137,11 +140,14 @@ public class NewOrderController extends FunctionDialog<Order> implements Initial
      */
     @FXML
     public void handleApply() {
+        //TODO 31.05.2024 Does not check if no spare part were chosen. No Order without spare part!
+        //this.spinnerTableColumn.getSparePartToSpinnerValue();
+
         Supplier supplier = this.saleBook.getSuppliersManager().getSupplier(this.supplierChcBx.getValue());
         if (supplier != null) {
             this.result = new Order(this.orderId, this.orderDatePicker.getValue(), supplier,
                     this.spinnerTableColumn.getSparePartToSpinnerValue(),
-                    BigDecimalUtils.parse(this.orderCostTxtFld.getText()));
+                    DoubleUtils.parse(this.orderCostTxtFld.getText()));
             this.handleCancel();
         }
     }

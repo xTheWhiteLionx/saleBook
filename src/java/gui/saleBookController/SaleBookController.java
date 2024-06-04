@@ -405,11 +405,26 @@ public class SaleBookController implements Initializable {
      */
     private void initializeCloseRequestHandler(@NotNull Stage stage) {
         stage.setOnCloseRequest(windowEvent -> {
-            //TODO 27.01.2024 add predicate for existing file but not saved yet
-            if (this.currentFile == null){
+            boolean unsavedData = false;
+            if (this.currentFile == null) {
+                unsavedData = true;
+            } else {
+                try {
+                    SaleBookData oldSaleBook = SaleBookData.fromJson(this.currentFile,
+                            progress -> {
+                            });
+                    SaleBookData currentSaleBook = this.saleBook.toData();
+                    System.out.println("oldSaleBook.equals(currentSaleBook) = " + oldSaleBook.equals(currentSaleBook));
+                    if (oldSaleBook != null && ! oldSaleBook.equals(currentSaleBook)) {
+                        unsavedData = true;
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if (unsavedData) {
                 windowEvent.consume();
-                boolean close = DialogWindow.unsavedDataAlert();
-                if (close) {
+                if (DialogWindow.unsavedDataAlert()) {
                     stage.close();
                 }
             }
@@ -444,7 +459,7 @@ public class SaleBookController implements Initializable {
     private void handleNextTheme() {
         int length = this.themeCmbBox.getItems().size();
         int index = this.themeCmbBox.getSelectionModel().selectedIndexProperty().get();
-        this.themeCmbBox.getSelectionModel().select(++index % length);
+        this.themeCmbBox.getSelectionModel().select(++ index % length);
     }
 
     /**
@@ -493,7 +508,7 @@ public class SaleBookController implements Initializable {
      */
     private GUIConnector createJavaFXGUI() {
         return new JavaFXGUI(this.positionsPage, this.sparePartsPage,
-                this.positionsPage.getTotalPerformanceLbl(), this.tenthPartPage,
+                this.tenthPartPage,
                 this.profitAndLossAccountPage, this.suppliersPage, this.ordersPage,
                 this.assetsPage, this.status);
     }
@@ -529,7 +544,7 @@ public class SaleBookController implements Initializable {
             @Override
             protected Void call() {
                 try {
-                    SaleBookData saleBookData = new SaleBookData(SaleBookController.this.saleBook);
+                    SaleBookData saleBookData = SaleBookController.this.saleBook.toData();
                     saleBookData.toJson(file, totalBytes -> this.updateProgress(totalBytes, file.length()));
                 } catch (IOException e) {
                     displayError(e);

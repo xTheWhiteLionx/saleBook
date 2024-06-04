@@ -6,10 +6,16 @@ import javafx.scene.control.TreeItem;
 import logic.products.item.Item;
 import logic.products.Product;
 import logic.products.position.Position;
+import utils.CollectionsUtils;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.function.Function;
 
 /**
  * A PositionTreeItem class.
@@ -21,7 +27,7 @@ public class PositionTreeItem extends TreeItem<Product> implements ListChangeLis
     /**
      * ObservableList of the direct children of this PositionTreeItem
      */
-    ObservableList<TreeItem<Product>> children;
+    private ObservableList<TreeItem<Product>> children;
 
     /**
      * Creates a new PositionTreeItem with the specified position
@@ -55,6 +61,14 @@ public class PositionTreeItem extends TreeItem<Product> implements ListChangeLis
                 for (Item item : removed) {
                     ids.add(item.getId());
                 }
+                //TODO 31.05.2024 optimate
+//                Iterator<TreeItem<Product>> iterator = this.children.iterator();
+//                while (iterator.hasNext()) {
+//                    TreeItem<Product> treeItem = iterator.next();
+//                    if (ids.contains(treeItem.getValue().getId())) {
+//                        iterator.remove();
+//                    }
+//                }
                 this.children.removeIf(
                         productTreeItem -> ids.contains(productTreeItem.getValue().getId()));
             }

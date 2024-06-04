@@ -5,7 +5,9 @@ import gui.FXutils.ColorUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.Pane;
@@ -62,6 +64,12 @@ public class DetailItemPane implements Initializable {
      */
     @FXML
     private Label errorDescriptionLbl;
+    /**
+     *
+     */
+    //TODO 03.06.2024 JavaDoc
+    @FXML
+    private Button copyBtn;
 
     /**
      * Creates a DetailItemPane with the specified item
@@ -87,7 +95,7 @@ public class DetailItemPane implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        Tooltip.install(this.copyBtn, new Tooltip("copy hexcode"));
     }
 
     /**

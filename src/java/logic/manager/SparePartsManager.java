@@ -1,7 +1,10 @@
 package logic.manager;
 
+import gui.ObservableListMapBinder;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import logic.Dataable;
 import logic.GUIConnector;
 import logic.saleBook.SaleBook;
 import logic.sparePart.SparePart;
@@ -13,9 +16,12 @@ import org.jetbrains.annotations.UnmodifiableView;
 import java.util.*;
 
 /**
- * @author
+ *
+ *
+ * @author xThe_white_Lionx
  */
-public class SparePartsManager {
+public class SparePartsManager extends AbstractManager implements Dataable<SparePartData[]>,
+        ObservableListable<SparePart> {
     /**
      * ObservableMap of the spareParts of this saleBook
      */
@@ -37,22 +43,13 @@ public class SparePartsManager {
     private final Set<String> sparePartUnits;
 
     /**
+     * Constructor
      *
-     */
-    private final SaleBook saleBook;
-
-    /**
-     *
-     */
-    private final GUIConnector gui;
-
-    /**
-     * @param saleBook
-     * @param gui
+     * @param saleBook the connection to the current saleBook
+     * @param gui the connection to the current gui
      */
     public SparePartsManager(@NotNull SaleBook saleBook, @NotNull GUIConnector gui) {
-        this.saleBook = saleBook;
-        this.gui = gui;
+        super(saleBook, gui);
         this.sparePartNames = new HashSet<>();
         this.sparePartUnits = new HashSet<>();
         this.categoryToSpareParts = new TreeMap<>();
@@ -60,9 +57,11 @@ public class SparePartsManager {
     }
 
     /**
-     * @param saleBook
-     * @param sparePartData
-     * @param gui
+     * Constructor
+     *
+     * @param saleBook the connection to the current saleBook
+     * @param sparePartData the data of the spare parts
+     * @param gui the connection to the current gui
      */
     public SparePartsManager(@NotNull SaleBook saleBook, @NotNull SparePartData[] sparePartData,
                              @NotNull GUIConnector gui) {
@@ -71,13 +70,7 @@ public class SparePartsManager {
             SparePart sparePart = new SparePart(sparePartDate);
             this.addSparePart(sparePart, sparePartDate.getQuantity());
         }
-    }
 
-    /**
-     * @return
-     */
-    public ObservableMap<SparePart, Integer> getSparePartsToQuantityMap() {
-        return this.sparePartsToQuantityObsMap;
     }
 
     /**
@@ -90,7 +83,9 @@ public class SparePartsManager {
     }
 
     /**
-     * @return
+     * Returns the names of the spare parts
+     *
+     * @return the names of the spare parts
      */
     @UnmodifiableView
     public Set<String> getSparePartNames() {
@@ -98,7 +93,9 @@ public class SparePartsManager {
     }
 
     /**
-     * @return
+     * Returns the units of the spare parts
+     *
+     * @return the units of the spare parts
      */
     @UnmodifiableView
     public Set<String> getSparePartUnits() {
@@ -106,8 +103,10 @@ public class SparePartsManager {
     }
 
     /**
-     * @param category
-     * @return the sparePart of the category or an empty set
+     * Returns the spare parts for the specified category
+     *
+     * @param category the category for which the matching spare parts should be seeked
+     * @return the sparePart of the category or null if the category is unknown
      */
     public @Nullable Set<SparePart> getSparePartsOfCategory(String category) {
         return this.categoryToSpareParts.get(category);
@@ -116,7 +115,8 @@ public class SparePartsManager {
     /**
      * @return
      */
-    public @NotNull SparePartData[] toSparePartData() {
+    @Override
+    public @NotNull SparePartData[] toData() {
         SparePartData[] sparePartData = new SparePartData[this.sparePartsToQuantityObsMap.size()];
         int i = 0;
         for (Map.Entry<SparePart, Integer> sparePartIntegerEntry : this.sparePartsToQuantityObsMap.entrySet()) {
@@ -150,19 +150,26 @@ public class SparePartsManager {
     }
 
     /**
-     * Adds the specified newSparePart to this sparePartManager
+     * Adds the specified spare part to this sparePartManager.
+     * If the sparePart is already known the specified quantity will be added to the stock
+     * otherwise the new spare part will be added and mapped to the specified quantity.
+     * Updates the gui.
      *
-     * @param newSparePart the newSparePart which should be added
-     * @return true if the ...
+     * @param newSparePart the "new" spare part which should be added
+     * @param quantity     the quantity which should be added
+     * @return {@code true} if the specified spare part was successfully added,
+     * otherwise {@code false}
+     * @throws IllegalArgumentException if the quantity is less than 0
      */
-    //TODO 20.04.2024
     public boolean addSparePart(@NotNull SparePart newSparePart, int quantity) {
         Integer oldQuantity = this.sparePartsToQuantityObsMap.get(newSparePart);
         boolean added = this.add(newSparePart, quantity);
-        //checks if the sparePart was already stored if not there is no matching quantity
+        //checks if the sparePart was already stored if not there is no matching quantity and it
+        // is a new spare part to this sparePartManager
         if (oldQuantity == null) {
             this.gui.displaySparePartNames(this.sparePartNames);
-            this.gui.updateStatus(String.format("spare part %s successfully added", newSparePart.getName()));
+            this.gui.updateStatus(String.format("spare part %s successfully added",
+                    newSparePart.getName()));
         } else {
             this.gui.refreshSpareParts();
             this.gui.updateStatus(String.format("quantity %d successfully added", quantity));
@@ -171,14 +178,24 @@ public class SparePartsManager {
     }
 
     /**
-     * @param sparePartsToQuantity
+     * Adds the specified map of spare part to their quantity to this sparePartManager.
+     * If the sparePart is already known the specified quantity will be added to the stock
+     * otherwise the new spare part will be added and mapped to the specified mapped quantity
+     *
+     * @param sparePartsToQuantity map from a spare part to his quantity
+     * @return true if each
+     * @throws IllegalArgumentException if any quantity is less than 0
      */
-    //TODO 20.04.2024
-    public void addSpareParts(Map<SparePart, Integer> sparePartsToQuantity) {
+    //TODO 30.05.2024 what if an Integer is less than or equals 0?
+    public boolean addSpareParts(Map<SparePart, Integer> sparePartsToQuantity) {
+        boolean addedAll = true;
         for (Map.Entry<SparePart, Integer> entry : sparePartsToQuantity.entrySet()) {
-            this.add(entry.getKey(), entry.getValue());
+            if (!this.add(entry.getKey(), entry.getValue())) {
+                addedAll = false;
+            }
         }
         this.gui.refreshSpareParts();
+        return addedAll;
     }
 
     /**
@@ -220,7 +237,7 @@ public class SparePartsManager {
             boolean containsName = false;
             boolean containsUnit = false;
             Iterator<SparePart> iterator = this.sparePartsToQuantityObsMap.keySet().iterator();
-            while (iterator.hasNext() && (!containsName || !containsUnit)) {
+            while (iterator.hasNext() && (! containsName || ! containsUnit)) {
                 SparePart part = iterator.next();
                 if (part.getName().equals(deletedName)) {
                     containsName = true;
@@ -229,11 +246,11 @@ public class SparePartsManager {
                     containsUnit = true;
                 }
             }
-            if (!containsName) {
+            if (! containsName) {
                 this.sparePartNames.remove(deletedName);
                 this.gui.displaySparePartNames(this.sparePartNames);
             }
-            if (!containsUnit) {
+            if (! containsUnit) {
                 this.sparePartUnits.remove(deletedUnit);
             }
             this.categoryToSpareParts.get(sparePart.getCategory()).remove(sparePart);
@@ -244,12 +261,30 @@ public class SparePartsManager {
         return removed;
     }
 
+    /**
+     *
+     * @param sparePart
+     * @return
+     */
+    public boolean inStock(@NotNull SparePart sparePart) {
+        Integer quantity = this.sparePartsToQuantityObsMap.get(sparePart);
+        if (quantity == null) {
+            return false;
+        }
+        return quantity > 0;
+    }
+
+    @Override
+    public ObservableList<SparePart> getObservableList() {
+        return new ObservableListMapBinder<>(this.sparePartsToQuantityObsMap).getObservableKeyList();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof SparePartsManager that)) {
+        if (! (o instanceof SparePartsManager that)) {
             return false;
         }
         return Objects.equals(this.sparePartsToQuantityObsMap, that.sparePartsToQuantityObsMap) &&
@@ -268,17 +303,24 @@ public class SparePartsManager {
                 "sparePartsObsSet=" + this.sparePartsToQuantityObsMap +
                 ", sparePartNames=" + this.sparePartNames +
                 ", sparePartUnits=" + this.sparePartUnits +
+                ", categoryToSpareParts=" + this.categoryToSpareParts +
                 '}';
     }
 
     /**
-     * @param newSparePart
-     * @param quantity
-     * @return
+     * Adds the specified spare part to this sparePartManager.
+     * If the sparePart is already known the specified quantity will be added to the stock
+     * otherwise the new spare part will be added and mapped to the specified quantity
+     *
+     * @param newSparePart the "new" spare part which should be added
+     * @param quantity     the quantity which should be added
+     * @return {@code true} if the specified spare part was successfully added,
+     * otherwise {@code false}
+     * @throws IllegalArgumentException if the quantity is less than 0
      */
     private boolean add(@NotNull SparePart newSparePart, int quantity) {
         if (quantity < 0) {
-            throw new IllegalArgumentException("quantity must be greater equals 0 but is %d".formatted(quantity));
+            throw new IllegalArgumentException("quantity must be greater or equals 0 but is %d".formatted(quantity));
         }
 
         Integer oldValue = this.sparePartsToQuantityObsMap.get(newSparePart);
@@ -286,7 +328,9 @@ public class SparePartsManager {
         if (oldValue == null) {
             this.sparePartUnits.add(newSparePart.getUnit());
             this.sparePartNames.add(newSparePart.getName());
-            Set<SparePart> spareParts = this.categoryToSpareParts.computeIfAbsent(newSparePart.getCategory(), k -> new HashSet<>());
+            Set<SparePart> spareParts = this.categoryToSpareParts.computeIfAbsent(
+                    newSparePart.getCategory(), category -> new HashSet<>()
+            );
             spareParts.add(newSparePart);
         }
         return true;

@@ -137,6 +137,14 @@ public final class Images {
             "icons8-add-picture-32.png");
 
     /**
+     * Image with "to clipboard" icon
+     */
+    public static final Image TO_CLIPBOARD = new Image("gui/textures/ribbonBandIcons/" +
+            "icons8-zur-zwischenablage-hinzufügen-32.png");
+
+    public static final double SMALL = 16D;
+
+    /**
      * Suppresses default constructor, ensuring non-instantiability.
      */
     private Images() {

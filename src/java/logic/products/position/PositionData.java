@@ -29,7 +29,7 @@ public class PositionData extends AbstractPosition {
         super(position.id, position.category, position.orderDate, position.purchasingPrice,
                 position.state, position.cost, position.receivedDate, position.sellingDate,
                 position.sellingPrice, position.shippingCompany, position.trackingNumber);
-        this.itemData = CollectionsUtils.toArray(position.getItems(), ItemData::new,
+        this.itemData = CollectionsUtils.toArray(position.getItems(), Item::toData,
                 new ItemData[0]);
         this.nextItemId = position.nextItemId;
     }
@@ -45,15 +45,21 @@ public class PositionData extends AbstractPosition {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || this.getClass() != o.getClass()) return false;
-        PositionData that = (PositionData) o;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof PositionData that)) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
         return Objects.deepEquals(this.itemData, that.itemData);
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(this.itemData);
+        return Objects.hash(super.hashCode(), Arrays.hashCode(this.itemData));
     }
 
     @Override

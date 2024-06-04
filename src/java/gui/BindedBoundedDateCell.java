@@ -12,7 +12,7 @@ import java.time.LocalDate;
  * This class represents a BoundedDateCell. A BoundedDateCell is a DateCell for which a minimal
  * and maximal reachable date can be set as bounds. Excluding dates will be highlighted as disabled
  *
- * @author xthe_white_lionx
+ * @author xThe_white_Lionx
  */
 public class BindedBoundedDateCell extends DateCell {
 

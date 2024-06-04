@@ -1,12 +1,7 @@
 package gui.FXutils;
 
-import gui.ObservableListKeyBinder;
-import gui.ObservableListValuesBinder;
-import gui.ObservableListSetBinder;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-import javafx.collections.ObservableSet;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -25,32 +20,6 @@ public class FXCollectionsUtils {
      */
     private FXCollectionsUtils() {
     }
-
-    /**
-     * Creates an observable List bound to the specified observableMap
-     *
-     * @param observableMap Map of the values that should be bound
-     * @return a new observable Map with the specific values
-     * @param <K>     type of the Keys
-     * @param <V>     type of the Values
-     */
-    public static <K, V> ObservableList<V> toObservableValuesList(ObservableMap<K,V> observableMap) {
-        return new ObservableListValuesBinder<>(observableMap).getObservableList();
-    }
-
-    /**
-     * Creates an observable List bound to the specified observableMap
-     *
-     * @param observableMap Map of the values that should be bound
-     * @return a new observable Map with the specific values
-     * @param <K>     type of the Keys
-     * @param <V>     type of the Values
-     */
-    public static <K, V> ObservableList<K> toObservableKeyList(ObservableMap<K,V> observableMap) {
-        return new ObservableListKeyBinder<>(observableMap).getObservableList();
-    }
-
-
 
     /**
      * Creates an observable Map from the specified values, using the natural ordering of its keys.

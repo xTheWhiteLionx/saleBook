@@ -85,7 +85,8 @@
                             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                         </HBox.margin>
                     </Circle>
-               <Button fx:id="copyBtn" mnemonicParsing="false" onAction="#handleCopyHexColor">
+               <Button fx:id="copyBtn" mnemonicParsing="false"
+                       onAction="#handleCopyHexColor">
                    <graphic>
                        <ImageView>
                            <Image url="@../../../textures/icons8-kopieren-16-black.png" />
