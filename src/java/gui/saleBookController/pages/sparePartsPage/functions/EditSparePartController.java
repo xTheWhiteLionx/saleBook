@@ -1,6 +1,7 @@
 package gui.saleBookController.pages.sparePartsPage.functions;
 
 import gui.ApplicationMain;
+import gui.FXutils.SpinnerUtils;
 import gui.saleBookController.pages.FunctionDialog;
 import gui.FXutils.ChoiceBoxUtils;
 import javafx.beans.binding.BooleanBinding;
@@ -9,12 +10,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import logic.Condition;
+import logic.manager.SparePartsManager;
 import logic.sparePart.SparePart;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +29,6 @@ import java.util.Set;
 
 import static gui.DialogWindow.displayError;
 import static gui.FXutils.StageUtils.createStyledStage;
-import static gui.FXutils.TextFieldUtils.isPositive;
 
 /**
  * EditSparePartController is a controller to edit a specific sparePart
@@ -35,6 +38,11 @@ import static gui.FXutils.TextFieldUtils.isPositive;
  */
 public class EditSparePartController extends FunctionDialog<Boolean> implements Initializable {
 
+    /**
+     * ChoiceBox to choose the category of the spare part
+     */
+    @FXML
+    private ChoiceBox<String> categoryChcBx;
     /**
      * TextField to edit the name
      */
@@ -47,11 +55,6 @@ public class EditSparePartController extends FunctionDialog<Boolean> implements 
     @FXML
     public TextField unitTxtFld;
 
-    /**
-     * Label to display the Unit of the quantity
-     */
-    @FXML
-    public Label quantityUnitLbl;
 
     /**
      * ChoiceBox to choose the condition of the spare part
@@ -59,18 +62,19 @@ public class EditSparePartController extends FunctionDialog<Boolean> implements 
     @FXML
     public ChoiceBox<Condition> conditionChcBx;
 
+    @FXML
+    private CheckBox minimumStockChckBx;
+    @FXML
+    private Spinner<Integer> minimumStockSpinner;
     /**
-     * TextField to edit the quantity
+     * Label to display the Unit of the quantity
      */
     @FXML
-    public TextField quantityTxtFld;
-
-    /**
-     * ChoiceBox to choose the category of the spare part
-     */
+    public Label minStockUnitLbl;
     @FXML
-    private ChoiceBox<String> categoryChcBx;
-
+    private Spinner<Integer> stockSpinner;
+    @FXML
+    private Label stockUnitLbl;
     /**
      * Button to apply the editing
      */
@@ -83,10 +87,12 @@ public class EditSparePartController extends FunctionDialog<Boolean> implements 
     @FXML
     public Button btnCancel;
 
+    private SparePartsManager sparePartsManager;
     /**
      * The sparePart which should be editing
      */
     private SparePart sparePart;
+
 
     /**
      * Creates and loads a new EditSparePartController
@@ -97,6 +103,7 @@ public class EditSparePartController extends FunctionDialog<Boolean> implements 
      * @throws IOException if the fxml file could not be loaded
      */
     public static @NotNull EditSparePartController createEditSparePartController(
+            @NotNull SparePartsManager sparePartsManager,
             @NotNull SparePart sparePart, @NotNull Set<String> categories) throws IOException {
         FXMLLoader loader = new FXMLLoader(
                 ApplicationMain.class.getResource("saleBookController/pages/sparePartsPage" +
@@ -104,12 +111,12 @@ public class EditSparePartController extends FunctionDialog<Boolean> implements 
 
         Stage stage = createStyledStage(new Scene(loader.load()));
         stage.setTitle("Edit spare part");
-        stage.setMinWidth(400D);
-        stage.setMinHeight(300D);
+//        stage.setMinWidth(400D);
+//        stage.setMinHeight(300D);
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
         EditSparePartController editSparePartController = loader.getController();
-        editSparePartController.initialize(sparePart, categories);
+        editSparePartController.initialize(sparePartsManager, sparePart, categories);
         stage.showAndWait();
         return editSparePartController;
     }
@@ -124,25 +131,29 @@ public class EditSparePartController extends FunctionDialog<Boolean> implements 
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ChoiceBoxUtils.addItems(this.conditionChcBx, Condition.class);
         this.unitTxtFld.textProperty().addListener((observableValue, s, t1) ->
-                this.quantityUnitLbl.setText(t1));
+                this.minStockUnitLbl.setText(t1));
         this.initializeBooleanBinding();
     }
 
     /**
      * Initializes controls of this controller
      *
-     * @param sparePart the sparePart which should be editing
-     * @param categories the possible categories that can be chosen
+     * @param sparePartsManager
+     * @param sparePart         the sparePart which should be editing
+     * @param categories        the possible categories that can be chosen
      */
-    private void initialize(@NotNull SparePart sparePart, @NotNull Set<String> categories) {
+    private void initialize(@NotNull SparePartsManager sparePartsManager,
+                            @NotNull SparePart sparePart, @NotNull Set<String> categories) {
+        this.sparePartsManager = sparePartsManager;
         this.sparePart = sparePart;
 
+        ChoiceBoxUtils.addItems(this.categoryChcBx, categories);
+        this.categoryChcBx.setValue(sparePart.getCategory());
         this.nameTxtFld.setText(sparePart.getName());
         this.conditionChcBx.setValue(sparePart.getCondition());
         this.unitTxtFld.setText(sparePart.getUnit());
-//        this.quantityTxtFld.setText(String.valueOf(sparePart.getQuantity()));
-        ChoiceBoxUtils.addItems(this.categoryChcBx, categories);
-        this.categoryChcBx.setValue(sparePart.getCategory());
+        this.minimumStockSpinner.setValueFactory(SpinnerUtils.createValueFactory(sparePart.getMinimumStock()));
+        this.stockSpinner.setValueFactory(SpinnerUtils.createValueFactory(this.sparePartsManager.getQuantity(sparePart)));
     }
 
     /**
@@ -152,14 +163,12 @@ public class EditSparePartController extends FunctionDialog<Boolean> implements 
     private void initializeBooleanBinding() {
         BooleanBinding inputsValid = new BooleanBinding() {
             {
-                this.bind(EditSparePartController.this.nameTxtFld.textProperty(), EditSparePartController.this.unitTxtFld.textProperty(),
-                        EditSparePartController.this.quantityTxtFld.textProperty());
+                this.bind(EditSparePartController.this.nameTxtFld.textProperty(), EditSparePartController.this.unitTxtFld.textProperty());
             }
 
             @Override
             protected boolean computeValue() {
-                return !EditSparePartController.this.unitTxtFld.getText().isEmpty() && !EditSparePartController.this.nameTxtFld.getText().isEmpty() &&
-                        isPositive(EditSparePartController.this.quantityTxtFld);
+                return !EditSparePartController.this.unitTxtFld.getText().isEmpty() && !EditSparePartController.this.nameTxtFld.getText().isEmpty();
             }
         };
         this.btnApply.disableProperty().bind(inputsValid.not());
@@ -183,8 +192,16 @@ public class EditSparePartController extends FunctionDialog<Boolean> implements 
         this.sparePart.setName(this.nameTxtFld.getText());
         this.sparePart.setCondition(this.conditionChcBx.getValue());
         this.sparePart.setUnit(this.unitTxtFld.getText());
-//        this.sparePart.setQuantity(Integer.parseInt(this.quantityTxtFld.getText()));
-        this.sparePart.setCategory(this.categoryChcBx.getValue());
+        this.sparePart.setMinimumStock(this.minimumStockSpinner.getValue());
+        Integer oldQuantity = this.sparePartsManager.getQuantity(this.sparePart);
+        Integer newQuantity = this.stockSpinner.getValue();
+        if (oldQuantity != null && newQuantity != null) {
+            if (oldQuantity > newQuantity) {
+                this.sparePartsManager.useSparParts(this.sparePart, oldQuantity - newQuantity);
+            } else if (oldQuantity < newQuantity) {
+                this.sparePartsManager.addSparePart(this.sparePart, newQuantity - oldQuantity);
+            }
+        }
         this.result = true;
         this.handleCancel();
     }

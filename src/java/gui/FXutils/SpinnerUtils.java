@@ -24,7 +24,7 @@ public class SpinnerUtils {
      * @return the newly created SpinnerValueFactory
      */
     public static @NotNull SpinnerValueFactory<Integer> createValueFactory(int initValue) {
-        return new SpinnerValueFactory.IntegerSpinnerValueFactory(initValue, Integer.MAX_VALUE,
+        return new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE,
                 initValue);
     }
 }

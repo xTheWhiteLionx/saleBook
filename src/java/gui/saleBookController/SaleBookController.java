@@ -3,6 +3,7 @@ package gui.saleBookController;
 import com.pixelduke.control.Ribbon;
 import com.pixelduke.control.ribbon.RibbonGroup;
 import com.pixelduke.control.ribbon.RibbonTab;
+import costumeClasses.FXClasses.CustomSplitMenuButton;
 import gui.*;
 import gui.saleBookController.pages.Page;
 import gui.saleBookController.pages.assetsPage.AssetsPage;
@@ -29,7 +30,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import logic.GUIConnector;
 import logic.saleBook.SaleBook;
-import logic.saleBook.SaleBookData;
+import data.SaleBookData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,7 +43,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
-import static gui.CustomSplitMenuButton.SplitMode.SPLIT_BOTTOM;
+import static costumeClasses.FXClasses.CustomSplitMenuButton.SplitMode.SPLIT_BOTTOM;
 import static gui.DialogWindow.*;
 import static gui.Images.*;
 import static gui.FXutils.StageUtils.createStyledStage;
@@ -99,7 +100,7 @@ public class SaleBookController implements Initializable {
      * CustomSplitMenuButton for saving options
      */
     @FXML
-    private CustomSplitMenuButton saveBtn;
+    private costumeClasses.FXClasses.CustomSplitMenuButton saveBtn;
 
     /**
      * ComboBox to display/choose the theme
@@ -413,9 +414,7 @@ public class SaleBookController implements Initializable {
                     SaleBookData oldSaleBook = SaleBookData.fromJson(this.currentFile,
                             progress -> {
                             });
-                    SaleBookData currentSaleBook = this.saleBook.toData();
-                    System.out.println("oldSaleBook.equals(currentSaleBook) = " + oldSaleBook.equals(currentSaleBook));
-                    if (oldSaleBook != null && ! oldSaleBook.equals(currentSaleBook)) {
+                    if (oldSaleBook != null && ! oldSaleBook.equals(this.saleBook.toData())) {
                         unsavedData = true;
                     }
                 } catch (IOException e) {
@@ -432,7 +431,9 @@ public class SaleBookController implements Initializable {
     }
 
     /**
+     * Initializes the shortcuts for the specified scene
      *
+     * @param scene
      */
     private void initializeShortCuts(@NotNull Scene scene) {
         ObservableMap<KeyCombination, Runnable> accelerators = scene.getAccelerators();

@@ -1,9 +1,9 @@
 package logic.saleBook;
 
-import gui.FilteredTreeItem;
+import data.SaleBookData;
 import gui.FXutils.LabelUtils;
 import logic.Asset;
-import logic.Dataable;
+import data.Dataable;
 import logic.GUIConnector;
 import logic.Supplier;
 import logic.order.Order;
@@ -28,7 +28,7 @@ import java.util.*;
  *
  * @author xthe_white_lionx
  */
-public class SaleBook extends AbstractSaleBook implements Dataable<SaleBookData> {
+public class SaleBook extends AbstractSaleBook implements Dataable<data.SaleBookData> {
     /**
      * Manager for the spare parts of this saleBook
      */
@@ -98,21 +98,21 @@ public class SaleBook extends AbstractSaleBook implements Dataable<SaleBookData>
      * @param saleBookData the data of a saleBook
      * @param gui          Connection to the gui
      */
-    public SaleBook(@NotNull SaleBookData saleBookData, @NotNull GUIConnector gui) {
+    public SaleBook(@NotNull data.SaleBookData saleBookData, @NotNull GUIConnector gui) {
         super(saleBookData.repairServiceSales, saleBookData.extraordinaryIncome,
                 saleBookData.paid, saleBookData.fixedCosts);
 
         this.categories = new TreeSet<>();
-        this.sparePartsManager = new SparePartsManager(this, saleBookData.getSparePartData(), gui);
+        this.sparePartsManager = new SparePartsManager(this, gui,
+                saleBookData.getSparePartsManagerData());
         ItemColor.setItemColors(saleBookData.getItemColors());
-        Position[] positions = this.createPositions(saleBookData.getPositionData());
+        Position[] positions = this.createPositions(saleBookData.getPositionsManagerData().getPositionsData());
         this.positionsManager = new PositionsManager(this, positions,
-                saleBookData.getNextPosId(), gui);
+                saleBookData.getPositionsManagerData().getNextPosId(), gui);
         this.suppliersManager = new SuppliersManager(this, saleBookData.getSuppliers(), gui);
-        this.ordersManager = new OrdersManager(this, saleBookData.getOrders(),
-                saleBookData.getNextOrderId(), gui);
-        this.assetsManager = new AssetsManager(this, saleBookData.getAssets(),
-                saleBookData.getNextAssetId(), gui);
+        this.ordersManager = new OrdersManager(this, gui,
+                saleBookData.getOrdersManagerData());
+        this.assetsManager = new AssetsManager(this, saleBookData.getAssetsManagerData(), gui);
         this.gui = gui;
         this.displaySaleBook();
     }
@@ -351,10 +351,8 @@ public class SaleBook extends AbstractSaleBook implements Dataable<SaleBookData>
                 this.fixedCosts, this.sparePartsManager.toData(), this.positionsManager.toData(),
                 ItemColor.getItemColors().toArray(new ItemColor[0]),
                 this.suppliersManager.getSuppliers().toArray(new Supplier[0]),
-                this.ordersManager.getOrders().toArray(new Order[0]),
-                this.assetsManager.getAssets().toArray(new Asset[0]),
-                this.positionsManager.getNextPosId(), this.ordersManager.getNextOrderId(),
-                this.assetsManager.getNextAssetId());
+                this.ordersManager.toData(),
+                this.assetsManager.toData());
     }
 
     @Override
@@ -456,9 +454,7 @@ public class SaleBook extends AbstractSaleBook implements Dataable<SaleBookData>
     private void displaySaleBook() {
         this.gui.displaySpareParts(this.sparePartsManager.getObservableList());
         this.gui.displaySparePartNames(this.sparePartsManager.getSparePartNames());
-        FilteredTreeItem<Integer> root =
-                new FilteredTreeItem<>(this.positionsManager.getIdToPositionObsMap());
-        this.gui.displayPositions(root);
+        this.gui.displayPositions(this.positionsManager.toFilteredTreeItem());
         this.gui.displaySuppliers(this.suppliersManager.getObservableList());
         this.gui.displaySupplierNames(this.suppliersManager.getSupplierNames());
         this.gui.displayOrders(this.ordersManager.getObservableList());

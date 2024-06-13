@@ -1,16 +1,16 @@
 package logic.manager;
 
-import gui.ObservableListMapBinder;
+import data.AssetsManagerData;
+import costumeClasses.FXClasses.ObservableListMapBinder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import logic.Asset;
-import gui.FXutils.FXCollectionsUtils;
+import logic.Dataable;
 import logic.GUIConnector;
 import logic.saleBook.SaleBook;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import utils.IterableUtils;
 
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -20,11 +20,12 @@ import java.util.TreeSet;
 import java.util.function.BiFunction;
 
 /**
- * This class manages assets
+ * This class manages {@link Asset assets}.
  *
  * @author xthe_white_lionx
  */
-public class AssetsManager extends AbstractManager implements ObservableListable<Asset> {
+public class AssetsManager extends AbstractManager implements Dataable<AssetsManagerData>,
+        ObservableListable<Asset> {
 
     /**
      * ObservableMap of assets mapped to their matching id
@@ -37,15 +38,14 @@ public class AssetsManager extends AbstractManager implements ObservableListable
     private int nextAssetId;
 
     /**
-     *
+     * The sum of the value of all assets
      */
-    //TODO 01.06.2024 JavaDoc
     private BigDecimal sumValue;
 
     /**
      * Constructor
      *
-     * @param saleBook
+     * @param saleBook connection to the saleBook
      * @param gui      connection to the gui
      */
     public AssetsManager(@NotNull SaleBook saleBook, @NotNull GUIConnector gui) {
@@ -58,29 +58,55 @@ public class AssetsManager extends AbstractManager implements ObservableListable
     /**
      * Constructor
      *
-     * @param saleBook
-     * @param assets      the assets that should be
-     * @param nextAssetId the id for the next asset
+     * @param saleBook connection to the saleBook
+     * @param assetsManagerData
      * @param gui         connection to the gui
      * @throws IllegalArgumentException if the nextAssetId is negative
      */
-    public AssetsManager(@NotNull SaleBook saleBook, @NotNull Asset[] assets, int nextAssetId, @NotNull GUIConnector gui) {
+    public AssetsManager(@NotNull SaleBook saleBook, @NotNull AssetsManagerData assetsManagerData,
+                         @NotNull GUIConnector gui) {
         super(saleBook, gui);
-        if (nextAssetId <= 0) {
-            throw new IllegalArgumentException(("nextAssetId must be greater equals 0 " +
-                    "but is %d").formatted(nextAssetId));
+        this.idToAssetObsMap = FXCollections.observableMap(new TreeMap<>());
+        this.sumValue = BigDecimal.ZERO;
+        for (Asset asset : assetsManagerData.getAssets()) {
+            this.idToAssetObsMap.put(asset.getId(), asset);
+            this.sumValue = BigDecimal.valueOf(asset.getValue()).add(this.sumValue);
         }
+        this.nextAssetId = assetsManagerData.getNextAssetId();
+        this.gui.displaySumAssetsValue(this.sumValue);
+    }
 
-        this.idToAssetObsMap = FXCollectionsUtils.toObservableMap(assets, Asset::getId);
-        this.nextAssetId = nextAssetId;
-        BigDecimal sum = IterableUtils.reduce(this.idToAssetObsMap.values(), BigDecimal.ZERO,
-                (asset, accu) -> accu.add(BigDecimal.valueOf(asset.getValue())));
-        this.setSumValue(sum);
+    @Override
+    public AssetsManagerData toData() {
+        return new AssetsManagerData(this);
     }
 
     @Override
     public ObservableList<Asset> getObservableList() {
         return new ObservableListMapBinder<>(this.idToAssetObsMap).getObservableValuesList();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AssetsManager that)) return false;
+        return this.nextAssetId == that.nextAssetId
+                && Objects.equals(this.idToAssetObsMap, that.idToAssetObsMap)
+                && (this.sumValue == null ? that.sumValue == null : this.sumValue.compareTo(that.sumValue) == 0);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.idToAssetObsMap, this.nextAssetId, this.sumValue);
+    }
+
+    @Override
+    public String toString() {
+        return "AssetsManager{" +
+                "idToAssetObsMap=" + this.idToAssetObsMap +
+                ", nextAssetId=" + this.nextAssetId +
+                ", sumValue=" + this.sumValue +
+                '}';
     }
 
     /**
@@ -93,8 +119,9 @@ public class AssetsManager extends AbstractManager implements ObservableListable
     }
 
     /**
+     * Returns the sum of the values of all assets
      *
-     * @return
+     * @return the sum of the values of all assets
      */
     public @NotNull BigDecimal getSumValue() {
         return this.sumValue;
@@ -141,32 +168,10 @@ public class AssetsManager extends AbstractManager implements ObservableListable
         return removedAsset;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AssetsManager that)) return false;
-        return this.nextAssetId == that.nextAssetId
-                && Objects.equals(this.idToAssetObsMap, that.idToAssetObsMap)
-                && (this.sumValue == null ? that.sumValue == null : this.sumValue.compareTo(that.sumValue) == 0);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.idToAssetObsMap, this.nextAssetId, this.sumValue);
-    }
-
-    @Override
-    public String toString() {
-        return "AssetsManager{" +
-                "idToAssetObsMap=" + this.idToAssetObsMap +
-                ", nextAssetId=" + this.nextAssetId +
-                ", sumValue=" + this.sumValue +
-                '}';
-    }
-
     /**
+     * Sets the sum value and displays it in the gui
      *
-     * @param sumValue
+     * @param sumValue the new sum value
      */
     private void setSumValue(BigDecimal sumValue) {
         this.sumValue = sumValue;
@@ -174,8 +179,10 @@ public class AssetsManager extends AbstractManager implements ObservableListable
     }
 
     /**
+     * Sets the sum value to the result of the biFunction. As operands for the function the
+     * current sumValue and the specified rightOperand will be used.
      *
-     * @param rightOperand
+     * @param rightOperand the right operand for the specified biFunction
      */
     private void setSumValue(BigDecimal rightOperand,
                              BiFunction<? super BigDecimal, ? super BigDecimal, ? extends BigDecimal> biFunction) {

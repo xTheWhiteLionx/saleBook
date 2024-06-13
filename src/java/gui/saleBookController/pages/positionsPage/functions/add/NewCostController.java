@@ -1,6 +1,7 @@
 package gui.saleBookController.pages.positionsPage.functions.add;
 
 import gui.ApplicationMain;
+import gui.FXutils.TextInputControlUtils;
 import gui.saleBookController.pages.FunctionDialog;
 import gui.FXutils.LabelUtils;
 import utils.StringUtils;
@@ -76,6 +77,7 @@ public class NewCostController extends FunctionDialog<BigDecimal> implements Ini
     public void initialize(URL url, ResourceBundle resourceBundle) {
         LabelUtils.setCurrencies(this.costCurrencyLbl);
         this.costTxtFld.setText("0");
+        TextInputControlUtils.installTouch(this.costTxtFld);
         this.costTxtFld.textProperty().addListener((observableValue, oldText, newText) -> {
             this.applyBtn.setDisable(!StringUtils.isValidNumber(newText) && newText.startsWith("-"));
         });

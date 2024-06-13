@@ -3,12 +3,12 @@ package gui.saleBookController.pages.sparePartsPage;
 import com.pixelduke.control.ribbon.RibbonGroup;
 import com.pixelduke.control.ribbon.RibbonTab;
 import gui.ApplicationMain;
-import gui.ImageButton;
+import gui.FXutils.TextInputControlUtils;
+import costumeClasses.FXClasses.ImageButton;
 import gui.saleBookController.pages.Page;
 import gui.saleBookController.pages.sparePartsPage.functions.NewSparePartController;
 import gui.saleBookController.pages.sparePartsPage.functions.EditSparePartController;
 import gui.FXutils.RibbonTabUtils;
-import gui.FXutils.SpinnerUtils;
 import javafx.scene.image.Image;
 import logic.manager.SparePartsManager;
 import utils.StringUtils;
@@ -51,34 +51,34 @@ public class SparePartsPage implements Initializable, Page {
     private Pane basePane;
 
     /**
-     * Label to display the name of the current spare part 
+     * Label to display the category of the current spare part
+     */
+    @FXML
+    public Label categoryLbl;
+
+    /**
+     * Label to display the name of the current spare part
      */
     @FXML
     public Label nameLbl;
 
     /**
-     * Label to display the condition of the current spare part 
+     * Label to display the condition of the current spare part
      */
     @FXML
     public Label conditionLbl;
 
-    /**
-     * Spinner to edit the quantity of the current spare part 
-     */
     @FXML
-    public Spinner<Integer> quantitySpinner;
+    public Label minimumStockLbl;
+
+    @FXML
+    public Label stockLbl;
 
     /**
      * Label to display the unit of the current spare part 
      */
     @FXML
     public Label unitLbl;
-
-    /**
-     * Label to display the category of the current spare part 
-     */
-    @FXML
-    public Label categoryLbl;
 
     /**
      * TextField to search a spare part by name
@@ -134,6 +134,7 @@ public class SparePartsPage implements Initializable, Page {
      */
     private Button editBtn;
 
+    private SparePartsManager sparePartsManager;
 
     /**
      * Creates and loads a new SparePartsPage
@@ -172,6 +173,7 @@ public class SparePartsPage implements Initializable, Page {
     @Override
     public void setSaleBook(@NotNull SaleBook saleBook) {
         this.saleBook = saleBook;
+        this.sparePartsManager = this.saleBook.getSparePartsManager();
     }
 
     /**
@@ -184,14 +186,8 @@ public class SparePartsPage implements Initializable, Page {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.initializeRibbonTab();
         this.initializeTblVw();
-        this.detailsToDefault();
         this.initializeSearchBar();
-        this.quantitySpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
-        this.quantitySpinner.valueProperty().addListener((observableValue, oldValue, newValue) -> {
-            if (this.selectedSparePart != null) {
-                this.sparePartTblVw.refresh();
-            }
-        });
+        this.detailsToDefault();
     }
 
 
@@ -199,11 +195,13 @@ public class SparePartsPage implements Initializable, Page {
      * Handles the press of the edit button
      */
     @FXML
-    public void handleEditSparePart() {
+    private void handleEditSparePart() {
         if (this.selectedSparePart != null) {
             try {
                 EditSparePartController editSparePartController =
-                        createEditSparePartController(this.selectedSparePart, this.saleBook.getCategories());
+                        createEditSparePartController(this.sparePartsManager,
+                                this.selectedSparePart,
+                                this.saleBook.getCategories());
                 editSparePartController.getResult().ifPresent(dirty -> {
                     if (dirty) {
                         this.updateTableViewAndDetail();
@@ -230,7 +228,7 @@ public class SparePartsPage implements Initializable, Page {
     @FXML
     public void handleNewSparePart() {
         try {
-            SparePartsManager sparePartsManager = this.saleBook.getSparePartsManager();
+            SparePartsManager sparePartsManager = this.sparePartsManager;
             NewSparePartController newSparePartController =
                     createSparePartController(sparePartsManager.getSparePartNames(),
                             sparePartsManager.getSparePartUnits(),
@@ -247,7 +245,7 @@ public class SparePartsPage implements Initializable, Page {
     @FXML
     public void handleDeleteSparePart() {
         if (acceptedDeleteAlert()) {
-            this.saleBook.getSparePartsManager().removeSparePart(this.selectedSparePart);
+            this.sparePartsManager.removeSparePart(this.selectedSparePart);
         }
     }
 
@@ -283,12 +281,14 @@ public class SparePartsPage implements Initializable, Page {
      */
     private void updateDetail() {
         if (this.selectedSparePart != null) {
+            this.categoryLbl.setText(this.selectedSparePart.getCategory());
             this.nameLbl.setText(this.selectedSparePart.getName());
             this.conditionLbl.setText(this.selectedSparePart.getCondition().name());
-//            this.quantitySpinner.setValueFactory(
-//                    SpinnerUtils.createValueFactory(this.selectedSparePart.getQuantity()));
             this.unitLbl.setText(this.selectedSparePart.getUnit());
-            this.categoryLbl.setText(this.selectedSparePart.getCategory());
+            Integer minimumStock = this.selectedSparePart.getMinimumStock();
+            this.minimumStockLbl.setText(String.valueOf(minimumStock));
+            this.stockLbl.setText(String.valueOf(this.sparePartsManager.getQuantity(this.selectedSparePart
+            )));
         } else {
             this.detailsToDefault();
         }
@@ -299,9 +299,9 @@ public class SparePartsPage implements Initializable, Page {
      */
     private void initializeTblVw() {
         TableViewUtils.addColumn(this.sparePartTblVw, "", (sparePart) -> {
-            Integer minimumStock = sparePart.getMinimumStock();
-            if (minimumStock != null) {
-                Integer quantity = this.saleBook.getSparePartsManager().getQuantity(sparePart);
+            int minimumStock = sparePart.getMinimumStock();
+            if (minimumStock > 0) {
+                Integer quantity = this.sparePartsManager.getQuantity(sparePart);
                 if (quantity != null && quantity < minimumStock) {
                     Image image = WARNING_IMAGE;
                     String toolTipText = "below minimum stock";
@@ -326,16 +326,9 @@ public class SparePartsPage implements Initializable, Page {
         TableViewUtils.addColumn(this.sparePartTblVw, "condition",
                 sparePart -> sparePart.getCondition().name());
         TableViewUtils.addColumn(this.sparePartTblVw, "in stock",
-                sparePart -> this.saleBook.getSparePartsManager().getQuantity(sparePart) + " " + sparePart.getUnit());
+                sparePart -> this.sparePartsManager.getQuantity(sparePart) + " " + sparePart.getUnit());
         TableViewUtils.addColumn(this.sparePartTblVw, "min stock",
-                sparePart -> {
-                    Integer minimumStock = sparePart.getMinimumStock();
-                    if (minimumStock != null) {
-                        return  minimumStock + " " + sparePart.getUnit();
-                    } else {
-                        return "";
-                    }
-                });
+                sparePart -> sparePart.getMinimumStock() + " " + sparePart.getUnit());
 
         this.sparePartTblVw.prefHeightProperty().bind(this.wrapVBox.heightProperty());
 
@@ -344,7 +337,6 @@ public class SparePartsPage implements Initializable, Page {
             this.selectedSparePart = newSparePart;
             this.updateDetail();
             boolean isNull = newSparePart == null;
-            this.quantitySpinner.setDisable(isNull);
             this.editBtn.setDisable(isNull);
             this.deleteSparePartBtn.setDisable(isNull);
         }));
@@ -354,6 +346,7 @@ public class SparePartsPage implements Initializable, Page {
      * Initializes the search bar
      */
     private void initializeSearchBar() {
+        TextInputControlUtils.installTouch(this.searchBar);
         this.searchBar.textProperty().addListener((observableValue, oldText, newText) -> {
             if (newText.isEmpty()) {
                 this.cleanSearchBarBtn.setVisible(false);
@@ -374,7 +367,7 @@ public class SparePartsPage implements Initializable, Page {
         this.conditionLbl.setText("");
         this.unitLbl.setText("");
         this.categoryLbl.setText("");
-        this.quantitySpinner.setDisable(true);
-        this.quantitySpinner.setValueFactory(SpinnerUtils.createValueFactory(0));
+        this.minimumStockLbl.setText("");
+        this.stockLbl.setText("");
     }
 }

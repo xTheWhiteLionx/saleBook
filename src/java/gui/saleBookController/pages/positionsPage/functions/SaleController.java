@@ -1,10 +1,9 @@
 package gui.saleBookController.pages.positionsPage.functions;
 
 import gui.ApplicationMain;
-import gui.BoundedDateCell;
-import gui.DialogWindow;
+import costumeClasses.FXClasses.BoundedDateCell;
 import gui.FXutils.LabelUtils;
-import gui.FXutils.StageUtils;
+import gui.FXutils.TextInputControlUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,7 +11,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import logic.products.position.State;
 import utils.BigDecimalUtils;
 import logic.products.position.Position;
 import logic.saleBook.SaleBook;
@@ -22,7 +20,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static gui.DialogWindow.displayError;
@@ -123,6 +120,7 @@ public class SaleController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        TextInputControlUtils.installTouch(this.sellingPriceTxtField);
         LabelUtils.setCurrencies(this.sellingPriceLblCurrency);
         this.btnApply.setDisable(true);
         this.sellingDatePicker.setValue(LocalDate.now());

@@ -1,5 +1,6 @@
 package gui;
 
+import costumeClasses.FXClasses.FilteredTreeItem;
 import gui.saleBookController.pages.assetsPage.AssetsPage;
 import gui.saleBookController.pages.ordersPage.OrdersPage;
 import gui.saleBookController.pages.positionsPage.PositionsPage;
@@ -39,7 +40,7 @@ public class JavaFXGUI implements GUIConnector {
     /**
      * Decimal format for formatted displayed value
      */
-    private static final DecimalFormat df = new DecimalFormat("#.##");
+    private static final DecimalFormat df = new DecimalFormat("0.00");
 
     /**
      * Display duration of the update state

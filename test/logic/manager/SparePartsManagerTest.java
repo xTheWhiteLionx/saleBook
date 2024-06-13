@@ -20,7 +20,7 @@ public class SparePartsManagerTest {
         SaleBook saleBook = new SaleBook(new FakeGui());
         String category = "testCategory";
         String name = "scrow";
-        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, null);
+        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, 0);
         SparePartsManager sparePartsManager = saleBook.getSparePartsManager();
 
         sparePartsManager.addSparePart(sparePart, -3);
@@ -31,7 +31,7 @@ public class SparePartsManagerTest {
         SaleBook saleBook = new SaleBook(new FakeGui());
         String category = "testCategory";
         String name = "scrow";
-        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, null);
+        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, 0);
         SparePartsManager sparePartsManager = saleBook.getSparePartsManager();
         sparePartsManager.addSparePart(sparePart,12);
 
@@ -46,7 +46,7 @@ public class SparePartsManagerTest {
         SaleBook saleBook = new SaleBook(new FakeGui());
         String category = "testCategory";
         String name = "scrow";
-        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, null);
+        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, 0);
         SparePartsManager sparePartsManager = saleBook.getSparePartsManager();
 
         Assert.assertTrue(sparePartsManager.addSparePart(sparePart, 12));
@@ -61,8 +61,8 @@ public class SparePartsManagerTest {
         String category = "testCategory";
         String name = "scrow";
         String name2 = "wrench";
-        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, null);
-        SparePart sparePart2 = new SparePart(name2, Condition.NEW, "piece", category, null);
+        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, 0);
+        SparePart sparePart2 = new SparePart(name2, Condition.NEW, "piece", category, 0);
         SparePartsManager sparePartsManager = saleBook.getSparePartsManager();
 
         Assert.assertTrue(sparePartsManager.addSparePart(sparePart, 12));
@@ -79,7 +79,7 @@ public class SparePartsManagerTest {
         SaleBook saleBook = new SaleBook(new FakeGui());
         String category = "testCategory";
         String name = "scrow";
-        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, null);
+        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, 0);
         SparePartsManager sparePartsManager = saleBook.getSparePartsManager();
 
         Assert.assertTrue(sparePartsManager.addSparePart(sparePart, 12));
@@ -96,8 +96,8 @@ public class SparePartsManagerTest {
         String category2 = "junk";
         String name = "scrow";
         String name2 = "wrench";
-        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, null);
-        SparePart sparePart2 = new SparePart(name2, Condition.NEW, "piece", category2, null);
+        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, 0);
+        SparePart sparePart2 = new SparePart(name2, Condition.NEW, "piece", category2, 0);
         SparePartsManager sparePartsManager = saleBook.getSparePartsManager();
         Map<SparePart,Integer> sparePartIntegerMap = Map.of(sparePart, 12, sparePart2, 2);
 
@@ -114,7 +114,7 @@ public class SparePartsManagerTest {
         SaleBook saleBook = new SaleBook(new FakeGui());
         String category = "testCategory";
         String name = "scrow";
-        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, null);
+        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, 0);
         SparePartsManager sparePartsManager = saleBook.getSparePartsManager();
         sparePartsManager.addSparePart(sparePart,12);
         Map<SparePart,Integer> sparePartIntegerMap = Map.of(sparePart, 20);
@@ -128,8 +128,8 @@ public class SparePartsManagerTest {
         SaleBook saleBook = new SaleBook(new FakeGui());
         String category = "testCategory";
         String name = "scrow";
-        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, null);
-        SparePart sparePart2 = new SparePart("wrench", Condition.NEW, "piece", category, null);
+        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, 0);
+        SparePart sparePart2 = new SparePart("wrench", Condition.NEW, "piece", category, 0);
         SparePartsManager sparePartsManager = saleBook.getSparePartsManager();
         sparePartsManager.addSparePart(sparePart,12);
         Map<SparePart,Integer> sparePartIntegerMap = Map.of(sparePart2, 12);
@@ -142,8 +142,8 @@ public class SparePartsManagerTest {
         SaleBook saleBook = new SaleBook(new FakeGui());
         String category = "testCategory";
         String name = "scrow";
-        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, null);
-        SparePart sparePart2 = new SparePart("wrench", Condition.NEW, "piece", category, null);
+        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, 0);
+        SparePart sparePart2 = new SparePart("wrench", Condition.NEW, "piece", category, 0);
         SparePartsManager sparePartsManager = saleBook.getSparePartsManager();
         sparePartsManager.addSparePart(sparePart,12);
         sparePartsManager.addSparePart(sparePart2, 7);
@@ -159,8 +159,8 @@ public class SparePartsManagerTest {
         SaleBook saleBook = new SaleBook(new FakeGui());
         String category = "testCategory";
         String name = "scrow";
-        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, null);
-        SparePart sparePart2 = new SparePart("wrench", Condition.NEW, "piece", category, null);
+        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, 0);
+        SparePart sparePart2 = new SparePart("wrench", Condition.NEW, "piece", category, 0);
         SparePartsManager sparePartsManager = saleBook.getSparePartsManager();
         sparePartsManager.addSparePart(sparePart,12);
         sparePartsManager.addSparePart(sparePart2, 7);
@@ -176,7 +176,7 @@ public class SparePartsManagerTest {
         SaleBook saleBook = new SaleBook(new FakeGui());
         String category = "testCategory";
         String name = "scrow";
-        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, null);
+        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, 0);
         SparePartsManager sparePartsManager = saleBook.getSparePartsManager();
 
         sparePartsManager.addSparePart(sparePart, 12);
@@ -193,8 +193,8 @@ public class SparePartsManagerTest {
         String category = "testCategory";
         String name = "scrow";
         String name2 = "wrench";
-        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, null);
-        SparePart sparePart2 = new SparePart(name2, Condition.NEW, "piece", category, null);
+        SparePart sparePart = new SparePart(name, Condition.NEW, "piece", category, 0);
+        SparePart sparePart2 = new SparePart(name2, Condition.NEW, "piece", category, 0);
         SparePartsManager sparePartsManager = saleBook.getSparePartsManager();
 
         sparePartsManager.addSparePart(sparePart, 12);

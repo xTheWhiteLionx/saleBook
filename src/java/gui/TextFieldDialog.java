@@ -1,6 +1,7 @@
 package gui;
 
 import gui.FXutils.LabelUtils;
+import gui.FXutils.TextInputControlUtils;
 import gui.saleBookController.pages.FunctionDialog;
 import javafx.fxml.FXML;
 import utils.StringUtils;
@@ -86,6 +87,7 @@ public class TextFieldDialog extends FunctionDialog<BigDecimal> implements Initi
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        TextInputControlUtils.installTouch(this.textField);
         LabelUtils.setCurrencies(this.currencyLbl);
         this.applyBtn.setDisable(true);
         this.textField.textProperty().addListener((observableValue, oldText, newText) ->

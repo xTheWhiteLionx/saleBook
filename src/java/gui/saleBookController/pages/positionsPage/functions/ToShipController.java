@@ -3,6 +3,7 @@ package gui.saleBookController.pages.positionsPage.functions;
 import gui.ApplicationMain;
 import gui.FXutils.ChoiceBoxUtils;
 import gui.FXutils.LabelUtils;
+import gui.FXutils.TextInputControlUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -149,6 +150,8 @@ public class ToShipController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        TextInputControlUtils.installTouch(this.trackingNumberTxtFld);
+        TextInputControlUtils.installTouch(this.costTxtFld);
         ChoiceBoxUtils.addItems(this.shippingCompaniesChcBx, ShippingCompany.class);
         LabelUtils.setCurrencies(this.costCurrencyLbl);
 

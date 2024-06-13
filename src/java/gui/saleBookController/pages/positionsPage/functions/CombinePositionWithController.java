@@ -91,6 +91,8 @@ public class CombinePositionWithController extends FunctionDialog<int[]> impleme
         this.positionsTblVw.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         TableViewUtils.addColumn(this.positionsTblVw, "id", Position::getId);
         TableViewUtils.addColumn(this.positionsTblVw, "category", Position::getCategory);
+        TableViewUtils.addColumn(this.positionsTblVw, "state", Position::getState);
+        TableViewUtils.addColumn(this.positionsTblVw, "items", Position::itemCount);
     }
 
     /**

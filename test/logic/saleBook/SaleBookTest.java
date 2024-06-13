@@ -24,7 +24,7 @@ public class SaleBookTest extends TestCase {
     public void testAddSparePart() {
         SaleBook saleBook = new SaleBook(new FakeGui());
         SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece",
-                "testCategory", null);
+                "testCategory", 0);
 
         Assert.assertTrue(saleBook.getSparePartsManager().addSparePart(sparePart));
         Assert.assertEquals(Set.of(sparePart), saleBook.getSparePartsManager().getSpareParts());
@@ -34,7 +34,7 @@ public class SaleBookTest extends TestCase {
     public void testRemoveSparePart() {
         SaleBook saleBook = new SaleBook(new FakeGui());
         SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece",
-                "testCategory", null);
+                "testCategory", 0);
         saleBook.getSparePartsManager().addSparePart(sparePart);
 
         Assert.assertTrue(saleBook.getSparePartsManager().removeSparePart(sparePart));

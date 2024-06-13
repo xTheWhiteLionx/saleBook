@@ -1,7 +1,8 @@
 package gui.saleBookController.pages.positionsPage.functions;
 
 import gui.ApplicationMain;
-import gui.BoundedDateCell;
+import costumeClasses.FXClasses.BoundedDateCell;
+import gui.FXutils.TextInputControlUtils;
 import gui.saleBookController.pages.FunctionDialog;
 import gui.FXutils.LabelUtils;
 import gui.FXutils.StageUtils;
@@ -234,6 +235,11 @@ public class EditPositionController extends FunctionDialog<Boolean> implements I
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        TextInputControlUtils.installTouch(this.categoryComboBox.getEditor());
+        TextInputControlUtils.installTouch(this.purchasingPriceTxtFld);
+        TextInputControlUtils.installTouch(this.costTxtFld);
+        TextInputControlUtils.installTouch(this.sellingPriceTxtFld);
+        TextInputControlUtils.installTouch(this.trackingNumberTxtFld);
         //all the currency labels as array
         LabelUtils.setCurrencies(this.purchasingPriceCurrencyLbl, this.costCurrencyLbl,
                 this.sellingPriceCurrencyLbl);

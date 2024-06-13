@@ -1,17 +1,15 @@
 package logic.manager;
 
+import data.PositionsManagerData;
 import gui.FXutils.LabelUtils;
-import gui.ObservableListMapBinder;
+import costumeClasses.FXClasses.FilteredTreeItem;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-import logic.Dataable;
+import data.Dataable;
 import logic.GUIConnector;
-import logic.order.Order;
 import logic.products.item.Item;
 import logic.products.position.Position;
 import logic.products.position.AbstractPosition;
-import logic.products.position.PositionData;
 import logic.products.position.ShippingCompany;
 import logic.products.position.State;
 import gui.FXutils.FXCollectionsUtils;
@@ -19,16 +17,20 @@ import logic.saleBook.SaleBook;
 import logic.sparePart.SparePart;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import utils.CollectionsUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 
 /**
+ * This class manages {@link Position Positions}.
+ * The Data of this manager can be reduced.
+ *
+ * @see logic.manager.AbstractManager
+ * @see Dataable
  * @author xthe_white_lionx
  */
-public class PositionsManager extends AbstractManager implements Dataable<PositionData[]> {
+public class PositionsManager extends AbstractManager implements Dataable<PositionsManagerData> {
     /**
      * ObservableMap of positions mapped to their matching id
      */
@@ -66,12 +68,8 @@ public class PositionsManager extends AbstractManager implements Dataable<Positi
         this.nextPosId = nextPosId;
     }
 
-    /**
-     * @return
-     */
-    //TODO 27.05.2024 needed?
-    public ObservableMap<Integer, Position> getIdToPositionObsMap() {
-        return this.idToPositionObsMap;
+    public @NotNull FilteredTreeItem<Integer> toFilteredTreeItem() {
+        return new FilteredTreeItem<>(this.idToPositionObsMap);
     }
 
     /**
@@ -302,18 +300,20 @@ public class PositionsManager extends AbstractManager implements Dataable<Positi
 
         Position[] positions = oldPosition.divide(positionIds);
         if (positions.length > 0) {
-            StringBuilder builder = new StringBuilder("position %d divided in ");
+            StringBuilder builder = new StringBuilder("position ");
             builder.append(positionId);
+            builder.append(" divided in ");
+            Position first = positions[0];
+            int firstId = first.getId();
+            this.idToPositionObsMap.put(firstId, first);
+            builder.append(first.getId());
 
-            for (int i = 0, positionsLength = positions.length; i < positionsLength; i++) {
-                builder.append(" ");
+            for (int i = 1, positionsLength = positions.length; i < positionsLength; i++) {
+                builder.append(", ");
                 Position position = positions[i];
                 int id = position.getId();
                 this.idToPositionObsMap.put(id, position);
                 builder.append(id);
-                if (i < positionsLength - 1) {
-                    builder.append(",");
-                }
             }
             this.gui.refreshPosition();
             this.gui.updateStatus(builder.toString());
@@ -356,9 +356,8 @@ public class PositionsManager extends AbstractManager implements Dataable<Positi
     }
 
     @Override
-    public PositionData[] toData() {
-        return CollectionsUtils.toArray(this.idToPositionObsMap.values(), PositionData::new,
-                new PositionData[0]);
+    public PositionsManagerData toData() {
+        return new PositionsManagerData(this);
     }
 
     @Override
@@ -381,4 +380,5 @@ public class PositionsManager extends AbstractManager implements Dataable<Positi
     public String toString() {
         return "PositionsManager{" + "idToPositionObsMap=" + this.idToPositionObsMap + ", nextPosId=" + this.nextPosId + '}';
     }
+
 }

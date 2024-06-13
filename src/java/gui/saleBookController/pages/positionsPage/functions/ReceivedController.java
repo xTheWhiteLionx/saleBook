@@ -1,7 +1,7 @@
 package gui.saleBookController.pages.positionsPage.functions;
 
 import gui.ApplicationMain;
-import gui.BoundedDateCell;
+import costumeClasses.FXClasses.BoundedDateCell;
 import gui.saleBookController.pages.FunctionDialog;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

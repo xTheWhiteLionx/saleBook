@@ -1,13 +1,12 @@
 package logic.manager;
 
-import gui.ObservableListMapBinder;
+import costumeClasses.FXClasses.ObservableListMapBinder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import logic.GUIConnector;
 import logic.Supplier;
 import gui.FXutils.FXCollectionsUtils;
-import logic.order.Order;
 import logic.saleBook.SaleBook;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

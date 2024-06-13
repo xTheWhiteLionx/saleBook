@@ -25,7 +25,7 @@ public class OrdersManagerTest {
         SaleBook saleBook = new SaleBook(new FakeGui());
         Supplier supplier = new Supplier("supplier", URI.create("D"));
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", 0);
         sparePartToOrderQuantity.put(sparePart, 10);
         Order order = new Order(1, LocalDate.now(), supplier, sparePartToOrderQuantity, 25D);
 
@@ -39,10 +39,10 @@ public class OrdersManagerTest {
         Supplier supplier = new Supplier("supplier", URI.create("D"));
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
         SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece",
-                "testCategory", null);
+                "testCategory", 0);
         sparePartToOrderQuantity.put(sparePart, 10);
         SparePart sparePart2 = new SparePart("batterie", Condition.NEW, "piece",
-                "testCategory", null);
+                "testCategory", 0);
         sparePartToOrderQuantity.put(sparePart2, 15);
         Order order = new Order(1, LocalDate.now(), supplier, sparePartToOrderQuantity, 25D);
         saleBook.getOrdersManager().addOrder(order);
@@ -63,10 +63,10 @@ public class OrdersManagerTest {
         Supplier supplier = new Supplier("supplier", URI.create("D"));
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
         SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece",
-                "testCategory", null);
+                "testCategory", 0);
         sparePartToOrderQuantity.put(sparePart, 10);
         SparePart sparePart2 = new SparePart("batterie", Condition.NEW, "piece",
-                "testCategory", null);
+                "testCategory", 0);
         sparePartToOrderQuantity.put(sparePart2, 15);
         Order order = new Order(1, LocalDate.now(), supplier, sparePartToOrderQuantity, 25D);
         saleBook.getOrdersManager().addOrder(order);
@@ -87,13 +87,13 @@ public class OrdersManagerTest {
         Supplier supplier = new Supplier("supplier", URI.create("D"));
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
         SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece",
-                "testCategory", null);
+                "testCategory", 0);
         sparePartToOrderQuantity.put(sparePart, 10);
         Order order = new Order(1, LocalDate.now(), supplier, sparePartToOrderQuantity,
                 25D);
         saleBook.getOrdersManager().addOrder(order);
         SparePart expected = new SparePart("Scrow", Condition.NEW, "piece",
-                "testCategory", null);
+                "testCategory", 0);
 
         saleBook.getOrdersManager().sparePartReceived(1, sparePart);
 
@@ -109,14 +109,14 @@ public class OrdersManagerTest {
         Supplier supplier = new Supplier("supplier", URI.create("D"));
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
         SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece",
-                "testCategory", null);
+                "testCategory", 0);
         saleBook.getSparePartsManager().addSparePart(sparePart);
         sparePartToOrderQuantity.put(sparePart, 10);
         Order order = new Order(1, LocalDate.now(), supplier, sparePartToOrderQuantity,
                 25D);
         saleBook.getOrdersManager().addOrder(order);
         SparePart expected = new SparePart("Scrow", Condition.NEW, "piece",
-                "testCategory", null);
+                "testCategory", 0);
 
         saleBook.getOrdersManager().sparePartReceived(1, sparePart);
 
@@ -130,9 +130,9 @@ public class OrdersManagerTest {
         SaleBook saleBook = new SaleBook(new FakeGui());
         Supplier supplier = new Supplier("supplier", URI.create("D"));
         SparePart sparePart = new SparePart("scrow", Condition.NEW, "piece",
-                "testCategory", null);
+                "testCategory", 0);
         SparePart sparePart2 = new SparePart("wrench", Condition.NEW, "piece",
-                "testCategory", null);
+                "testCategory", 0);
         Map<SparePart, Integer> sparePartToOrderQuantity = Map.of(sparePart, 10);
         Order order = new Order(1, LocalDate.now(), supplier, sparePartToOrderQuantity, 25D);
         saleBook.getOrdersManager().addOrder(order);
@@ -146,7 +146,7 @@ public class OrdersManagerTest {
         Supplier supplier = new Supplier("supplier", URI.create("D"));
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
         SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece",
-                "testCategory", null);
+                "testCategory", 0);
         sparePartToOrderQuantity.put(sparePart, 10);
         Order order = new Order(1, LocalDate.now(), supplier, sparePartToOrderQuantity, 25D);
         saleBook.getOrdersManager().addOrder(order);

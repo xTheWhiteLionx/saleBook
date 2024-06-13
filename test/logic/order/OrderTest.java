@@ -20,7 +20,7 @@ public class OrderTest {
     @Test
     public void testSideEffectFree() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", 0);
         sparePartToOrderQuantity.put(sparePart, 1000);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
                 200D);
@@ -33,7 +33,7 @@ public class OrderTest {
     @Test
     public void getState() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", 0);
         sparePartToOrderQuantity.put(sparePart, 1000);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
                 200D);
@@ -44,7 +44,7 @@ public class OrderTest {
     @Test
     public void getState_receivedOrder() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", 0);
         sparePartToOrderQuantity.put(sparePart, 1000);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
                 200D);
@@ -57,7 +57,7 @@ public class OrderTest {
     @Test
     public void getState_forSparePart() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", 0);
         sparePartToOrderQuantity.put(sparePart, 1000);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
                 200D);
@@ -68,7 +68,7 @@ public class OrderTest {
     @Test
     public void getState_forReceivedSparePart() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", 0);
         sparePartToOrderQuantity.put(sparePart, 1000);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
                 200D);
@@ -80,7 +80,7 @@ public class OrderTest {
     @Test
     public void getOrderQuantity() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", 0);
         sparePartToOrderQuantity.put(sparePart, 1000);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
                 200D);
@@ -91,7 +91,7 @@ public class OrderTest {
     @Test
     public void isReceivable_orderedOrder() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", 0);
         sparePartToOrderQuantity.put(sparePart, 1000);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
                 200D);
@@ -102,7 +102,7 @@ public class OrderTest {
     @Test
     public void isReceivable_receivedOrder() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", 0);
         sparePartToOrderQuantity.put(sparePart, 1000);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
                 200D);
@@ -114,7 +114,7 @@ public class OrderTest {
     @Test
     public void isReceivable_allSparePartReceived() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", 0);
         sparePartToOrderQuantity.put(sparePart, 1000);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
                 200D);
@@ -126,7 +126,7 @@ public class OrderTest {
     @Test
     public void isReceivable_cancelledOrder() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", 0);
         sparePartToOrderQuantity.put(sparePart, 1000);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
                 200D);
@@ -138,9 +138,9 @@ public class OrderTest {
     @Test
     public void sparePartReceived() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", 0);
         SparePart wrench = new SparePart("wrench", Condition.NEW, "piece", "testCategory",
-                null);
+                0);
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
@@ -153,7 +153,7 @@ public class OrderTest {
     @Test
     public void sparePartReceived_allSparePartReceived() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart sparePart = new SparePart("Scrow", Condition.NEW, "piece", "testCategory", 0);
         sparePartToOrderQuantity.put(sparePart, 1000);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
                 200D);
@@ -165,9 +165,9 @@ public class OrderTest {
     @Test (expected = IllegalStateException.class)
     public void sparePartReceived_onCancelledOrder() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", 0);
         SparePart wrench = new SparePart("wrench", Condition.NEW, "piece", "testCategory",
-                null);
+                0);
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
@@ -180,9 +180,9 @@ public class OrderTest {
     @Test
     public void received() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", 0);
         SparePart wrench = new SparePart("wrench", Condition.NEW, "piece", "testCategory",
-                null);
+                0);
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
@@ -195,9 +195,9 @@ public class OrderTest {
     @Test
     public void received_someSparePartReceived() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", 0);
         SparePart wrench = new SparePart("wrench", Condition.NEW, "piece", "testCategory",
-                null);
+                0);
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
@@ -211,9 +211,9 @@ public class OrderTest {
     @Test (expected = IllegalStateException.class)
     public void receivedOrder() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", 0);
         SparePart wrench = new SparePart("wrench", Condition.NEW, "piece", "testCategory",
-                null);
+                0);
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
@@ -226,9 +226,9 @@ public class OrderTest {
     @Test (expected = IllegalStateException.class)
     public void received_onCancelledOrder() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", 0);
         SparePart wrench = new SparePart("wrench", Condition.NEW, "piece", "testCategory",
-                null);
+                0);
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
@@ -241,9 +241,9 @@ public class OrderTest {
     @Test
     public void isCancellable() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", 0);
         SparePart wrench = new SparePart("wrench", Condition.NEW, "piece", "testCategory",
-                null);
+                0);
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
@@ -255,9 +255,9 @@ public class OrderTest {
     @Test
     public void isCancellable_onCancelledOrder() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", 0);
         SparePart wrench = new SparePart("wrench", Condition.NEW, "piece", "testCategory",
-                null);
+                0);
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
@@ -270,9 +270,9 @@ public class OrderTest {
     @Test
     public void isCancellable_onReceivedOrder() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", 0);
         SparePart wrench = new SparePart("wrench", Condition.NEW, "piece", "testCategory",
-                null);
+                0);
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
@@ -285,9 +285,9 @@ public class OrderTest {
     @Test
     public void cancel() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", 0);
         SparePart wrench = new SparePart("wrench", Condition.NEW, "piece", "testCategory",
-                null);
+                0);
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
@@ -300,9 +300,9 @@ public class OrderTest {
     @Test (expected = IllegalStateException.class)
     public void cancel_onCancelledOrder() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", 0);
         SparePart wrench = new SparePart("wrench", Condition.NEW, "piece", "testCategory",
-                null);
+                0);
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,
@@ -315,9 +315,9 @@ public class OrderTest {
     @Test (expected = IllegalStateException.class)
     public void cancel_onReceivedOrder() {
         Map<SparePart, Integer> sparePartToOrderQuantity = new HashMap<>();
-        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", null);
+        SparePart scrow = new SparePart("scrow", Condition.NEW, "piece", "testCategory", 0);
         SparePart wrench = new SparePart("wrench", Condition.NEW, "piece", "testCategory",
-                null);
+                0);
         sparePartToOrderQuantity.put(scrow, 1000);
         sparePartToOrderQuantity.put(wrench, 2);
         Order order = new Order(1, LocalDate.now(), EXAMPLE_SUPPLIER, sparePartToOrderQuantity,

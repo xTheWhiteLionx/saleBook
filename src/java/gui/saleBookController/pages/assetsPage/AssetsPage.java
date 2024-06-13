@@ -5,7 +5,8 @@ import com.pixelduke.control.ribbon.RibbonTab;
 import gui.ApplicationMain;
 import gui.DialogWindow;
 import gui.FXutils.LabelUtils;
-import gui.ImageButton;
+import gui.FXutils.TextInputControlUtils;
+import costumeClasses.FXClasses.ImageButton;
 import gui.JavaFXGUI;
 import gui.saleBookController.pages.Page;
 import gui.saleBookController.pages.assetsPage.functions.EditAssetController;
@@ -151,6 +152,7 @@ public class AssetsPage implements Initializable, Page {
         });
         TableViewUtils.addColumn(this.assetTblVw, "value", asset ->
                 JavaFXGUI.formatMoney(asset.getValue()));
+        TextInputControlUtils.installTouch(this.assetSearchbarTxtFld);
         this.assetSearchbarTxtFld.textProperty().addListener((observableValue, oldText, newText) -> {
             if (newText.isEmpty()) {
                 this.assetsFilteredList.setPredicate(asset -> true);

@@ -4,7 +4,8 @@ import com.pixelduke.control.ribbon.RibbonGroup;
 import com.pixelduke.control.ribbon.RibbonTab;
 import gui.ApplicationMain;
 import gui.DialogWindow;
-import gui.ImageButton;
+import gui.FXutils.TextInputControlUtils;
+import costumeClasses.FXClasses.ImageButton;
 import gui.saleBookController.pages.Page;
 import gui.saleBookController.pages.ordersPage.functions.NewOrderController;
 import gui.FXutils.StageUtils;
@@ -160,6 +161,7 @@ public class OrdersPage implements Initializable, Page {
                     this.selectedOrder = newValue;
                     this.updateDetail();
                 });
+        TextInputControlUtils.installTouch(this.orderSearchbarTxtFld);
         this.orderSearchbarTxtFld.textProperty().addListener((observableValue, oldText, newText) -> {
             if (newText.isEmpty()){
                 this.ordersFilteredList.setPredicate(order -> true);
@@ -185,6 +187,7 @@ public class OrdersPage implements Initializable, Page {
                             || !this.selectedOrder.isReceivable(newValue));
                 });
 
+        TextInputControlUtils.installTouch(this.sparePartSearchbarTxtFld);
         this.sparePartSearchbarTxtFld.textProperty().addListener((observableValue, oldText, newText) -> {
             if (newText.isEmpty()){
                 this.sparePartsFilteredList.setPredicate(sparePart -> true);

@@ -1,10 +1,10 @@
 package gui.saleBookController.pages.ordersPage.functions;
 
 import gui.ApplicationMain;
-import gui.BoundedDateCell;
+import costumeClasses.FXClasses.BoundedDateCell;
 import gui.DialogWindow;
-import gui.SpinnerTableCell;
-import gui.SpinnerTableColumn;
+import gui.FXutils.TextInputControlUtils;
+import costumeClasses.FXClasses.SpinnerTableColumn;
 import gui.saleBookController.pages.FunctionDialog;
 import gui.FXutils.ChoiceBoxUtils;
 import gui.FXutils.LabelUtils;
@@ -27,7 +27,6 @@ import logic.sparePart.SparePart;
 import logic.order.Order;
 import logic.Supplier;
 import logic.saleBook.SaleBook;
-import utils.BigDecimalUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -122,10 +121,10 @@ public class NewOrderController extends FunctionDialog<Order> implements Initial
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        TextInputControlUtils.installTouch(this.orderCostTxtFld);
         TableViewUtils.addColumn(this.sparePartsTblVw, "name", SparePart::getName);
         TableViewUtils.addColumn(this.sparePartsTblVw, "condition", SparePart::getCondition);
-        this.spinnerTableColumn = new SpinnerTableColumn("ordered",
-                SpinnerTableCell.MaxValueType.UNLIMITED);
+        this.spinnerTableColumn = new SpinnerTableColumn("ordered", sparePart -> Integer.MAX_VALUE);
         this.sparePartsTblVw.getColumns().add(this.spinnerTableColumn);
 
         this.orderDatePicker.setValue(LocalDate.now());

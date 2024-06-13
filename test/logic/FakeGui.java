@@ -1,6 +1,6 @@
 package logic;
 
-import gui.FilteredTreeItem;
+import costumeClasses.FXClasses.FilteredTreeItem;
 import javafx.collections.ObservableList;
 import logic.order.Order;
 import logic.sparePart.SparePart;

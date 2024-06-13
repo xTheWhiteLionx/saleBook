@@ -1,6 +1,6 @@
 package logic;
 
-import gui.FilteredTreeItem;
+import costumeClasses.FXClasses.FilteredTreeItem;
 import javafx.collections.ObservableList;
 import logic.order.Order;
 import logic.sparePart.SparePart;
@@ -162,8 +162,15 @@ public interface GUIConnector {
      */
     void refreshSpareParts();
 
+    /**
+     * Refreshes the displayed orders and the current displayed order if needed
+     */
     void refreshOrders();
 
+    /**
+     *
+     * @param sumValue
+     */
     void displaySumAssetsValue(BigDecimal sumValue);
 
     /**

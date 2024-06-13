@@ -1,15 +1,16 @@
 package logic.manager;
 
-import logic.Dataable;
 import logic.GUIConnector;
 import logic.saleBook.SaleBook;
 import org.jetbrains.annotations.NotNull;
 
 /**
+ * This class represents an abstract Manager and administrates the comment connections to the gui
+ * and the saleBook for each manager
+ *
  * @author xThe_white_Lionx
  * @Date 30.05.2024
  */
-//TODO 30.05.2024 JavaDoc
 public abstract class AbstractManager {
 
     /**

@@ -1,6 +1,7 @@
 package gui.saleBookController.pages.positionsPage.functions;
 
 import gui.ApplicationMain;
+import gui.FXutils.TextInputControlUtils;
 import gui.JavaFXGUI;
 import gui.FXutils.LabelUtils;
 import javafx.fxml.FXML;
@@ -102,6 +103,7 @@ public class SellingPriceCalculatorController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        TextInputControlUtils.installTouch(this.targetPerformanceTxtField);
         LabelUtils.setCurrencies(this.targetPerformanceCurrency);
         this.btnCalculate.setDisable(true);
         this.targetPerformanceTxtField.textProperty().addListener(

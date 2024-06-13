@@ -1,7 +1,8 @@
 package gui.saleBookController.pages.positionsPage.functions.add;
 
 import gui.ApplicationMain;
-import gui.BindedBoundedDateCell;
+import costumeClasses.FXClasses.BindedBoundedDateCell;
+import gui.FXutils.TextInputControlUtils;
 import gui.saleBookController.pages.FunctionDialog;
 import gui.FXutils.ChoiceBoxUtils;
 import gui.FXutils.LabelUtils;
@@ -80,11 +81,6 @@ public class NewPositionController extends FunctionDialog<Position> implements I
     @FXML
     private Label idLbl;
     /**
-     * TextField for the cost of the position (excluding the purchasing price)
-     */
-    @FXML
-    private TextField costTxtFld;
-    /**
      * ComboBox for the category of the position
      */
     @FXML
@@ -94,6 +90,11 @@ public class NewPositionController extends FunctionDialog<Position> implements I
      */
     @FXML
     private TextField purchasingPriceTxtFld;
+    /**
+     * TextField for the cost of the position (excluding the purchasing price)
+     */
+    @FXML
+    private TextField costTxtFld;
     /**
      * DatePicker for the date that the position has arrived
      */
@@ -118,6 +119,7 @@ public class NewPositionController extends FunctionDialog<Position> implements I
      * The id of the position
      */
     private int id;
+
     /**
      * The MasterController, needed to notify that the next step should be shown
      */
@@ -164,6 +166,13 @@ public class NewPositionController extends FunctionDialog<Position> implements I
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        TextInputControlUtils.installTouch(this.categoryComboBox.getEditor());
+        TextInputControlUtils.installTouch(this.purchasingPriceTxtFld);
+        TextInputControlUtils.installTouch(this.costTxtFld);
+        TextInputControlUtils.installTouch(this.sellingPriceTxtFld);
+        TextInputControlUtils.installTouch(this.trackingNumberTxtFld);
+        TextInputControlUtils.installTouch(this.trackingNumberTxtFld);
+
         this.costTxtFld.setText("0");
         LabelUtils.setCurrencies(this.purchasingPriceCurrencyLbl, this.costCurrencyLbl,
                 this.sellingPriceCurrencyLbl);

@@ -1,7 +1,7 @@
 package gui.saleBookController.pages.positionsPage.functions;
 
 import gui.ApplicationMain;
-import gui.FilteredTreeItem;
+import costumeClasses.FXClasses.FilteredTreeItem;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

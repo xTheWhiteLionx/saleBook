@@ -1,6 +1,7 @@
 package gui.saleBookController.pages.positionsPage.functions;
 
 import gui.ApplicationMain;
+import gui.FXutils.TextInputControlUtils;
 import gui.saleBookController.pages.FunctionDialog;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -141,6 +142,8 @@ public class EditItemController extends FunctionDialog<Boolean> implements Initi
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        TextInputControlUtils.installTouch(this.colorNameComboBox.getEditor());
+        TextInputControlUtils.installTouch(this.errorDescriptionTxtArea);
         addItems(this.conditionChcBx, Condition.class);
         addItems(this.variantChcBx, Variant.class);
     }

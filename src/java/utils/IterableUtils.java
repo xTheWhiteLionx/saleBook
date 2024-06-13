@@ -1,8 +1,12 @@
 package utils;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -77,5 +81,42 @@ public class IterableUtils {
         for (E element : iterable) {
             result.add(function.apply(element));
         }
+    }
+
+    /**
+     * Collects the
+     *
+     * @param iterable
+     * @param predicate
+     * @param result
+     * @param <E>
+     */
+    public static <E> void filter(@NotNull Iterable<E> iterable,
+                                                           @NotNull Predicate<? super E> predicate,
+                                                           @NotNull Collection<? super E> result) {
+        for (E element : iterable) {
+            if (predicate.test(element)) {
+                result.add(element);
+            }
+        }
+    }
+
+    /**
+     * Collects the
+     *
+     * @param iterable
+     * @param predicate
+     * @param <E>
+     */
+    public static <E> @Nullable E lookUp(@NotNull Iterable<E> iterable,
+                                         @NotNull Predicate<? super E> predicate) {
+        E result = null;
+        Iterator<E> iterator = iterable.iterator();
+        while (iterator.hasNext() && result == null) {
+            if (predicate.test(iterator.next())) {
+                result = iterator.next();
+            }
+        }
+        return result;
     }
 }

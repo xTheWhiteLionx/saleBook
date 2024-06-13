@@ -2,7 +2,6 @@ package logic.sparePart;
 
 import logic.Condition;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -15,6 +14,10 @@ import java.util.Objects;
 public class SparePart implements Comparable<SparePart> {
 
     /**
+     * The category of this spare part
+     */
+    private String category;
+    /**
      * The name of this spare part
      */
     private String name;
@@ -23,18 +26,14 @@ public class SparePart implements Comparable<SparePart> {
      */
     private Condition condition;
     /**
-     * The category of this spare part
-     */
-    private String category;
-    /**
      * The quantity unit of this spare part
      */
     private String unit;
 
     /**
-     *
+     * The minimum stock which is required for this spare part
      */
-    private Integer minimumStock;
+    private int minimumStock;
 
     /**
      * Constructor for a spare part
@@ -42,13 +41,13 @@ public class SparePart implements Comparable<SparePart> {
      * @param name         the name of the spare part
      * @param condition    the condition of the spare part
      * @param unit         the unit of the quantity
-     * @param category
-     * @param minimumStock
+     * @param category     the category for which this spare part can be used
+     * @param minimumStock the minimum stock which is required for this spare part
      * @throws IllegalArgumentException if the name, the unit or the category is empty or the
      *                                  quantity is less or equals 0
      */
     public SparePart(@NotNull String name, @NotNull Condition condition, @NotNull String unit,
-                     @NotNull String category, @Nullable Integer minimumStock) {
+                     @NotNull String category, int minimumStock) {
         if (name.isEmpty()) {
             throw new IllegalArgumentException("name is empty");
         }
@@ -67,7 +66,9 @@ public class SparePart implements Comparable<SparePart> {
     }
 
     /**
-     * @param sparePart
+     * Copy constructor
+     *
+     * @param sparePart the spare part which should be copied
      */
     public SparePart(SparePart sparePart) {
         this.name = sparePart.name;
@@ -163,17 +164,22 @@ public class SparePart implements Comparable<SparePart> {
     }
 
     /**
-     * @return
+     * Returns the minimum stock which is required for this spare part
+     *
+     * @return the minimum stock which is required for this spare part
      */
-    public @Nullable Integer getMinimumStock() {
+    public int getMinimumStock() {
         return this.minimumStock;
     }
 
     /**
-     * @param minimumStock
+     * Sets the minimum stock which is required for this spare part
+     *
+     * @param minimumStock the new required minimum stock
+     * @throws IllegalArgumentException if the new minimum stock is negative (x < 0)
      */
-    public void setMinimumStock(@Nullable Integer minimumStock) {
-        if (minimumStock != null && minimumStock < 0){
+    public void setMinimumStock(int minimumStock) {
+        if (minimumStock < 0) {
             throw new IllegalArgumentException("minimumStock is negative");
         }
 
@@ -214,10 +220,11 @@ public class SparePart implements Comparable<SparePart> {
     @Override
     public String toString() {
         return "SparePart{" +
-                "name='" + this.name + '\'' +
+                "category='" + this.category + '\'' +
+                ", name='" + this.name + '\'' +
                 ", condition=" + this.condition +
-                ", category='" + this.category + '\'' +
                 ", unit='" + this.unit + '\'' +
+                ", minimumStock=" + this.minimumStock +
                 '}';
     }
 }

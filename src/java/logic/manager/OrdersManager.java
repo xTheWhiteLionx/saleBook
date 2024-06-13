@@ -1,12 +1,14 @@
 package logic.manager;
 
-import gui.ObservableListMapBinder;
+import data.Dataable;
+import data.OrdersManagerData;
+import gui.FXutils.FXCollectionsUtils;
+import costumeClasses.FXClasses.ObservableListMapBinder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import logic.GUIConnector;
 import logic.order.Order;
-import gui.FXutils.FXCollectionsUtils;
 import logic.saleBook.SaleBook;
 import logic.sparePart.SparePart;
 import org.jetbrains.annotations.NotNull;
@@ -16,11 +18,12 @@ import java.util.Objects;
 import java.util.TreeMap;
 
 /**
- * This class
+ * This class manages orders
  *
  * @author xthe_white_lionx
  */
-public class OrdersManager extends AbstractManager implements ObservableListable<Order>{
+public class OrdersManager extends AbstractManager implements Dataable<OrdersManagerData>,
+        ObservableListable<Order> {
 
     /**
      * ObservableMap of orders mapped to their matching id
@@ -44,24 +47,41 @@ public class OrdersManager extends AbstractManager implements ObservableListable
         this.nextOrderId = 1;
     }
 
+//    /**
+//     * Constructor
+//     *
+//     * @param saleBook    connection to the saleBook
+//     * @param orders      the orders that should be managed
+//     * @param nextOrderId the id for the next order
+//     * @param gui         connection to the gui
+//     * @throws IllegalArgumentException if the nextOrderId is negative or 0
+//     */
+//    public OrdersManager(@NotNull SaleBook saleBook, Order[] orders, int nextOrderId,
+//                         @NotNull GUIConnector gui) {
+//        super(saleBook, gui);
+//        if (nextOrderId < 1) {
+//            throw new IllegalArgumentException("nextOrderId must be greater equals 1 but is %d".formatted(nextOrderId));
+//        }
+//
+//        this.idToOrderObsMap = FXCollectionsUtils.toObservableMap(orders, Order::getId);
+//        this.nextOrderId = nextOrderId;
+//    }
+
     /**
      * Constructor
      *
-     * @param saleBook
+     * @param saleBook    connection to the saleBook
      * @param orders      the orders that should be managed
      * @param nextOrderId the id for the next order
-     * @param gui
+     * @param gui         connection to the gui
      * @throws IllegalArgumentException if the nextOrderId is negative or 0
      */
-    public OrdersManager(@NotNull SaleBook saleBook, Order[] orders, int nextOrderId,
-                         @NotNull GUIConnector gui){
-        super(saleBook,gui);
-        if (nextOrderId < 1) {
-            throw new IllegalArgumentException("nextOrderId must be greater equals 1 but is %d".formatted(nextOrderId));
-        }
-
-        this.idToOrderObsMap = FXCollectionsUtils.toObservableMap(orders, Order::getId);
-        this.nextOrderId = nextOrderId;
+    public OrdersManager(@NotNull SaleBook saleBook, @NotNull GUIConnector gui,
+                         @NotNull OrdersManagerData ordersManagerData) {
+        super(saleBook, gui);
+        this.idToOrderObsMap = FXCollectionsUtils.toObservableMap(ordersManagerData.getOrders(),
+                Order::getId);
+        this.nextOrderId = ordersManagerData.getNextOrderId();
     }
 
     /**
@@ -104,7 +124,7 @@ public class OrdersManager extends AbstractManager implements ObservableListable
      *
      * @param orderId the id of the searched order
      * @throws IllegalArgumentException if there is no order with the specified orderId
-     * @throws IllegalStateException if
+     * @throws IllegalStateException    if the order is already
      */
     //TODO 24.05.2024 JavaDoc
     public void orderReceived(int orderId) {
@@ -167,6 +187,11 @@ public class OrdersManager extends AbstractManager implements ObservableListable
     }
 
     @Override
+    public OrdersManagerData toData() {
+        return new OrdersManagerData(this);
+    }
+
+    @Override
     public ObservableList<Order> getObservableList() {
         return new ObservableListMapBinder<>(this.idToOrderObsMap).getObservableValuesList();
     }
@@ -176,7 +201,7 @@ public class OrdersManager extends AbstractManager implements ObservableListable
         if (this == o) {
             return true;
         }
-        if (!(o instanceof OrdersManager that)) {
+        if (! (o instanceof OrdersManager that)) {
             return false;
         }
         return this.nextOrderId == that.nextOrderId &&

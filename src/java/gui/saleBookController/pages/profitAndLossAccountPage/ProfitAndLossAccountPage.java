@@ -2,7 +2,7 @@ package gui.saleBookController.pages.profitAndLossAccountPage;
 
 import com.pixelduke.control.ribbon.RibbonTab;
 import gui.ApplicationMain;
-import gui.ImageButton;
+import costumeClasses.FXClasses.ImageButton;
 import gui.Images;
 import gui.saleBookController.pages.Page;
 import gui.FXutils.RibbonGroupUtils;

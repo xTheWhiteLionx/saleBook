@@ -33,4 +33,16 @@ public class FileUtils {
         }
         return extension;
     }
+
+    /**
+     *
+     * @param file
+     * @return
+     */
+    public static boolean createIfAbsent(@NotNull File file) {
+        if (!file.exists()) {
+            return file.mkdirs();
+        }
+        return false;
+    }
 }

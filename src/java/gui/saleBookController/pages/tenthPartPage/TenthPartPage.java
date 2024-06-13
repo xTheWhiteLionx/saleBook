@@ -4,7 +4,7 @@ import com.pixelduke.control.ribbon.RibbonGroup;
 import com.pixelduke.control.ribbon.RibbonTab;
 import gui.ApplicationMain;
 import gui.DialogWindow;
-import gui.ImageButton;
+import costumeClasses.FXClasses.ImageButton;
 import gui.Images;
 import gui.saleBookController.pages.Page;
 import gui.saleBookController.pages.tenthPartPage.functions.EditTenthPartController;

@@ -15,7 +15,7 @@ public enum Condition {
      */
     AS_NEW,
     /**
-     * Was faulty but was repaired
+     * Was faulty but was repaired and can again be used
      */
     REFURBISHED,
     /**

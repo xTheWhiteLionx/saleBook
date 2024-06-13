@@ -2,7 +2,7 @@ package logic.products.position;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import logic.Dataable;
+import data.Dataable;
 import logic.products.item.Item;
 import logic.products.Product;
 import logic.products.item.ItemColor;

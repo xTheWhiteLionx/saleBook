@@ -1,7 +1,8 @@
 package gui.saleBookController.pages.assetsPage.functions;
 
 import gui.ApplicationMain;
-import gui.BoundedDateCell;
+import costumeClasses.FXClasses.BoundedDateCell;
+import gui.FXutils.TextInputControlUtils;
 import gui.saleBookController.pages.FunctionDialog;
 import gui.FXutils.ChoiceBoxUtils;
 import gui.FXutils.LabelUtils;
@@ -15,7 +16,6 @@ import javafx.stage.Stage;
 import logic.Asset;
 import logic.Supplier;
 import logic.saleBook.SaleBook;
-import utils.BigDecimalUtils;
 import org.jetbrains.annotations.NotNull;
 import utils.DoubleUtils;
 
@@ -103,6 +103,9 @@ public class NewAssetController extends FunctionDialog<Asset> implements Initial
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        TextInputControlUtils.installTouch(this.nameTxtFld);
+        TextInputControlUtils.installTouch(this.valueTxtFld);
+
         LabelUtils.setCurrencies(this.valueCurrencyLbl);
         LocalDate now = LocalDate.now();
         this.purchasingDatePicker.setValue(now);

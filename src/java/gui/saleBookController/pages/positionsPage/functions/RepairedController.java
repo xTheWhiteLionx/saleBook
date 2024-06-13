@@ -1,8 +1,7 @@
 package gui.saleBookController.pages.positionsPage.functions;
 
 import gui.ApplicationMain;
-import gui.SpinnerTableCell;
-import gui.SpinnerTableColumn;
+import costumeClasses.FXClasses.SpinnerTableColumn;
 import gui.saleBookController.pages.FunctionDialog;
 import gui.FXutils.TableViewUtils;
 import javafx.collections.ObservableList;
@@ -19,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -102,7 +102,7 @@ public class RepairedController extends FunctionDialog<Map<SparePart, Integer>> 
                             @NotNull SparePartsManager sparePartsManager) {
         this.sparePartsManager = sparePartsManager;
         TableViewUtils.addColumn(this.sparePartsTblVw, "in stock", this.sparePartsManager::getQuantity);
-        this.spinnerTableColumn = new SpinnerTableColumn("used", SpinnerTableCell.MaxValueType.MAX_STOCK);
+        this.spinnerTableColumn = new SpinnerTableColumn("used", this.sparePartsManager::getQuantity);
         this.sparePartsTblVw.getColumns().add(this.spinnerTableColumn);
 
         ObservableList<SparePart> items = this.sparePartsTblVw.getItems();
@@ -113,6 +113,7 @@ public class RepairedController extends FunctionDialog<Map<SparePart, Integer>> 
                     items.add(sparePart);
                 }
             }
+            Collections.sort(items);
         }
     }
 

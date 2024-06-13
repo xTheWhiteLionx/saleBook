@@ -3,11 +3,12 @@ package gui.saleBookController.pages.positionsPage;
 import com.pixelduke.control.ribbon.RibbonGroup;
 import com.pixelduke.control.ribbon.RibbonTab;
 import gui.ApplicationMain;
-import gui.CustomSplitMenuButton;
-import gui.CustomSplitMenuButton.SplitMode;
+import costumeClasses.FXClasses.CustomSplitMenuButton;
+import costumeClasses.FXClasses.CustomSplitMenuButton.SplitMode;
 import gui.FXutils.StageUtils;
-import gui.FilteredTreeItem;
-import gui.ImageButton;
+import gui.FXutils.TextInputControlUtils;
+import costumeClasses.FXClasses.FilteredTreeItem;
+import costumeClasses.FXClasses.ImageButton;
 import gui.Images;
 import gui.saleBookController.pages.FunctionDialog;
 import gui.saleBookController.pages.Page;
@@ -644,6 +645,7 @@ public class PositionsPage implements Initializable, Page {
             }
         });
 
+        TextInputControlUtils.installTouch(this.idSearchbarTxtFld);
         this.idSearchbarTxtFld.textProperty().addListener((observableValue, oldText, newText) -> {
             if (!newText.isEmpty()) {
                 if(!newText.matches("[,.]") && StringUtils.isValidNumber(newText)){

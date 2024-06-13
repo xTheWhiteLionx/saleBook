@@ -201,9 +201,9 @@ public class Asset implements Comparable<Asset> {
     }
 
     /**
-     * Returns true
+     * Returns checks if this asset has been received
      *
-     * @return
+     * @return {@code true} if this asset has been received, otherwise {@code false}
      */
     public boolean isReceived() {
         return this.arrivalDate != null;

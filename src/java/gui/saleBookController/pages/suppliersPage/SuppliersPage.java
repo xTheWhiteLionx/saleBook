@@ -3,7 +3,8 @@ package gui.saleBookController.pages.suppliersPage;
 import com.pixelduke.control.ribbon.RibbonGroup;
 import com.pixelduke.control.ribbon.RibbonTab;
 import gui.ApplicationMain;
-import gui.ImageButton;
+import gui.FXutils.TextInputControlUtils;
+import costumeClasses.FXClasses.ImageButton;
 import gui.saleBookController.pages.Page;
 import gui.saleBookController.pages.suppliersPage.functions.EditSupplierController;
 import gui.saleBookController.pages.suppliersPage.functions.NewSupplierController;
@@ -269,6 +270,7 @@ public class SuppliersPage implements Initializable, Page {
      * Initializes the search bar
      */
     private void initializeSearchBar() {
+        TextInputControlUtils.installTouch(this.nameSearchbar);
         this.nameSearchbar.textProperty().addListener((observable, oldText, newText) -> {
             if (newText.isEmpty()) {
                 // Compare name of every supplier with filter text.

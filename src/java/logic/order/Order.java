@@ -241,7 +241,7 @@ public class Order implements Comparable<Order> {
 
     /**
      * @return
-     * @throws IllegalStateException
+     * @throws IllegalStateException if the order cannot be received
      */
     public @NotNull Map<SparePart, Integer> received() {
         if (this.orderState == OrderState.RECEIVED) {

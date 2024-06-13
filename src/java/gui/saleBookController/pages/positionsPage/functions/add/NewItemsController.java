@@ -3,6 +3,7 @@ package gui.saleBookController.pages.positionsPage.functions.add;
 import gui.ApplicationMain;
 import gui.FXutils.ChoiceBoxUtils;
 import gui.FXutils.TableViewUtils;
+import gui.FXutils.TextInputControlUtils;
 import gui.saleBookController.pages.FunctionDialog;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -143,6 +144,8 @@ public class NewItemsController extends FunctionDialog<Position> implements Init
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        TextInputControlUtils.installTouch(this.colorNameComboBox.getEditor());
+        TextInputControlUtils.installTouch(this.errorDescriptionTxtArea);
         ChoiceBoxUtils.addItems(this.conditionChcBx, Condition.class);
         ChoiceBoxUtils.addItems(this.variantChcBx, Variant.class);
         this.applyBtn.setDisable(this.invalidInput());

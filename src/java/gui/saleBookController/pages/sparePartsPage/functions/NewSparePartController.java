@@ -2,6 +2,7 @@ package gui.saleBookController.pages.sparePartsPage.functions;
 
 import gui.ApplicationMain;
 import gui.FXutils.SpinnerUtils;
+import gui.FXutils.TextInputControlUtils;
 import gui.saleBookController.pages.FunctionDialog;
 import gui.FXutils.ChoiceBoxUtils;
 import javafx.beans.binding.BooleanBinding;
@@ -56,6 +57,7 @@ public class NewSparePartController extends FunctionDialog<SparePart> implements
      * CheckBox of the minimum stock of the
      */
     @FXML
+    @Deprecated
     public CheckBox minimumStockChckBx;
 
     /**
@@ -125,6 +127,8 @@ public class NewSparePartController extends FunctionDialog<SparePart> implements
      */
     private void initialize(@NotNull Set<String> nameOfSpareParts, @NotNull Set<String> units,
                             @NotNull Set<String> categories){
+        TextInputControlUtils.installTouch(this.nameTxtFld);
+        TextInputControlUtils.installTouch(this.unitTxtFld);
         TextFields.bindAutoCompletion(this.nameTxtFld, nameOfSpareParts);
         TextFields.bindAutoCompletion(this.unitTxtFld, units);
         ChoiceBoxUtils.addItems(this.categoryChcBx, categories);
@@ -139,7 +143,6 @@ public class NewSparePartController extends FunctionDialog<SparePart> implements
             {
                 this.bind(NewSparePartController.this.nameTxtFld.textProperty(),
                         NewSparePartController.this.unitTxtFld.textProperty(),
-                        NewSparePartController.this.minimumStockChckBx.selectedProperty(),
                         NewSparePartController.this.minimumStockSpinner.valueProperty());
             }
 
@@ -161,15 +164,7 @@ public class NewSparePartController extends FunctionDialog<SparePart> implements
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ChoiceBoxUtils.addItems(this.conditionChcBx, Condition.class);
-        this.minimumStockSpinner.setValueFactory(SpinnerUtils.createValueFactory(1));
-        this.minimumStockChckBx.selectedProperty().addListener((observableValue, oldValue, newValue) -> {
-            if (!newValue) {
-                this.minimumStockSpinner.setValueFactory(SpinnerUtils.createValueFactory(0));
-            } else {
-                this.minimumStockSpinner.setValueFactory(SpinnerUtils.createValueFactory(1));
-            }
-            this.minimumStockSpinner.setDisable(!newValue);
-        });
+        this.minimumStockSpinner.setValueFactory(SpinnerUtils.createValueFactory(0));
         this.unitTxtFld.textProperty().addListener((observableValue, oldText, newText) -> {
             this.minStockUnitLbl.setText(newText);
         });

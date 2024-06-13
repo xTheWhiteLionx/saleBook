@@ -1,14 +1,15 @@
 package logic.manager;
 
-import gui.ObservableListMapBinder;
+import data.SparePartsManagerData;
+import costumeClasses.FXClasses.ObservableListMapBinder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-import logic.Dataable;
+import data.Dataable;
 import logic.GUIConnector;
 import logic.saleBook.SaleBook;
 import logic.sparePart.SparePart;
-import logic.sparePart.SparePartData;
+import data.SparePartData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -20,7 +21,7 @@ import java.util.*;
  *
  * @author xThe_white_Lionx
  */
-public class SparePartsManager extends AbstractManager implements Dataable<SparePartData[]>,
+public class SparePartsManager extends AbstractManager implements Dataable<SparePartsManagerData>,
         ObservableListable<SparePart> {
     /**
      * ObservableMap of the spareParts of this saleBook
@@ -63,12 +64,30 @@ public class SparePartsManager extends AbstractManager implements Dataable<Spare
      * @param sparePartData the data of the spare parts
      * @param gui the connection to the current gui
      */
-    public SparePartsManager(@NotNull SaleBook saleBook, @NotNull SparePartData[] sparePartData,
-                             @NotNull GUIConnector gui) {
+    public SparePartsManager(@NotNull SaleBook saleBook,
+                             @NotNull GUIConnector gui, @NotNull SparePartData[] sparePartData) {
         this(saleBook, gui);
         for (SparePartData sparePartDate : sparePartData) {
             SparePart sparePart = new SparePart(sparePartDate);
-            this.addSparePart(sparePart, sparePartDate.getQuantity());
+            this.add(sparePart, sparePartDate.getQuantity());
+        }
+
+    }
+
+    /**
+     * Constructor
+     *
+     * @param saleBook the connection to the current saleBook
+     * @param sparePartData the data of the spare parts
+     * @param gui the connection to the current gui
+     */
+    public SparePartsManager(@NotNull SaleBook saleBook,
+                             @NotNull GUIConnector gui,
+                             @NotNull SparePartsManagerData sparePartsManagerData) {
+        this(saleBook, gui);
+        for (SparePartData sparePartDate : sparePartsManagerData.getSparePartData()) {
+            SparePart sparePart = new SparePart(sparePartDate);
+            this.add(sparePart, sparePartDate.getQuantity());
         }
 
     }
@@ -109,22 +128,8 @@ public class SparePartsManager extends AbstractManager implements Dataable<Spare
      * @return the sparePart of the category or null if the category is unknown
      */
     public @Nullable Set<SparePart> getSparePartsOfCategory(String category) {
+        //TODO 07.06.2024 return copy or unmodifiable view
         return this.categoryToSpareParts.get(category);
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public @NotNull SparePartData[] toData() {
-        SparePartData[] sparePartData = new SparePartData[this.sparePartsToQuantityObsMap.size()];
-        int i = 0;
-        for (Map.Entry<SparePart, Integer> sparePartIntegerEntry : this.sparePartsToQuantityObsMap.entrySet()) {
-            SparePart key = sparePartIntegerEntry.getKey();
-            Integer value = sparePartIntegerEntry.getValue();
-            sparePartData[i++] = new SparePartData(key, value);
-        }
-        return sparePartData;
     }
 
     /**
@@ -139,14 +144,14 @@ public class SparePartsManager extends AbstractManager implements Dataable<Spare
     }
 
     /**
-     * Adds the specified sparePart to this sparePartManager
+     * Adds the specified sparePart to this sparePartManager with the quantity one, if the spare
+     * part is already known to this sparePartManager one will be added to the current quantity
      *
      * @param sparePart the sparePart which should be added
-     * @return true if the ...
+     * @return true if the spare part was successfully added
      */
-    //TODO 20.04.2024
     public boolean addSparePart(@NotNull SparePart sparePart) {
-        return this.addSparePart(sparePart, 0);
+        return this.addSparePart(sparePart, 1);
     }
 
     /**
@@ -199,8 +204,27 @@ public class SparePartsManager extends AbstractManager implements Dataable<Spare
     }
 
     /**
+     *
+     * @param sparePart
+     * @param use
+     * @return
+     */
+    //TODO 20.04.2024
+    public boolean useSparParts(@NotNull SparePart sparePart, int use) {
+        boolean used = false;
+        Integer stock = this.sparePartsToQuantityObsMap.get(sparePart);
+        if (stock != null && stock >= use) {
+            this.sparePartsToQuantityObsMap.put(sparePart, stock - use);
+            this.gui.refreshSpareParts();
+            used = true;
+        }
+        return used;
+    }
+
+    /**
      * @param sparePartsToUseCount
      * @throws IllegalArgumentException if a specific spare part is unknown
+     * @return
      */
     //TODO 20.04.2024
     public boolean useSparParts(@NotNull Map<SparePart, Integer> sparePartsToUseCount) {
@@ -272,6 +296,14 @@ public class SparePartsManager extends AbstractManager implements Dataable<Spare
             return false;
         }
         return quantity > 0;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public @NotNull SparePartsManagerData toData() {
+        return new SparePartsManagerData(this);
     }
 
     @Override
