@@ -5,6 +5,7 @@ import com.pixelduke.control.ribbon.RibbonGroup;
 import com.pixelduke.control.ribbon.RibbonTab;
 import costumeClasses.FXClasses.CustomSplitMenuButton;
 import gui.*;
+import gui.FXutils.StageUtils;
 import gui.saleBookController.pages.Page;
 import gui.saleBookController.pages.assetsPage.AssetsPage;
 import gui.saleBookController.pages.ordersPage.OrdersPage;
@@ -45,8 +46,8 @@ import java.util.concurrent.ExecutionException;
 
 import static costumeClasses.FXClasses.CustomSplitMenuButton.SplitMode.SPLIT_BOTTOM;
 import static gui.DialogWindow.*;
+import static gui.FXutils.StageUtils.*;
 import static gui.Images.*;
-import static gui.FXutils.StageUtils.createStyledStage;
 
 /**
  * Controller of the graphical user interface of the saleBook.
@@ -56,21 +57,25 @@ import static gui.FXutils.StageUtils.createStyledStage;
 public class SaleBookController implements Initializable {
 
     /**
-     *
+     * Width of the start scene
      */
-    //TODO 06.01.2024 JavaDoc
-    public static final String THEMES_DIR_PATH = "gui/css/themes";
+    private static final double WIDTH = 1250D;
+
+    /**
+     * Height of the start scene
+     */
+    private static final double HEIGHT = 700D;
 
     /**
      * The name of the default file if a new saleBook wil be created
      */
-    public static final String DEFAULT_FILE_NAME = "newBook.json";
+    private static final String DEFAULT_FILE_NAME = "newBook.json";
 
     /**
      * Label to display the current status
      */
     @FXML
-    private Label status;
+    private Label statusLbl;
 
     /**
      * ProgressBar to display the progress of a process like saving a file
@@ -95,12 +100,6 @@ public class SaleBookController implements Initializable {
      */
     @FXML
     private BorderPane basePane;
-
-    /**
-     * CustomSplitMenuButton for saving options
-     */
-    @FXML
-    private costumeClasses.FXClasses.CustomSplitMenuButton saveBtn;
 
     /**
      * ComboBox to display/choose the theme
@@ -171,7 +170,7 @@ public class SaleBookController implements Initializable {
     /**
      * Initializes a new SaleBookController with the data from the specified file
      *
-     * @param file the file from which the data will be read
+     * @param file  the file from which the data will be read
      * @throws IOException if the file cannot be found, an error occurs by reading the file
      */
     public static void initializeSaleBookController(@NotNull File file) throws IOException {
@@ -195,13 +194,12 @@ public class SaleBookController implements Initializable {
                 ApplicationMain.class.getResource("saleBookController/SaleBookController.fxml"));
 
         try {
-            Scene scene = new Scene(loader.load());
+            Scene scene = new Scene(loader.load(), WIDTH, HEIGHT);
             Stage stage = createStyledStage(scene);
+            stage.setScene(scene);
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.setTitle(fileName);
-            stage.setMinWidth(1250D);
-            stage.setMinHeight(900D);
             stage.setMaximized(true);
+            stage.setTitle(fileName);
             SaleBookController controller = loader.getController();
             controller.initializeShortCuts(scene);
             controller.initializeCloseRequestHandler(stage);
@@ -279,9 +277,7 @@ public class SaleBookController implements Initializable {
             this.saleBook.updateStatus(String.format("%s successfully loaded", selectedFile.getName()));
             this.progressBar.setVisible(true);
             this.progressBar.progressProperty().bind(loadTask.progressProperty());
-            loadTask.setOnSucceeded(workerStateEvent -> {
-                this.hideInfobox();
-            });
+            loadTask.setOnSucceeded(workerStateEvent -> this.hideInfobox());
             loadTask.run();
             try {
                 this.setSaleBook(new SaleBook(loadTask.get(), this.createJavaFXGUI()));
@@ -309,12 +305,14 @@ public class SaleBookController implements Initializable {
      * Handles the "save as" button and opens a save as dialog
      */
     @FXML
-    public void handleSaveBookAs() {
+    private void handleSaveBookAs() {
         FileChooser fileChooser = createFileChooser();
         if (this.currentFile == null) {
             fileChooser.setInitialFileName(DEFAULT_FILE_NAME);
         }
-        File selectedFile = fileChooser.showSaveDialog(this.progressBar.getScene().getWindow());
+        File selectedFile = fileChooser.showSaveDialog(
+                this.progressBar.getScene().getWindow()
+        );
         if (selectedFile != null) {
             this.save(selectedFile);
             this.setCurrentFile(selectedFile);
@@ -342,8 +340,13 @@ public class SaleBookController implements Initializable {
         this.themeCmbBox.getSelectionModel().selectedItemProperty().addListener(
                 (ov, oldTheme, newTheme) -> {
                     Config.setTheme(newTheme);
-                    this.progressBar.getScene().getStylesheets().setAll(JarMain.class.getResource(
-                            "css/themes/%s.css".formatted(newTheme)).toExternalForm());
+                    URL resource = JarMain.class.getResource(
+                            "css/themes/%s.css".formatted(newTheme));
+                    if (resource != null) {
+                        this.progressBar.getScene().getStylesheets().setAll(
+                                resource.toExternalForm()
+                                );
+                    }
                 });
     }
 
@@ -402,7 +405,10 @@ public class SaleBookController implements Initializable {
     }
 
     /**
+     * Initializes a closeRequestHandler which checks if there is unsaved
+     * changes
      *
+     * @param stage the stage for which the close request handler should be set
      */
     private void initializeCloseRequestHandler(@NotNull Stage stage) {
         stage.setOnCloseRequest(windowEvent -> {
@@ -411,10 +417,12 @@ public class SaleBookController implements Initializable {
                 unsavedData = true;
             } else {
                 try {
-                    SaleBookData oldSaleBook = SaleBookData.fromJson(this.currentFile,
+                    SaleBookData oldSaleBook =
+                            SaleBookData.fromJson(this.currentFile,
                             progress -> {
                             });
-                    if (oldSaleBook != null && ! oldSaleBook.equals(this.saleBook.toData())) {
+                    if (oldSaleBook != null
+                            && !oldSaleBook.equals(this.saleBook.toData())) {
                         unsavedData = true;
                     }
                 } catch (IOException e) {
@@ -422,10 +430,15 @@ public class SaleBookController implements Initializable {
                 }
             }
             if (unsavedData) {
-                windowEvent.consume();
-                if (DialogWindow.unsavedDataAlert()) {
-                    stage.close();
-                }
+                DialogWindow.unsavedDataAlert().ifPresent(buttonType -> {
+                    if (buttonType.equals(ButtonType.CANCEL)) {
+                        windowEvent.consume();
+                    } else {
+                        if (buttonType.equals(ButtonType.YES)) {
+                            this.handleSaveBook();
+                        }
+                    }
+                });
             }
         });
     }
@@ -433,19 +446,19 @@ public class SaleBookController implements Initializable {
     /**
      * Initializes the shortcuts for the specified scene
      *
-     * @param scene
+     * @param scene the scene for which the shortcuts should be set
      */
     private void initializeShortCuts(@NotNull Scene scene) {
         ObservableMap<KeyCombination, Runnable> accelerators = scene.getAccelerators();
-        accelerators.put(new KeyCodeCombination(KeyCode.T, KeyCombination.CONTROL_DOWN),
+        accelerators.put(new KeyCodeCombination(KeyCode.T, KeyCombination.SHORTCUT_DOWN),
                 this::handleNextTheme);
-        accelerators.put(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN),
+        accelerators.put(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN),
                 this::handleOpenBook);
-        accelerators.put(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN),
+        accelerators.put(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN),
                 this::handleNewBook);
-        accelerators.put(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN),
+        accelerators.put(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN),
                 this::handleSaveBook);
-        accelerators.put(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN,
+        accelerators.put(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN,
                 KeyCombination.SHIFT_DOWN), this::handleSaveBookAs);
         accelerators.put(new KeyCodeCombination(KeyCode.F1), this::handleHelp);
         accelerators.put(new KeyCodeCombination(KeyCode.ENTER, KeyCombination.ALT_DOWN), () -> {
@@ -460,24 +473,21 @@ public class SaleBookController implements Initializable {
     private void handleNextTheme() {
         int length = this.themeCmbBox.getItems().size();
         int index = this.themeCmbBox.getSelectionModel().selectedIndexProperty().get();
-        this.themeCmbBox.getSelectionModel().select(++ index % length);
+        this.themeCmbBox.getSelectionModel().select(++index % length);
     }
 
     /**
-     *
+     * Initializes the {@link #ribbonBand} of this saleBookController
      */
     private void initializeRibbonBand() {
-        /**
-         *
-         */
         MenuItem saveAs = new MenuItem("Save As ");
-        saveAs.setGraphic(createImageView(SAVE_AS_IMAGE, 16));
+        saveAs.setGraphic(createImageView(SAVE_AS_IMAGE, SMALL));
         saveAs.setOnAction(actionEvent -> this.handleSaveBookAs());
 
-        this.saveBtn = new CustomSplitMenuButton("Save", SPLIT_BOTTOM, saveAs);
-        this.saveBtn.setGraphic(new ImageView(SAVE_IMAGE));
-        this.saveBtn.setOnAction(actionEvent -> this.handleSaveBook());
-        this.fileRibbonGroup.getNodes().add(this.saveBtn);
+        CustomSplitMenuButton saveBtn = new CustomSplitMenuButton("Save", SPLIT_BOTTOM, saveAs);
+        saveBtn.setGraphic(new ImageView(SAVE_IMAGE));
+        saveBtn.setOnAction(actionEvent -> this.handleSaveBook());
+        this.fileRibbonGroup.getNodes().add(saveBtn);
 
         this.ribbonBand.selectedRibbonTabProperty().addListener((observableValue, oldSimpleObject, newSimpleObject) -> {
             RibbonTab ribbonTab = ((RibbonTab) newSimpleObject);
@@ -509,9 +519,9 @@ public class SaleBookController implements Initializable {
      */
     private GUIConnector createJavaFXGUI() {
         return new JavaFXGUI(this.positionsPage, this.sparePartsPage,
-                this.tenthPartPage,
-                this.profitAndLossAccountPage, this.suppliersPage, this.ordersPage,
-                this.assetsPage, this.status);
+                this.tenthPartPage, this.profitAndLossAccountPage,
+                this.suppliersPage, this.ordersPage, this.assetsPage,
+                this.statusLbl);
     }
 
     /**
@@ -527,18 +537,18 @@ public class SaleBookController implements Initializable {
     }
 
     /**
-     *
+     * Hides the status label and the progress bar
      */
-    //TODO JavaDoc
     private void hideInfobox() {
-        this.status.setText("");
-        this.status.setVisible(false);
+        this.statusLbl.setText("");
+        this.statusLbl.setVisible(false);
         this.progressBar.setVisible(false);
     }
 
     /**
-     * @param file
-     * @return
+     * Saves the current data in the specified file
+     *
+     * @param file the file in which should be written
      */
     private void save(@NotNull File file) {
         Task<Void> saveTask = new Task<>() {

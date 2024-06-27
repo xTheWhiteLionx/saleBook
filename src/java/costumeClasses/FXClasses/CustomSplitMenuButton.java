@@ -9,17 +9,40 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 
-
-//TODO 08.01.2024 JavaDoc
+/**
+ * This class represents a customSplitMenuButton its split mode can be
+ * adjusted.
+ *
+ * @author xThe_white_Lionx
+ * @Date 17.06.2024
+ */
 public class CustomSplitMenuButton extends Group {
+    /**
+     * the label of this custom split menu button
+     */
+    private final ButtonBase mainButtonBase;
 
-    private final ButtonBase label;
+    /**
+     * the arrow button
+     */
     private final ButtonBase arrowButton;
+
+    /**
+     * The contextMenu of the arrow button
+     */
     protected ContextMenu popup;
+
+    /**
+     * The property of splitMode of this customSplitMenuButton
+     */
     private ObjectProperty<SplitMode> splitMode;
+
+    /**
+     *
+     */
     private DoubleProperty sizeBinding;
     private DoubleProperty layoutBinding;
     private double oldSizeValue;
@@ -33,14 +56,37 @@ public class CustomSplitMenuButton extends Group {
     private static final PseudoClass RIGHT_PSEUDO_CLASS = PseudoClass.getPseudoClass("right");
     private static final PseudoClass HIDDEN_PSEUDO_CLASS = PseudoClass.getPseudoClass("hidden");
 
+    /**
+     *
+     */
     public enum SplitMode {
-        SPLIT_TOP, // put arrow buton on top
-        SPLIT_RIGHT, // put arrow button on right
-        SPLIT_BOTTOM, // bottom
-        SPLIT_LEFT, // left
-        HIDDEN  // hides the arrow button regardless of visibility
+        /**
+         * sets the arrow button on the top
+         */
+        SPLIT_TOP, // put arrow button on top
+        /**
+         * sets the arrow button on the right
+         */
+        SPLIT_RIGHT,
+        /**
+         * sets the arrow button on the bottom
+         */
+        SPLIT_BOTTOM,
+        /**
+         * sets the arrow button on the left
+         */
+        SPLIT_LEFT,
+        /**
+         * hides the arrow button
+         */
+        HIDDEN
     }
 
+    /**
+     *
+     *
+     * @param newClass
+     */
     private void changeToPseudoClass(PseudoClass newClass) {
         this.pseudoClassStateChanged(this.layoutClass, false);
         this.pseudoClassStateChanged(newClass, true);
@@ -82,17 +128,32 @@ public class CustomSplitMenuButton extends Group {
         this.arrowButton.setVisible(true);
     }
 
-    public void setGraphic(ImageView imageView) {
-        this.label.setGraphic(imageView);
+    /**
+     * Sets the graphic for the label of this customSplitMenuButton
+     *
+     * @param graphic the new graphic
+     */
+    public void setGraphic(Node graphic) {
+        this.mainButtonBase.setGraphic(graphic);
     }
 
+    /**
+     * Sets the actionEvent for the mainButtonBase
+     *
+     * @param actionEvent the new actionEvent
+     */
     public void setOnAction(EventHandler<ActionEvent> actionEvent) {
-        this.label.setOnAction(actionEvent);
+        this.mainButtonBase.setOnAction(actionEvent);
     }
 
+    /**
+     * Sets the splitMode of this customSplitMenuButton
+     *
+     * @param mode the new mode of this customSplitMenuButton
+     */
     public void setSplitMode(SplitMode mode) {
         if (this.splitMode == null) {
-            this.splitMode = new SimpleObjectProperty<>();
+            this.splitMode = new SimpleObjectProperty<>(mode);
         }
         if (this.splitMode.get() == mode) {
             return;
@@ -104,26 +165,26 @@ public class CustomSplitMenuButton extends Group {
             case SPLIT_BOTTOM:
                 // bind arrowbutton width to label width
                 // bind arrowbutton starting position to bottom of label
-                this.bindSizeAndLayout(this.arrowButton.prefWidthProperty(), this.label.widthProperty(),
-                        this.arrowButton.layoutYProperty(), this.label.heightProperty(),
+                this.bindSizeAndLayout(this.arrowButton.prefWidthProperty(), this.mainButtonBase.widthProperty(),
+                        this.arrowButton.layoutYProperty(), this.mainButtonBase.heightProperty(),
                         BOTTOM_PSEUDO_CLASS);
                 break;
             case SPLIT_RIGHT:
                 // bind arrowbutton height to label height
-                this.bindSizeAndLayout(this.arrowButton.prefHeightProperty(), this.label.heightProperty(),
-                        this.arrowButton.layoutXProperty(), this.label.widthProperty(),
+                this.bindSizeAndLayout(this.arrowButton.prefHeightProperty(), this.mainButtonBase.heightProperty(),
+                        this.arrowButton.layoutXProperty(), this.mainButtonBase.widthProperty(),
                         RIGHT_PSEUDO_CLASS);
                 break;
             case SPLIT_LEFT:
                 // bind arrowbutton height to label height
-                this.bindSizeAndLayout(this.arrowButton.prefHeightProperty(), this.label.heightProperty(),
-                        this.label.layoutXProperty(), this.arrowButton.widthProperty(),
+                this.bindSizeAndLayout(this.arrowButton.prefHeightProperty(), this.mainButtonBase.heightProperty(),
+                        this.mainButtonBase.layoutXProperty(), this.arrowButton.widthProperty(),
                         LEFT_PSEUDO_CLASS);
                 break;
             case SPLIT_TOP:
                 // bind arrowbutton width to label height
-                this.bindSizeAndLayout(this.arrowButton.prefWidthProperty(), this.label.widthProperty(),
-                        this.label.layoutYProperty(), this.arrowButton.heightProperty(),
+                this.bindSizeAndLayout(this.arrowButton.prefWidthProperty(), this.mainButtonBase.widthProperty(),
+                        this.mainButtonBase.layoutYProperty(), this.arrowButton.heightProperty(),
                         TOP_PSEUDO_CLASS);
                 break;
             case HIDDEN:
@@ -134,34 +195,63 @@ public class CustomSplitMenuButton extends Group {
 
     }
 
+    /**
+     * Returns the splitMode of this customSplitMenuButton
+     *
+     * @return the splitMode
+     */
     public SplitMode getSplitMode() {
         return (this.splitMode == null) ? SplitMode.HIDDEN : this.splitMode.get();
     }
 
+    /**
+     * Returns the splitModeProperty of this customSplitMenuButton
+     *
+     * @return the splitModeProperty
+     */
     public ObjectProperty<SplitMode> splitModeProperty() {
         return this.splitMode;
     }
 
-    public ButtonBase getButton() {
-        return this.label;
+    /**
+     * Returns the mainButtonBase of this customSplitMenuButton
+     *
+     * @return the mainButtonBase
+     */
+    public ButtonBase getMainButton() {
+        return this.mainButtonBase;
     }
 
+    /**
+     * Returns the arrowButtonBase of this customSplitMenuButton
+     *
+     * @return the arrowButtonBase
+     */
     public ButtonBase getArrowButton() {
         return this.arrowButton;
     }
 
-    public CustomSplitMenuButton(String text, SplitMode mode, MenuItem... items) {
-        this.label = new Button(text);
-        this.label.getStyleClass().setAll("label");
+    /**
+     * Constructor
+     *
+     * @param text the text of the mainButtonBase
+     * @param splitMode the splitMode for the mainButtonBase and the arrowButton
+     * @param items the items for the popup
+     */
+    public CustomSplitMenuButton(String text, SplitMode splitMode,
+                                 MenuItem... items) {
+        this.mainButtonBase = new Button(text);
+        this.mainButtonBase.getStyleClass().setAll("label");
         this.arrowButton = new Button();
         // bind the managed property to visibility.
         // we dont want to manage an invisible button.
-        this.arrowButton.managedProperty().bind(this.arrowButton.visibleProperty());
+        this.arrowButton.managedProperty().bind(
+                this.arrowButton.visibleProperty());
         this.arrowButton.getStyleClass().setAll("arrow-button");
         this.getStyleClass().setAll("split-menu-button");
-        this.getChildren().setAll(this.label, this.arrowButton);
+        this.getChildren().setAll(this.mainButtonBase, this.arrowButton);
         this.getStyleClass().add("big");
-        this.setSplitMode(mode);
+        this.setSplitMode(splitMode);
 
         this.popup = new ContextMenu(items);
 
@@ -172,7 +262,9 @@ public class CustomSplitMenuButton extends Group {
             public void handle(ActionEvent actionEvent) {
                 this.isOpen = !this.isOpen;
                 if (this.isOpen) {
-                    CustomSplitMenuButton.this.popup.show(CustomSplitMenuButton.this.arrowButton, Side.BOTTOM, 0, 0);
+                    CustomSplitMenuButton.this.popup.show(
+                            CustomSplitMenuButton.this.arrowButton,
+                            Side.BOTTOM, 0, 0);
                 } else {
                     CustomSplitMenuButton.this.popup.hide();
                 }

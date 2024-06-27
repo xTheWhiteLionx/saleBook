@@ -32,12 +32,19 @@ public class FileUtils {
             extension = fileName.substring(i + 1);
         }
         return extension;
+
     }
 
     /**
+     * Creates the specified file, including any
+     * necessary but nonexistent parent directories. Note that if this
+     * operation fails it may have succeeded in creating some of the necessary
+     * parent directories.
      *
-     * @param file
-     * @return
+     * @param file the file which should be created
+     * @return  {@code true} if and only if the directory was created and does not exist yet,
+     *          along with all necessary parent directories; {@code false}
+     *          otherwise
      */
     public static boolean createIfAbsent(@NotNull File file) {
         if (!file.exists()) {

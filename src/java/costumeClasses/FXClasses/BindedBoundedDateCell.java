@@ -38,6 +38,7 @@ public class BindedBoundedDateCell extends DateCell {
     public BindedBoundedDateCell(@Nullable ObjectProperty<LocalDate> minDate,
                                  @Nullable ObjectProperty<LocalDate> maxDate) {
         if (minDate != null && maxDate != null ) {
+            // the value of each objectProperty could be null
             if (minDate.get() != null && maxDate.get() != null) {
                 if (!LocalDateUtils.areAcceptableDates(minDate.get(), maxDate.get())){
                     throw new IllegalArgumentException("the minDate is after the maxDate");

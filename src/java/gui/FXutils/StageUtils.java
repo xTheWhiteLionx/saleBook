@@ -26,10 +26,10 @@ public class StageUtils {
     }
 
     /**
-     * Styles the specified stage and his scene matching to the current theme.
+     * Styles the specified stage and its scene matching to the current theme.
      * Adds the app icon to the stage.
      *
-     * @param stage the stage and his scene, which should be styled
+     * @param stage the stage and its scene, which should be styled
      * @throws IllegalArgumentException if the stage has no scene
      */
     public static void styleStage(@NotNull Stage stage) {

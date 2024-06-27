@@ -71,8 +71,6 @@ public class OrdersManager extends AbstractManager implements Dataable<OrdersMan
      * Constructor
      *
      * @param saleBook    connection to the saleBook
-     * @param orders      the orders that should be managed
-     * @param nextOrderId the id for the next order
      * @param gui         connection to the gui
      * @throws IllegalArgumentException if the nextOrderId is negative or 0
      */
@@ -120,20 +118,16 @@ public class OrdersManager extends AbstractManager implements Dataable<OrdersMan
     }
 
     /**
-     * Consumes the order with the specified orderId and stores the spare parts of the order
+     * Consumes the order with the specified orderId and stores its spare parts
      *
      * @param orderId the id of the searched order
      * @throws IllegalArgumentException if there is no order with the specified orderId
-     * @throws IllegalStateException    if the order is already
+     * @throws IllegalStateException    if the order is not receivable
      */
-    //TODO 24.05.2024 JavaDoc
     public void orderReceived(int orderId) {
         Order order = this.idToOrderObsMap.get(orderId);
         if (order == null) {
             throw new IllegalArgumentException("no order for id " + orderId);
-        }
-        if (!order.isReceivable()) {
-            throw new IllegalStateException("order is already received");
         }
         this.saleBook.getSparePartsManager().addSpareParts(order.received());
         this.saleBook.addFixedCost(order.getValue());

@@ -78,7 +78,6 @@ public class SparePartsManager extends AbstractManager implements Dataable<Spare
      * Constructor
      *
      * @param saleBook the connection to the current saleBook
-     * @param sparePartData the data of the spare parts
      * @param gui the connection to the current gui
      */
     public SparePartsManager(@NotNull SaleBook saleBook,
@@ -128,8 +127,9 @@ public class SparePartsManager extends AbstractManager implements Dataable<Spare
      * @return the sparePart of the category or null if the category is unknown
      */
     public @Nullable Set<SparePart> getSparePartsOfCategory(String category) {
-        //TODO 07.06.2024 return copy or unmodifiable view
-        return this.categoryToSpareParts.get(category);
+        Set<SparePart> spareParts = this.categoryToSpareParts.get(category);
+        return spareParts != null ?
+                new HashSet<>(this.categoryToSpareParts.get(category)) : null;
     }
 
     /**
@@ -204,21 +204,21 @@ public class SparePartsManager extends AbstractManager implements Dataable<Spare
     }
 
     /**
+     * Consumes the specified amount of the specified sparePart. Returns true
+     * if the spareParts could be used otherwise false
      *
-     * @param sparePart
-     * @param use
-     * @return
+     * @param sparePart the sparPart which should be used
+     * @param amount the amount of the sparePart which should be used
+     * @return {@code true} if the spareParts were used; otherwise {@code false}
      */
-    //TODO 20.04.2024
-    public boolean useSparParts(@NotNull SparePart sparePart, int use) {
-        boolean used = false;
+    public boolean useSparParts(@NotNull SparePart sparePart, int amount) {
         Integer stock = this.sparePartsToQuantityObsMap.get(sparePart);
-        if (stock != null && stock >= use) {
-            this.sparePartsToQuantityObsMap.put(sparePart, stock - use);
+        if (stock != null && stock >= amount) {
+            this.sparePartsToQuantityObsMap.put(sparePart, stock - amount);
             this.gui.refreshSpareParts();
-            used = true;
+            return true;
         }
-        return used;
+        return false;
     }
 
     /**

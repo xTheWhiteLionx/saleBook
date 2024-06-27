@@ -4,7 +4,9 @@ import gui.FXutils.StageUtils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -19,16 +21,6 @@ import static gui.DialogWindow.displayError;
 public class ApplicationMain extends Application {
 
     /**
-     * Width of the start scene
-     */
-    private static final double WIDTH = 300D;
-
-    /**
-     * Height of the start scene
-     */
-    private static final double HEIGHT = 300D;
-
-    /**
      * Creating the stage and showing it. This is where the initial size and the
      * title of the window are set.
      *
@@ -39,12 +31,10 @@ public class ApplicationMain extends Application {
         try {
             FXMLLoader loader = new FXMLLoader(ApplicationMain.class.getResource(
                     "Start.fxml"));
-            Scene scene = new Scene(loader.load(), WIDTH, HEIGHT);
+            Scene scene = new Scene(loader.load());
             primaryStage.setScene(scene);
             StageUtils.styleStage(primaryStage);
             primaryStage.setTitle("welcome");
-            primaryStage.setMinWidth(WIDTH);
-            primaryStage.setMinHeight(HEIGHT);
             primaryStage.show();
         } catch (IOException e) {
             displayError("failed to load start.fxml",e);

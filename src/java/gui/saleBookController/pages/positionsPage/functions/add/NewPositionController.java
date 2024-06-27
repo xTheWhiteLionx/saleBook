@@ -173,7 +173,6 @@ public class NewPositionController extends FunctionDialog<Position> implements I
         TextInputControlUtils.installTouch(this.trackingNumberTxtFld);
         TextInputControlUtils.installTouch(this.trackingNumberTxtFld);
 
-        this.costTxtFld.setText("0");
         LabelUtils.setCurrencies(this.purchasingPriceCurrencyLbl, this.costCurrencyLbl,
                 this.sellingPriceCurrencyLbl);
         ChoiceBoxUtils.addItems(this.stateChcBx, State.class);

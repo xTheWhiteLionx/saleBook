@@ -69,19 +69,23 @@ public class DialogWindow {
     }
 
     /**
-     * creates a warning alert
+     * Creates a confirmation alert with three possible options
+     * <ul>
+     *     <li>{@link ButtonType#YES}</li>
+     *     <li>{@link ButtonType#NO}</li>
+     *     <li>{@link ButtonType#CANCEL}</li>
+     * </ul>
      *
-     * @return true if deleting were accepted
+     * @return an optional that contains the result
      */
-    public static boolean unsavedDataAlert() {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
+    public static Optional<ButtonType> unsavedDataAlert() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
         StageUtils.styleStage(stage);
-        alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.CANCEL);
+        alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
         alert.setHeaderText("You have unsaved data");
-        alert.setContentText("Unsaved data will get lost. Should the app still be closed?");
-        Optional<ButtonType> result = alert.showAndWait();
-        return result.isPresent() && result.get() == ButtonType.YES;
+        alert.setContentText("Should your changes be saved?");
+        return alert.showAndWait();
     }
 
     /**

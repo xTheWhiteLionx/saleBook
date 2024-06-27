@@ -6,12 +6,16 @@ import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.collections.transformation.FilteredList;
+import javafx.concurrent.Task;
 import javafx.scene.control.TreeItem;
 import logic.products.Product;
 import logic.products.position.Position;
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
@@ -45,11 +49,13 @@ public class FilteredTreeItem<K> extends TreeItem<Product>
         super();
         this.children = FXCollections.observableArrayList();
         Collection<Position> values = map.values();
+
+        this.filteredList = new FilteredList<>(this.children);
+        Bindings.bindContent(this.getChildren(), this.filteredList);
         for (Position position : values) {
             this.children.add(new PositionTreeItem(position));
         }
-        this.filteredList = new FilteredList<>(this.children);
-        Bindings.bindContent(this.getChildren(), this.filteredList);
+
         map.addListener(this);
     }
 

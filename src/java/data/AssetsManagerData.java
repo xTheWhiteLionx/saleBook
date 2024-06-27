@@ -4,18 +4,33 @@ import logic.Asset;
 import logic.manager.AssetsManager;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Objects;
+import java.util.TreeSet;
 
 /**
+ * The data representation of an {@link AssetsManager}
+ *
  * @author xThe_white_Lionx
  * @Date 08.06.2024
  */
 public class AssetsManagerData {
 
+    /**
+     * The assets
+     */
     private final Asset[] assets;
 
+    /**
+     * The id of the next asset
+     */
     private final int nextAssetId;
 
+    /**
+     * Constructor
+     *
+     * @param assetsManager
+     */
     public AssetsManagerData(AssetsManager assetsManager) {
         this.assets = assetsManager.getAssets().toArray(new Asset[0]);
         this.nextAssetId = assetsManager.getNextAssetId();

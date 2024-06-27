@@ -28,18 +28,18 @@ public class IterableUtils {
     /**
      * Checks if each value of the specified iterable fulfills he specified predicate
      *
-     * @param iterable the iterable which supplies the values
+     * @param iterable  the iterable which supplies the values
      * @param predicate the predicate which every value should fit
-     * @param <T> type of the elements of the iterable
+     * @param <T>       type of the elements of the iterable
      * @return {@code true} if each element of the iterable fits the specified predicate, otherwise {@code false}
      */
-    public static <T> boolean areValid(@NotNull Iterable<T> iterable,@NotNull Predicate<?
-            super T> predicate) {
+    public static <T> boolean areValid(@NotNull Iterable<T> iterable,
+                                       @NotNull Predicate<? super T> predicate) {
         boolean areValid = true;
         Iterator<T> iterator = iterable.iterator();
         while (areValid && iterator.hasNext()) {
             T value = iterator.next();
-            if (!predicate.test(value)) {
+            if (! predicate.test(value)) {
                 areValid = false;
             }
         }
@@ -51,15 +51,16 @@ public class IterableUtils {
      * The values will be reduced by the specified combiner
      *
      * @param iterable the iterable with his values
-     * @param accu the current value of the accumulation
+     * @param accu     the current value of the accumulation
      * @param combiner the combiner to combine the values
+     * @param <E>      Type of the values of the iterable
+     * @param <R>      Type of the accu and the result
      * @return the reduced value of the iterable values
-     * @param <E> Type of the values of the iterable
-     * @param <R> Type of the accu and the result
      */
-    public static <E, R> @NotNull R reduce(@NotNull Iterable<E> iterable, @NotNull R accu,
-                                           @NotNull BiFunction<? super E, ? super R,
-                                           ? extends R> combiner) {
+    public static <E, R> @NotNull R reduce(@NotNull Iterable<E> iterable,
+                                           @NotNull R accu,
+                                           @NotNull BiFunction<? super E, ? super R, ? extends R>
+                                                   combiner) {
         for (E element : iterable) {
             accu = combiner.apply(element, accu);
         }
@@ -75,9 +76,9 @@ public class IterableUtils {
      * @param <E>
      * @param <T>
      */
-    public static <E,T> void collect(@NotNull Iterable<E> iterable,
-                                     @NotNull Function<? super E, ? extends T> function,
-                                    @NotNull Collection<? super T> result) {
+    public static <E, T> void map(@NotNull Iterable<E> iterable,
+                                  @NotNull Function<? super E, ? extends T> function,
+                                  @NotNull Collection<? super T> result) {
         for (E element : iterable) {
             result.add(function.apply(element));
         }
@@ -92,8 +93,8 @@ public class IterableUtils {
      * @param <E>
      */
     public static <E> void filter(@NotNull Iterable<E> iterable,
-                                                           @NotNull Predicate<? super E> predicate,
-                                                           @NotNull Collection<? super E> result) {
+                                  @NotNull Predicate<? super E> predicate,
+                                  @NotNull Collection<? super E> result) {
         for (E element : iterable) {
             if (predicate.test(element)) {
                 result.add(element);

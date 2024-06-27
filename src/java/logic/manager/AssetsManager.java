@@ -2,11 +2,11 @@ package logic.manager;
 
 import data.AssetsManagerData;
 import costumeClasses.FXClasses.ObservableListMapBinder;
+import data.Dataable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import logic.Asset;
-import logic.Dataable;
 import logic.GUIConnector;
 import logic.saleBook.SaleBook;
 import org.jetbrains.annotations.NotNull;

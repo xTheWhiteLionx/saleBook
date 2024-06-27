@@ -193,6 +193,7 @@ public class EditSparePartController extends FunctionDialog<Boolean> implements 
         this.sparePart.setCondition(this.conditionChcBx.getValue());
         this.sparePart.setUnit(this.unitTxtFld.getText());
         this.sparePart.setMinimumStock(this.minimumStockSpinner.getValue());
+
         Integer oldQuantity = this.sparePartsManager.getQuantity(this.sparePart);
         Integer newQuantity = this.stockSpinner.getValue();
         if (oldQuantity != null && newQuantity != null) {

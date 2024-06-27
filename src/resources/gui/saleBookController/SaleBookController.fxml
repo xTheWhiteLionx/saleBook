@@ -18,7 +18,11 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane fx:id="basePane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="966.0" prefWidth="1000.0" stylesheets="@../css/Global.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.saleBookController.SaleBookController">
+<BorderPane fx:id="basePane"
+            stylesheets="@../css/Global.css"
+            xmlns="http://javafx.com/javafx/20.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="gui.saleBookController.SaleBookController">
     <top>
         <Ribbon fx:id="ribbonBand">
             <quickAccessBar>
@@ -27,7 +31,7 @@
                         <Button contentDisplay="TOP" onAction="#handleSaveBook" text="Save">
                             <graphic>
                                 <ImageView>
-                                    <Image url="@../textures/ribbonBandIcons/icons8-speichern-16.png" />
+                                    <Image url="@../textures/ribbonBandIcons/icons8-speichern-16.png"/>
                                 </ImageView>
                             </graphic>
                         </Button>
@@ -39,17 +43,21 @@
                     <ribbonGroups>
                         <RibbonGroup fx:id="fileRibbonGroup" title="File">
                             <nodes>
-                                <Button contentDisplay="TOP" onAction="#handleOpenBook" styleClass="big" text="Open" wrapText="true">
+                                <Button contentDisplay="TOP"
+                                        onAction="#handleOpenBook"
+                                        styleClass="big" text="Open"
+                                        wrapText="true">
                                     <graphic>
                                         <ImageView>
-                                            <Image url="@../textures/ribbonBandIcons/icons8-datei-32.png" />
+                                            <Image url="@../textures/ribbonBandIcons/icons8-datei-32.png"/>
                                         </ImageView>
                                     </graphic>
                                 </Button>
-                                <Button contentDisplay="TOP" onAction="#handleNewBook" styleClass="big" text="New" wrapText="true">
+                                <Button contentDisplay="TOP" onAction="#handleNewBook"
+                                        styleClass="big" text="New" wrapText="true">
                                     <graphic>
                                         <ImageView>
-                                            <Image url="@../textures/ribbonBandIcons/icons8-neue-datei-32.png" />
+                                            <Image url="@../textures/ribbonBandIcons/icons8-neue-datei-32.png"/>
                                         </ImageView>
                                     </graphic>
                                 </Button>
@@ -63,8 +71,8 @@
                                             <ComboBox fx:id="themeCmbBox">
                                                 <items>
                                                     <FXCollections fx:factory="observableArrayList">
-                                                        <String fx:value="Darkmode" />
-                                                        <String fx:value="Lightmode" />
+                                                        <String fx:value="Darkmode"/>
+                                                        <String fx:value="Lightmode"/>
                                                     </FXCollections>
                                                 </items>
                                             </ComboBox>
@@ -75,26 +83,29 @@
                         </RibbonGroup>
                         <RibbonGroup title="Help">
                             <nodes>
-                                <Button contentDisplay="TOP" onAction="#handleOpenShortcuts" styleClass="big" text="Shortcuts" wrapText="true">
+                                <Button contentDisplay="TOP" onAction="#handleOpenShortcuts"
+                                        styleClass="big" text="Shortcuts" wrapText="true">
                                     <graphic>
                                         <ImageView>
-                                            <Image url="@../textures/ribbonBandIcons/icons8-tastatur-32.png" />
+                                            <Image url="@../textures/ribbonBandIcons/icons8-tastatur-32.png"/>
                                         </ImageView>
                                     </graphic>
                                 </Button>
                             </nodes>
                             <nodes>
-                                <Button contentDisplay="TOP" styleClass="big" text="About" wrapText="true">
+                                <Button contentDisplay="TOP" styleClass="big" text="About"
+                                        wrapText="true">
                                     <graphic>
                                         <ImageView>
-                                            <Image url="@../textures/ribbonBandIcons/icons8-info-32.png" />
+                                            <Image url="@../textures/ribbonBandIcons/icons8-info-32.png"/>
                                         </ImageView>
                                     </graphic>
                                 </Button>
-                                <Button contentDisplay="TOP" onAction="#handleHelp" styleClass="big" text="Help" wrapText="true">
+                                <Button contentDisplay="TOP" onAction="#handleHelp" styleClass="big"
+                                        text="Help" wrapText="true">
                                     <graphic>
                                         <ImageView>
-                                            <Image url="@../textures/ribbonBandIcons/icons8-hilfe-32.png" />
+                                            <Image url="@../textures/ribbonBandIcons/icons8-hilfe-32.png"/>
                                         </ImageView>
                                     </graphic>
                                 </Button>
@@ -107,13 +118,13 @@
     </top>
     <bottom>
         <HBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
-            <Label fx:id="status" visible="false" />
-            <ProgressBar fx:id="progressBar" prefWidth="150.0" progress="0.0" visible="false" />
+            <Label fx:id="statusLbl" visible="false"/>
+            <ProgressBar fx:id="progressBar" prefWidth="150.0" progress="0.0" visible="false"/>
             <BorderPane.margin>
-                <Insets />
+                <Insets/>
             </BorderPane.margin>
             <padding>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
             </padding>
         </HBox>
     </bottom>

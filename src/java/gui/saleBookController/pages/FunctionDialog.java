@@ -10,6 +10,7 @@ import java.util.Optional;
  * For example, a Dialog that asks for a date has a date as a result.
  *
  * @param <T> the type of the result, of the specific function dialog
+ * @author xthe_white_lionx
  */
 public abstract class FunctionDialog<T> {
     /**

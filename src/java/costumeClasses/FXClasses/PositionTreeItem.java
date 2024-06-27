@@ -2,6 +2,7 @@ package costumeClasses.FXClasses;
 
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.scene.control.TreeItem;
 import logic.products.item.Item;
 import logic.products.Product;
@@ -55,14 +56,6 @@ public class PositionTreeItem extends TreeItem<Product> implements ListChangeLis
                 for (Item item : removed) {
                     ids.add(item.getId());
                 }
-                //TODO 31.05.2024 optimate
-//                Iterator<TreeItem<Product>> iterator = this.children.iterator();
-//                while (iterator.hasNext()) {
-//                    TreeItem<Product> treeItem = iterator.next();
-//                    if (ids.contains(treeItem.getValue().getId())) {
-//                        iterator.remove();
-//                    }
-//                }
                 this.children.removeIf(
                         productTreeItem -> ids.contains(productTreeItem.getValue().getId()));
             }

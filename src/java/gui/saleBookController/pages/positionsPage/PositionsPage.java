@@ -25,6 +25,7 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.DataFormat;
 import javafx.stage.Stage;
 import logic.products.item.ItemColor;
+import utils.FileUtils;
 import utils.StringUtils;
 import gui.FXutils.TreeTableViewUtils;
 import javafx.event.ActionEvent;
@@ -671,14 +672,8 @@ public class PositionsPage implements Initializable, Page {
                             this.saleBook.getCategories(), ItemColor.getItemColorMap());
             masterController.getResult().ifPresent(position -> {
                 this.saleBook.getPositionsManager().addPosition(position);
-                File dir = new File(DIR_POSITIONS);
-                if (!dir.isDirectory()){
-                    dir.mkdir();
-                }
-                File positionDir = new File(dir, String.valueOf(position.getId()));
-                positionDir.mkdir();
-                File picturesDir = new File(positionDir, "pictures");
-                picturesDir.mkdir();
+                File dir = new File(DIR_POSITIONS, String.valueOf(position.getId()));
+                FileUtils.createIfAbsent(new File(dir,"pictures"));
             });
         } catch (IOException e) {
             displayError("fail to load masterController", e);

@@ -14,8 +14,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="saleBook" level="project" />
     <orderEntry type="library" name="lib" level="project" />
-    <orderEntry type="module" module-name="salebook1" />
+    <orderEntry type="library" name="fxribbon-1.2.1" level="project" />
+    <orderEntry type="library" name="controlsfx-11.1.1" level="project" />
   </component>
 </module>
